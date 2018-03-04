@@ -5,4 +5,9 @@
     <string name="code_accepted">The code is right</string>
     <string name="code_incorrect_0">Incorrect code,</string>
     <string name="code_incorrect_1">tries remaining</string>
+    <string name="easy_difficulty">Default</string>
+    <string name="hard_difficulty">Complicated</string>
+    <string name="evil_difficulty">Highly complicated</string>
+    <string name="dif_change">Difficulty change</string>
+    <string name="cancel">Cancel</string>
 </resources>
