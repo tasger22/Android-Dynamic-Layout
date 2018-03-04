@@ -1,6 +1,7 @@
 package hu.bme.iit.dynamiclayout_prototype;
 
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +16,8 @@ public class MainActivity extends AppCompatActivity {
 
         Button numericButton = (Button) findViewById(R.id.numericButton);
         Button graphicButton = (Button) findViewById(R.id.graphicButton);
+        Button difficultyButton = (Button) findViewById(R.id.difficultyButton);
+
 
         numericButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -29,6 +32,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent graphicActivityIntent = new Intent(getApplicationContext(),GraphicCodeActivity.class);
                 startActivity(graphicActivityIntent);
+            }
+        });
+
+        difficultyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder difDialog = new AlertDialog.Builder(getApplicationContext());
+                View difficultyDialogView = View.inflate(getApplicationContext(),R.layout.dif_change_layout,null);
+                difDialog.setView(difficultyDialogView);
             }
         });
     }
