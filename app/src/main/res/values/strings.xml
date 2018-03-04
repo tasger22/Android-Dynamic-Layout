@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">DynamicLayout_Prototype</string>
+    <string name="insert_pin">Please insert your PIN code</string>
+    <string name="your_code">Your code:</string>
+    <string name="code_accepted">The code is right</string>
+    <string name="code_incorrect_0">Incorrect code,</string>
+    <string name="code_incorrect_1">tries remaining</string>
+</resources>

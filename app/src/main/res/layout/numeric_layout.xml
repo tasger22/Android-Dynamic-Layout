@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:orientation="vertical" android:layout_width="match_parent"
+android:layout_height="match_parent"
+    android:weightSum="7"
+    android:background="@color/light_gray">
+    <TextView
+        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_weight="2"
+        android:text="@string/insert_pin"
+        android:textSize="30sp"
+        android:textAlignment="center"
+        android:gravity="center"
+        />
+
+    <LinearLayout
+        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_weight="5"
+        android:weightSum="5"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:weightSum="4"
+            android:gravity="center">
+
+            <EditText
+                android:id="@+id/passwordLine"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:inputType="numberPassword"
+                android:layout_weight="3"
+                android:layout_marginLeft="15dp"
+                android:layout_marginStart="15dp"
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:maxLength="8"
+                android:enabled="false"
+                android:textIsSelectable="false"
+                />
+
+            <ImageButton
+                android:id="@+id/deleteButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@android:drawable/ic_input_delete"
+                android:background="@android:color/transparent"
+                />
+
+        </LinearLayout>
+
+        <GridLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:columnCount="3"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:layout_marginTop="25dp"
+            >
+            <Button
+                android:id="@+id/button1"
+                android:onClick="processNumberPress"
+                android:text="1"/>
+
+            <Button android:text="2"
+                android:id="@+id/button2"
+                android:onClick="processNumberPress"/>
+
+            <Button android:text="3"
+                android:id="@+id/button3"
+                android:onClick="processNumberPress"/>
+
+            <Button android:text="4"
+                android:id="@+id/button4"
+                android:onClick="processNumberPress"/>
+
+            <Button android:text="5"
+                android:id="@+id/button5"
+                android:onClick="processNumberPress"/>
+
+            <Button android:text="6"
+                android:id="@+id/button6"
+                android:onClick="processNumberPress"/>
+
+            <Button android:text="7"
+                android:id="@+id/button7"
+                android:onClick="processNumberPress"/>
+
+            <Button android:text="8"
+                android:id="@+id/button8"
+                android:onClick="processNumberPress"/>
+
+            <Button android:text="9"
+                android:id="@+id/button9"
+                android:onClick="processNumberPress"/>
+
+            <Button
+                android:text="0"
+                android:layout_column="1"
+                android:id="@+id/button10"
+                android:onClick="processNumberPress"/>
+
+            <Button
+                android:id="@+id/acceptButton"
+                android:text="OK"
+                />
+
+        </GridLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/your_code"
+            android:layout_marginRight="5dp"/>
+
+        <TextView
+            android:id="@+id/randomCodeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4242"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>
