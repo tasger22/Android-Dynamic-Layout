@@ -21,10 +21,6 @@ public class GraphicCodeActivity extends CodeActivityBase {
     private String codeInput = "";
     private int tries = 2;
 
-    private enum CodeState{
-        RIGHT,WRONG,PARTIALLY_RIGHT
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

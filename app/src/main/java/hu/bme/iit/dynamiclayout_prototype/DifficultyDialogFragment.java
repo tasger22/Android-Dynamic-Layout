@@ -2,12 +2,14 @@ package hu.bme.iit.dynamiclayout_prototype;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import hu.bme.iit.dynamiclayout_prototype.MainActivity.CodeResolveDifficulty;
 
 
 
@@ -19,6 +21,7 @@ public class DifficultyDialogFragment extends AppCompatDialogFragment{
 
     public static final String TAG = "DifficultyDialogFragment";
     private DifficultyPickedListener listener;
+    private String[] code;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,62 +31,45 @@ public class DifficultyDialogFragment extends AppCompatDialogFragment{
             throw new RuntimeException("The activity does not implement the" +
                     "DifficultyPickedListener interface");
         }
+        code = new String[3];
+        code[0] = getResources().getString(R.string.easy_difficulty);
+        code[1] = getResources().getString(R.string.hard_difficulty);
+        code[2] = getResources().getString(R.string.evil_difficulty);
 
         listener = (DifficultyPickedListener) getActivity();
     }
 
+
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Bundle b = getArguments();
+
         return new AlertDialog.Builder(getContext())
-                .setTitle("Difficulty change")
-                .setView(getDifChangeView())
+                .setTitle(getResources().getString(R.string.dif_change))
+                .setSingleChoiceItems(code,b.getInt("position"),difChosenListener)
                 .setNegativeButton(R.string.cancel, null)
                 .create();
     }
 
-    private View getDifChangeView() {
-
-        View view = LayoutInflater.from(getContext()).inflate(
-                R.layout.dif_change_fragment_layout, null);
-
-
-
-        final RadioGroup difChangeRadioGroup = (RadioGroup) view.findViewById(R.id.difChangeRadioGroup);
-        RadioButton easyButton = (RadioButton) view.findViewById(R.id.easyButton);
-        RadioButton hardButton = (RadioButton) view.findViewById(R.id.hardButton);
-        RadioButton evilButton = (RadioButton) view.findViewById(R.id.evilButton);
-        View.OnClickListener buttonClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int checkedButtonId = difChangeRadioGroup.getCheckedRadioButtonId();
-
-                switch (checkedButtonId){
-                    case 0: listener.OnDifficultyPicked(MainActivity.CodeResolveDifficulty.EASY);
+    private DialogInterface.OnClickListener difChosenListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialogInterface, int i) {
+            switch (i){
+                case 0: listener.OnDifficultyPicked(CodeResolveDifficulty.EASY);
                     break;
-
-                    case 1: listener.OnDifficultyPicked(MainActivity.CodeResolveDifficulty.HARD);
-                        break;
-
-                    case 2: listener.OnDifficultyPicked(MainActivity.CodeResolveDifficulty.EVIL);
-                        break;
-
-                    default: listener.OnDifficultyPicked(MainActivity.CodeResolveDifficulty.EASY);
-                        break;
-                }
-
-                dismiss();
+                case 1: listener.OnDifficultyPicked(CodeResolveDifficulty.HARD);
+                    break;
+                case 2: listener.OnDifficultyPicked(CodeResolveDifficulty.EVIL);
+                    break;
+                default: listener.OnDifficultyPicked(CodeResolveDifficulty.EASY);
+                    break;
             }
-        };
-
-        easyButton.setOnClickListener(buttonClickListener);
-        hardButton.setOnClickListener(buttonClickListener);
-        evilButton.setOnClickListener(buttonClickListener);
-
-        return view;
-
-    }
+            dismiss();
+        }
+    };
 
     public interface DifficultyPickedListener{
-        public void OnDifficultyPicked(MainActivity.CodeResolveDifficulty difficulty);
+        public void OnDifficultyPicked(CodeResolveDifficulty difficulty);
     }
 }
