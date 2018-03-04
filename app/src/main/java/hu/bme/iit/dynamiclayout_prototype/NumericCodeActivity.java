@@ -11,14 +11,28 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Random;
 
+import hu.bme.iit.dynamiclayout_prototype.MainActivity.CodeResolveDifficulty;
+
 public class NumericCodeActivity extends CodeActivityBase {
 
     private int tries = 2;
+    private CodeResolveDifficulty currentDifficulty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.numeric_layout);
+
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras == null) {
+                 currentDifficulty = CodeResolveDifficulty.EASY;
+            } else {
+                currentDifficulty = (CodeResolveDifficulty) extras.get("difficulty");
+            }
+        } else {
+            currentDifficulty = (CodeResolveDifficulty) savedInstanceState.getSerializable("difficulty");
+        }
 
         TextView codeView = (TextView) findViewById(R.id.randomCodeText);
         final EditText passwordLine = (EditText) findViewById(R.id.passwordLine);
@@ -48,7 +62,9 @@ public class NumericCodeActivity extends CodeActivityBase {
         setCodeToRandom();
         codeView.setText(code);
 
-        randomizeButtons();
+        if(currentDifficulty != CodeResolveDifficulty.EASY)
+            randomizeButtons();
+
     }
 
     public void processNumberPress(View view) {
@@ -58,7 +74,8 @@ public class NumericCodeActivity extends CodeActivityBase {
 
         passwordLine.append(numberButton.getText().toString());
 
-        randomizeButtons();
+        if(currentDifficulty == CodeResolveDifficulty.EVIL)
+            randomizeButtons();
     }
 
     protected void setCodeToRandom(){
