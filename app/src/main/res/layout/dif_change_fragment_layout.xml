@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="200dp" >
+    <RadioGroup
+        android:checkedButton="@id/easyButton"
+        android:id="@+id/difChangeRadioGroup"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <RadioButton
+            android:id="@+id/easyButton"
+            android:text="@string/easy_difficulty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <RadioButton
+            android:id="@+id/hardButton"
+            android:text="@string/hard_difficulty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <RadioButton
+            android:id="@+id/evilButton"
+            android:text="@string/evil_difficulty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </RadioGroup>>
+
+
+</LinearLayout>
