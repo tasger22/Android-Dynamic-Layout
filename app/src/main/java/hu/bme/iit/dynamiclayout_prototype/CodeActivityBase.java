@@ -4,7 +4,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 public abstract class CodeActivityBase extends AppCompatActivity {
+
     protected String code;
+    protected MainActivity.CodeResolveDifficulty currentDifficulty;
+    protected boolean isTestMode;
+    protected int tries = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

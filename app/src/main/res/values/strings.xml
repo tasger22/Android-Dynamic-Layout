@@ -10,4 +10,6 @@
     <string name="evil_difficulty">Highly complicated</string>
     <string name="dif_change">Difficulty change</string>
     <string name="cancel">Cancel</string>
+    <string name="attention_dialog_discalimer">In the next minutes the application will test how fast you can write the random code in 10 times. Are you ready?</string>
+    <string name="attention_dialog_title">ATTENTION!</string>
 </resources>

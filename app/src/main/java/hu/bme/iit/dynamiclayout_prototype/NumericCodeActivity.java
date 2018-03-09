@@ -15,9 +15,6 @@ import hu.bme.iit.dynamiclayout_prototype.MainActivity.CodeResolveDifficulty;
 
 public class NumericCodeActivity extends CodeActivityBase {
 
-    private int tries = 2;
-    private CodeResolveDifficulty currentDifficulty;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

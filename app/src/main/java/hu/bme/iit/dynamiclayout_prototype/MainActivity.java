@@ -1,5 +1,8 @@
 package hu.bme.iit.dynamiclayout_prototype;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,28 +23,48 @@ public class MainActivity extends AppCompatActivity implements DifficultyDialogF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button numericButton = (Button) findViewById(R.id.numericButton);
+        final Button numericButton = (Button) findViewById(R.id.numericButton);
         final Button graphicButton = (Button) findViewById(R.id.graphicButton);
-        final Button difficultyButton = (Button) findViewById(R.id.difficultyButton);
+        Button difficultyButton = (Button) findViewById(R.id.difficultyButton);
 
-
-        numericButton.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener activityStarterListener = new View.OnClickListener() { //OnClickListener to unify the listeners of the two activity start buttons to reduce repetition
             @Override
             public void onClick(View view) {
-                Intent numericActivityIntent = new Intent(getApplicationContext(),NumericCodeActivity.class);
-                numericActivityIntent.putExtra("difficulty",currentDifficulty);
-                startActivity(numericActivityIntent);
-            }
-        });
+                Intent activityIntent = new Intent();
 
-        graphicButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent graphicActivityIntent = new Intent(getApplicationContext(),GraphicCodeActivity.class);
-                graphicActivityIntent.putExtra("difficulty",currentDifficulty);
-                startActivity(graphicActivityIntent);
+                if(view == numericButton)
+                    activityIntent = new Intent(getApplicationContext(),NumericCodeActivity.class);
+                else if (view == graphicButton)
+                    activityIntent = new Intent(getApplicationContext(),GraphicCodeActivity.class);
+
+                activityIntent.putExtra("difficulty", currentDifficulty);
+                activityIntent.putExtra("testMode", false); //Test mode is default off
+
+                final Intent finalIntent = (Intent) activityIntent.clone();
+
+                AlertDialog.Builder attentionDialog = new AlertDialog.Builder(view.getContext());
+                attentionDialog.setMessage(R.string.attention_dialog_discalimer);
+                attentionDialog.setTitle(R.string.attention_dialog_title);
+                attentionDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finalIntent.putExtra("testMode",true);
+                        startActivity(finalIntent);
+                    }
+                });
+                attentionDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+
+                attentionDialog.show();
             }
-        });
+        };
+
+        numericButton.setOnClickListener(activityStarterListener);
+        graphicButton.setOnClickListener(activityStarterListener);
 
         difficultyButton.setOnClickListener(new View.OnClickListener() {
             @Override
