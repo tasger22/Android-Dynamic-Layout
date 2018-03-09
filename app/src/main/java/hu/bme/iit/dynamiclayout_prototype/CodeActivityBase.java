@@ -9,6 +9,9 @@ public abstract class CodeActivityBase extends AppCompatActivity {
     protected MainActivity.CodeResolveDifficulty currentDifficulty;
     protected boolean isTestMode;
     protected int tries = 2;
+    protected int fails;
+    protected long testStartTime;
+    protected int initialTries;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

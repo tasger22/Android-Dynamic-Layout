@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements DifficultyDialogF
                 final Intent finalIntent = (Intent) activityIntent.clone();
 
                 AlertDialog.Builder attentionDialog = new AlertDialog.Builder(view.getContext());
-                attentionDialog.setMessage(R.string.attention_dialog_discalimer);
+                attentionDialog.setMessage(R.string.attention_dialog_disclaimer);
                 attentionDialog.setTitle(R.string.attention_dialog_title);
                 attentionDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     @Override

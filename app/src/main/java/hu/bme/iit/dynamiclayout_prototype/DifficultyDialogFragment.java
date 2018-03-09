@@ -17,7 +17,7 @@ public class DifficultyDialogFragment extends AppCompatDialogFragment{
 
     public static final String TAG = "DifficultyDialogFragment";
     private DifficultyPickedListener listener;
-    private String[] code;
+    private String[] choices;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,10 +27,10 @@ public class DifficultyDialogFragment extends AppCompatDialogFragment{
             throw new RuntimeException("The activity does not implement the" +
                     "DifficultyPickedListener interface");
         }
-        code = new String[3];
-        code[0] = getResources().getString(R.string.easy_difficulty);
-        code[1] = getResources().getString(R.string.hard_difficulty);
-        code[2] = getResources().getString(R.string.evil_difficulty);
+        choices = new String[3];
+        choices[0] = getResources().getString(R.string.easy_difficulty);
+        choices[1] = getResources().getString(R.string.hard_difficulty);
+        choices[2] = getResources().getString(R.string.evil_difficulty);
 
         listener = (DifficultyPickedListener) getActivity();
     }
@@ -43,7 +43,7 @@ public class DifficultyDialogFragment extends AppCompatDialogFragment{
 
         return new AlertDialog.Builder(getContext())
                 .setTitle(getResources().getString(R.string.dif_change))
-                .setSingleChoiceItems(code,b.getInt("position"),difChosenListener)
+                .setSingleChoiceItems(choices,b.getInt("position"),difChosenListener)
                 .setNegativeButton(R.string.cancel, null)
                 .create();
     }

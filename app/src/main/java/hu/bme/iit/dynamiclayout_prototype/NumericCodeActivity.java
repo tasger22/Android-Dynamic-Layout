@@ -15,6 +15,8 @@ import hu.bme.iit.dynamiclayout_prototype.MainActivity.CodeResolveDifficulty;
 
 public class NumericCodeActivity extends CodeActivityBase {
 
+    private EditText passwordLine;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,15 +26,24 @@ public class NumericCodeActivity extends CodeActivityBase {
             Bundle extras = getIntent().getExtras();
             if(extras == null) {
                  currentDifficulty = CodeResolveDifficulty.EASY;
+                 isTestMode = false;
             } else {
                 currentDifficulty = (CodeResolveDifficulty) extras.get("difficulty");
+                isTestMode = extras.getBoolean("testMode");
             }
         } else {
             currentDifficulty = (CodeResolveDifficulty) savedInstanceState.getSerializable("difficulty");
+            isTestMode = savedInstanceState.getBoolean("testMode");
+        }
+
+        if(isTestMode){
+            tries = initialTries = 10;
+            fails = 0;
+            testStartTime = System.currentTimeMillis();
         }
 
         TextView codeView = (TextView) findViewById(R.id.randomCodeText);
-        final EditText passwordLine = (EditText) findViewById(R.id.passwordLine);
+        passwordLine = (EditText) findViewById(R.id.passwordLine);
 
         Button acceptButton = (Button) findViewById(R.id.acceptButton);
         acceptButton.setOnClickListener(new View.OnClickListener() {
@@ -94,23 +105,59 @@ public class NumericCodeActivity extends CodeActivityBase {
             return;
         }
 
-        if(!code.equals("")){
-            if(code.equals(input)){
-                Toast.makeText(getApplicationContext(), R.string.code_accepted,Toast.LENGTH_SHORT).show();
-                tries = 2;
-                return;
+        if (isTestMode) {
+            if(!code.equals("")){
+                if(code.equals(input)){
+                    --tries;
+                    Toast.makeText(getApplicationContext(), getString(R.string.code_accepted_test_mode,initialTries - tries,initialTries),Toast.LENGTH_SHORT).show();
+                    passwordLine.setText("");
+                }
+                else{
+                    Toast.makeText(getApplicationContext(),getString(R.string.code_incorrect_test_mode),Toast.LENGTH_LONG).show();
+                    ++fails;
+                }
+            }
+
+            if(tries <= 0){
+
+                long timeDifference = System.currentTimeMillis() - testStartTime;
+                long tempVar;
+
+                long minutes = timeDifference / 60000;
+                tempVar = timeDifference % 60000;
+
+                long seconds = tempVar / 1000;
+                String secondsString = Long.toString(seconds);
+                if(secondsString.length() < 2)
+                    secondsString = "0" + secondsString;
+
+                long milliseconds = timeDifference % 1000;
+                String milliString = Long.toString(milliseconds);
+                while(milliString.length() < 3)
+                    milliString = "0" + milliString;
+
+                String toastText = minutes + ":" + secondsString + "." + milliString ;
+                Toast.makeText(getApplicationContext(),toastText,Toast.LENGTH_LONG).show();
+                //TODO: Make a new activity and start it as an Intent here with the necessary extra content
+            }
+
+        } else {
+            if(!code.equals("")){
+                if(code.equals(input)){
+                    Toast.makeText(getApplicationContext(), R.string.code_accepted,Toast.LENGTH_SHORT).show();
+                    tries = 2;
+                    return;
+                }
+
+                else if(tries > 0){
+                    Toast.makeText(getApplicationContext(),getString(R.string.code_incorrect,tries),Toast.LENGTH_LONG).show();
+                    --tries;
+                }
+
+                else
+                    System.exit(1);
             }
         }
-
-        if(tries > 0){
-            Toast.makeText(getApplicationContext(),getString(R.string.code_incorrect_0) + " " + tries + " " + getString(R.string.code_incorrect_1),Toast.LENGTH_LONG).show(); //TODO: change "x tries" to represent an actual number
-            --tries;
-        }
-
-        else
-            System.exit(1);
-
-        return;
     }
 
     private void randomizeButtons(){

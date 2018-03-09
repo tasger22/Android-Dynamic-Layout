@@ -168,7 +168,7 @@ public class GraphicCodeActivity extends CodeActivityBase {
 
         else{
             if(tries > 0){
-                Toast.makeText(getApplicationContext(),getString(R.string.code_incorrect_0) + " " + tries + " " + getString(R.string.code_incorrect_1),Toast.LENGTH_LONG).show(); //TODO: change "x tries" to represent an actual number
+                Toast.makeText(getApplicationContext(),getString(R.string.code_incorrect,tries),Toast.LENGTH_LONG).show();
                 codeInput = "";
                 --tries;
             }
