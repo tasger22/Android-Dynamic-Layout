@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements DifficultyDialogF
             @Override
             public void onClick(View view) {
                 Intent graphicActivityIntent = new Intent(getApplicationContext(),GraphicCodeActivity.class);
+                graphicActivityIntent.putExtra("difficulty",currentDifficulty);
                 startActivity(graphicActivityIntent);
             }
         });

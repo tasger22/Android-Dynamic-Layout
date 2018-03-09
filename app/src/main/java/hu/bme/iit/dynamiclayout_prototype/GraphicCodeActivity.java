@@ -1,6 +1,5 @@
 package hu.bme.iit.dynamiclayout_prototype;
 
-import android.app.Application;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -15,16 +14,29 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Random;
+import hu.bme.iit.dynamiclayout_prototype.MainActivity.CodeResolveDifficulty;
 
 public class GraphicCodeActivity extends CodeActivityBase {
 
     private String codeInput = "";
     private int tries = 2;
+    private CodeResolveDifficulty currentDifficulty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.graphic_layout);
+
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras == null) {
+                currentDifficulty = MainActivity.CodeResolveDifficulty.EASY;
+            } else {
+                currentDifficulty = (MainActivity.CodeResolveDifficulty) extras.get("difficulty");
+            }
+        } else {
+            currentDifficulty = (MainActivity.CodeResolveDifficulty) savedInstanceState.getSerializable("difficulty");
+        }
 
         TextView codeView = (TextView) findViewById(R.id.randomCodeText);
 
@@ -103,7 +115,8 @@ public class GraphicCodeActivity extends CodeActivityBase {
                     codeInput = codeInput + clickedButton.getText().toString();
                     compareCodeToInput(codeInput);
 
-                    buttonSetup();
+                    if(currentDifficulty == CodeResolveDifficulty.EVIL)
+                        buttonSetup();
                 }
             });
         }
