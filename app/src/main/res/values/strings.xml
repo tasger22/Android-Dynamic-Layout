@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">DynamicLayout_Prototype</string>
+    <string name="app_name">Dynamic Layout Prototype</string>
     <string name="insert_pin">Please insert your PIN code</string>
-    <string name="your_code">Your code:</string>
+    <string name="your_code">Your code: </string>
     <string name="code_accepted">The code is right</string>
     <string name="code_accepted_test_mode">The code is right, you have done %1$d out of %2$d</string>
     <string name="code_incorrect">Incorrect code, %d tries remaining</string>
@@ -13,4 +13,5 @@
     <string name="cancel">Cancel</string>
     <string name="attention_dialog_disclaimer">In the next minutes the application will test how fast you can write the random code in 10 times. Are you ready?</string>
     <string name="attention_dialog_title">ATTENTION!</string>
+    <string name="title_activity_test_result">TestResultActivity</string>
 </resources>
