@@ -1,5 +1,6 @@
 package hu.bme.iit.dynamiclayout_prototype;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -62,8 +63,17 @@ public abstract class CodeActivityBase extends AppCompatActivity {
         while(milliString.length() < 3)
             milliString = "0" + milliString;
 
-        String toastText = minutes + ":" + secondsString + "." + milliString ;
-        Toast.makeText(getApplicationContext(),toastText,Toast.LENGTH_LONG).show();
+        String compTimeText = minutes + ":" + secondsString + "." + milliString ;
+        Toast.makeText(getApplicationContext(),compTimeText,Toast.LENGTH_LONG).show();
         //TODO: Make a new activity and start it as an Intent here with the necessary extra content
+        Intent resultIntent = new Intent(this,TestResultActivity.class);
+
+        resultIntent.putExtra(getString(R.string.diff_key),currentDifficulty)
+                    .putExtra(getString(R.string.code_length_key),code.length())
+                    .putExtra(getString(R.string.comp_time_key),compTimeText)
+                    .putExtra(getString(R.string.comp_time_sec_key),(int)timeDifference/1000)
+                    .putExtra(getString(R.string.fails_key),fails);
+
+        startActivity(resultIntent);
     }
 }

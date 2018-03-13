@@ -46,8 +46,8 @@ public class MainActivity extends AppCompatActivity implements DifficultyDialogF
                 else if (view == graphicButton)
                     activityIntent = new Intent(getApplicationContext(),GraphicCodeActivity.class);
 
-                activityIntent.putExtra("difficulty", currentDifficulty);
-                activityIntent.putExtra("testMode", false); //Test mode is default off
+                activityIntent.putExtra(getString(R.string.diff_key), currentDifficulty);
+                activityIntent.putExtra(getString(R.string.test_mode_key), false); //Test mode is default off
 
                 final Intent finalIntent = (Intent) activityIntent.clone();
 
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements DifficultyDialogF
                 attentionDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        finalIntent.putExtra("testMode",true);
+                        finalIntent.putExtra(getString(R.string.test_mode_key),true);
                         startActivity(finalIntent);
                     }
                 });
@@ -81,16 +81,16 @@ public class MainActivity extends AppCompatActivity implements DifficultyDialogF
                 Bundle b = new Bundle();
 
                 switch (currentDifficulty){
-                    case EASY: b.putInt("position",0);
+                    case EASY: b.putInt(getString(R.string.postition_key),0);
                         break;
 
-                    case HARD: b.putInt("position",1);
+                    case HARD: b.putInt(getString(R.string.postition_key),1);
                         break;
 
-                    case EVIL: b.putInt("position",2);
+                    case EVIL: b.putInt(getString(R.string.postition_key),2);
                         break;
 
-                    default: b.putInt("position",0);
+                    default: b.putInt(getString(R.string.postition_key),0);
                         break;
                 }
 

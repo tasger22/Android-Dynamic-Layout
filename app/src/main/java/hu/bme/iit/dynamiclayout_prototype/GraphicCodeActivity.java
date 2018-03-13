@@ -151,22 +151,18 @@ public class GraphicCodeActivity extends CodeActivityBase {
             if(codeSnippet.equals(codeInput)){
                 if(code.equals(codeInput)){
                     tries--;
+                    codeInput = "";
+
                     if(tries > 0)
                         Toast.makeText(getApplicationContext(), getString(R.string.code_accepted_test_mode,initialTries - tries,initialTries),Toast.LENGTH_SHORT).show();
-
-                    codeInput = "";
+                    else
+                        compileResults();
                 }
             }
 
             else{
-                if(tries > 0){
-                    Toast.makeText(getApplicationContext(),getString(R.string.code_incorrect,tries),Toast.LENGTH_LONG).show();
-                    codeInput = "";
-                    --tries;
-                }
-
-                else
-                    System.exit(1);
+                ++fails;
+                Toast.makeText(getApplicationContext(),getString(R.string.code_incorrect_test_mode),Toast.LENGTH_LONG).show();
             }
         }
 

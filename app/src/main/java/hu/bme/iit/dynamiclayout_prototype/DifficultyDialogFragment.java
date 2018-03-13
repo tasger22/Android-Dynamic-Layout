@@ -43,7 +43,7 @@ public class DifficultyDialogFragment extends AppCompatDialogFragment{
 
         return new AlertDialog.Builder(getContext())
                 .setTitle(getResources().getString(R.string.dif_change))
-                .setSingleChoiceItems(choices,b.getInt("position"),difChosenListener)
+                .setSingleChoiceItems(choices,b.getInt(getString(R.string.postition_key)),difChosenListener)
                 .setNegativeButton(R.string.cancel, null)
                 .create();
     }
