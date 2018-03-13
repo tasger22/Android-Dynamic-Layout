@@ -10,7 +10,7 @@
     </style>
 
     <style name="ResultStyle" parent="AppTheme">
-        <item name="textSize">30sp</item>
+        <item name="android:textSize">30sp</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
