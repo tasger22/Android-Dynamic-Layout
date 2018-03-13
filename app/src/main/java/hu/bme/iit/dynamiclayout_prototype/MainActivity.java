@@ -15,7 +15,16 @@ public class MainActivity extends AppCompatActivity implements DifficultyDialogF
     private CodeResolveDifficulty currentDifficulty = CodeResolveDifficulty.EASY;
 
     public enum CodeResolveDifficulty{ //Enumeration to indicate the toughness of the code resolution
-        EASY,HARD,EVIL
+        EASY,HARD,EVIL;
+
+        public double getDifficultyMultiplier(){ //getting the multiplier which is used in the user performance evaluation
+            switch(this){
+                case EASY: return 1;
+                case HARD: return 1.5;
+                case EVIL: return 2;
+                default: return 1;
+            }
+        }
     }
 
     @Override

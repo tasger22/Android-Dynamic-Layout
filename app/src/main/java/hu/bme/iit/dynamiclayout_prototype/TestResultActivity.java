@@ -4,6 +4,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import hu.bme.iit.dynamiclayout_prototype.MainActivity.CodeResolveDifficulty;
+
 public class TestResultActivity extends AppCompatActivity {
 
     @Override
@@ -17,26 +19,24 @@ public class TestResultActivity extends AppCompatActivity {
         TextView failsResultText = (TextView) findViewById(R.id.failsResultText);
         TextView finalScoreResultText = (TextView) findViewById(R.id.finalScoreResultText);
 
-        if(savedInstanceState == null){
-            Bundle extras = getIntent().getExtras();
+        Bundle extras = getIntent().getExtras();
 
-            if(extras == null){
-                difficultyResultText.setText("");
-                codeLengthResultText.setText("");
-                completionTimeResultText.setText("");
-                failsResultText.setText("");
-                finalScoreResultText.setText("");
-            }
+        if(extras == null){
+            difficultyResultText.setText("");
+            codeLengthResultText.setText("");
+            completionTimeResultText.setText("");
+            failsResultText.setText("");
+            finalScoreResultText.setText("");
+        }
+        else{
+            CodeResolveDifficulty difficultyResult = (CodeResolveDifficulty)extras.getSerializable("difficulty");
+            
 
-            else{
-                
 
-                difficultyResultText.setText(extras.getSerializable("difficulty").toString());
-                codeLengthResultText.setText(extras.getInt("code length"));
-                completionTimeResultText.setText(extras.getString("completion time"));
-                failsResultText.setText(extras.getInt("fails"));
-
-            }
+            difficultyResultText.setText(difficultyResult.toString());
+            codeLengthResultText.setText(extras.getInt("code length"));
+            completionTimeResultText.setText(extras.getString("completion time"));
+            failsResultText.setText(extras.getInt("fails"));
         }
 
     }
