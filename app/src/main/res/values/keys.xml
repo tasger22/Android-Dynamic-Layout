@@ -1,2 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="fails_key">fails</string>
+    <string name="comp_time_key">completion time</string>
+    <string name="code_length_key">code length</string>
+    <string name="test_mode_key">testMode</string>
+</resources>

@@ -14,4 +14,6 @@
     <string name="attention_dialog_disclaimer">In the next minutes the application will test how fast you can write the random code in 10 times. Are you ready?</string>
     <string name="attention_dialog_title">ATTENTION!</string>
     <string name="title_activity_test_result">TestResultActivity</string>
+    <string name="diff_key">difficulty</string>
+    <string name="comp_time_sec_key">sec completion time</string>
 </resources>

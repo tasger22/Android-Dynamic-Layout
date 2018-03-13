@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Android-Dynamic-Layout.iml" filepath="$PROJECT_DIR$/Android-Dynamic-Layout.iml" />
+      <module fileurl="file://E:\AndroidProjectFolder\DynamicLayout_Prototype\Android-Dynamic-Layout.iml" filepath="E:\AndroidProjectFolder\DynamicLayout_Prototype\Android-Dynamic-Layout.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DynamicLayout_Prototype.iml" filepath="$PROJECT_DIR$/DynamicLayout_Prototype.iml" />
       <module fileurl="file://C:\Users\Stealth.STEALTH-LAPTOP\AndroidStudioProjects\Android-Dynamic-Layout\DynamicLayout_Prototype.iml" filepath="C:\Users\Stealth.STEALTH-LAPTOP\AndroidStudioProjects\Android-Dynamic-Layout\DynamicLayout_Prototype.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>

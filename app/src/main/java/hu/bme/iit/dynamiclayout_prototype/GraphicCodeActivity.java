@@ -25,16 +25,7 @@ public class GraphicCodeActivity extends CodeActivityBase {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.graphic_layout);
 
-        if (savedInstanceState == null) {
-            Bundle extras = getIntent().getExtras();
-            if(extras == null) {
-                currentDifficulty = CodeResolveDifficulty.EASY;
-            } else {
-                currentDifficulty = (CodeResolveDifficulty) extras.get("difficulty");
-            }
-        } else {
-            currentDifficulty = (CodeResolveDifficulty) savedInstanceState.getSerializable("difficulty");
-        }
+        initialSetup(savedInstanceState);
 
         TextView codeView = (TextView) findViewById(R.id.randomCodeText);
 

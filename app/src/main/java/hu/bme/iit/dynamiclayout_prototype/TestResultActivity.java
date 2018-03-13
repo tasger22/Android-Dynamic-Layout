@@ -29,19 +29,19 @@ public class TestResultActivity extends AppCompatActivity {
             finalScoreResultText.setText("");
         }
         else{
-            CodeResolveDifficulty difficultyResult = (CodeResolveDifficulty)extras.getSerializable("difficulty");
-            int codeLengthResult = extras.getInt("code length");
-            String completionTimeResult = extras.getString("completion time");
-            int failsResult = extras.getInt("fails");
+            CodeResolveDifficulty difficultyResult = (CodeResolveDifficulty)extras.getSerializable(getString(R.string.diff_key));
+            int codeLengthResult = extras.getInt(getString(R.string.code_length_key));
+            String completionTimeResult = extras.getString(getString(R.string.comp_time_key));
+            int failsResult = extras.getInt(getString(R.string.fails_key));
 
             String diffLocalizedString = getLocalizedDifficultyString(difficultyResult);
-            int completionTimeInSecs = extras.getInt("sec completion time"); //only for performance calculation
+            int completionTimeInSecs = extras.getInt(getString(R.string.comp_time_sec_key)); //only for performance calculation
 
 
             difficultyResultText.setText(diffLocalizedString);
-            codeLengthResultText.setText(extras.getInt("code length"));
-            completionTimeResultText.setText(extras.getString("completion time"));
-            failsResultText.setText(extras.getInt("fails"));
+            codeLengthResultText.setText(codeLengthResult);
+            completionTimeResultText.setText(completionTimeResult);
+            failsResultText.setText(failsResult);
         }
 
     }

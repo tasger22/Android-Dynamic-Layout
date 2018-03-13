@@ -22,25 +22,7 @@ public class NumericCodeActivity extends CodeActivityBase {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.numeric_layout);
 
-        if (savedInstanceState == null) {
-            Bundle extras = getIntent().getExtras();
-            if(extras == null) {
-                 currentDifficulty = CodeResolveDifficulty.EASY;
-                 isTestMode = false;
-            } else {
-                currentDifficulty = (CodeResolveDifficulty) extras.get("difficulty");
-                isTestMode = extras.getBoolean("testMode");
-            }
-        } else {
-            currentDifficulty = (CodeResolveDifficulty) savedInstanceState.getSerializable("difficulty");
-            isTestMode = savedInstanceState.getBoolean("testMode");
-        }
-
-        if(isTestMode){
-            tries = initialTries = 10;
-            fails = 0;
-            testStartTime = System.currentTimeMillis();
-        }
+        initialSetup(savedInstanceState);
 
         TextView codeView = (TextView) findViewById(R.id.randomCodeText);
         passwordLine = (EditText) findViewById(R.id.passwordLine);
