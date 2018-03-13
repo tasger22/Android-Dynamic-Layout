@@ -147,28 +147,48 @@ public class GraphicCodeActivity extends CodeActivityBase {
     protected void compareCodeToInput(String input) {
         String codeSnippet = code.substring(0,codeInput.length());
 
-        if(codeSnippet.equals(codeInput)){
-            if(code.equals(codeInput)){
-                Toast.makeText(getApplicationContext(), R.string.code_accepted,Toast.LENGTH_SHORT).show();
-                codeInput = "";
-                tries = 2;
-                return;
+        if (isTestMode) {
+            if(codeSnippet.equals(codeInput)){
+                if(code.equals(codeInput)){
+                    tries--;
+                    if(tries > 0)
+                        Toast.makeText(getApplicationContext(), getString(R.string.code_accepted_test_mode,initialTries - tries,initialTries),Toast.LENGTH_SHORT).show();
+
+                    codeInput = "";
+                }
             }
-            return;
+
+            else{
+                if(tries > 0){
+                    Toast.makeText(getApplicationContext(),getString(R.string.code_incorrect,tries),Toast.LENGTH_LONG).show();
+                    codeInput = "";
+                    --tries;
+                }
+
+                else
+                    System.exit(1);
+            }
         }
 
         else{
-            if(tries > 0){
-                Toast.makeText(getApplicationContext(),getString(R.string.code_incorrect,tries),Toast.LENGTH_LONG).show();
-                codeInput = "";
-                --tries;
+            if(codeSnippet.equals(codeInput)){
+                if(code.equals(codeInput)){
+                    Toast.makeText(getApplicationContext(), R.string.code_accepted,Toast.LENGTH_SHORT).show();
+                    codeInput = "";
+                    tries = 2;
+                }
             }
 
-            else
-                System.exit(1);
+            else{
+                if(tries > 0){
+                    Toast.makeText(getApplicationContext(),getString(R.string.code_incorrect,tries),Toast.LENGTH_LONG).show();
+                    codeInput = "";
+                    --tries;
+                }
 
-
-            return;
+                else
+                    System.exit(1);
+            }
         }
     }
 

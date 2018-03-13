@@ -91,7 +91,8 @@ public class NumericCodeActivity extends CodeActivityBase {
             if(!code.equals("")){
                 if(code.equals(input)){
                     --tries;
-                    Toast.makeText(getApplicationContext(), getString(R.string.code_accepted_test_mode,initialTries - tries,initialTries),Toast.LENGTH_SHORT).show();
+                    if(tries > 0)
+                        Toast.makeText(getApplicationContext(), getString(R.string.code_accepted_test_mode,initialTries - tries,initialTries),Toast.LENGTH_SHORT).show();
                     passwordLine.setText("");
                 }
                 else{
@@ -102,25 +103,7 @@ public class NumericCodeActivity extends CodeActivityBase {
 
             if(tries <= 0){
 
-                long timeDifference = System.currentTimeMillis() - testStartTime;
-                long tempVar;
-
-                long minutes = timeDifference / 60000;
-                tempVar = timeDifference % 60000;
-
-                long seconds = tempVar / 1000;
-                String secondsString = Long.toString(seconds);
-                if(secondsString.length() < 2)
-                    secondsString = "0" + secondsString;
-
-                long milliseconds = timeDifference % 1000;
-                String milliString = Long.toString(milliseconds);
-                while(milliString.length() < 3)
-                    milliString = "0" + milliString;
-
-                String toastText = minutes + ":" + secondsString + "." + milliString ;
-                Toast.makeText(getApplicationContext(),toastText,Toast.LENGTH_LONG).show();
-                //TODO: Make a new activity and start it as an Intent here with the necessary extra content
+                compileResults();
             }
 
         } else {

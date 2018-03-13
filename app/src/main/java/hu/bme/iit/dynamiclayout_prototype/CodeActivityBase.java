@@ -2,15 +2,17 @@ package hu.bme.iit.dynamiclayout_prototype;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
 public abstract class CodeActivityBase extends AppCompatActivity {
 
+    //TODO: encapsulate all protected fields and create setter/getter or inc/dec for them
     protected String code;
     protected MainActivity.CodeResolveDifficulty currentDifficulty;
     protected boolean isTestMode;
     protected int tries = 2;
     protected int fails;
-    protected long testStartTime;
+    private long testStartTime;
     protected int initialTries;
 
     @Override
@@ -42,4 +44,26 @@ public abstract class CodeActivityBase extends AppCompatActivity {
 
     protected abstract void setCodeToRandom();
     protected abstract void compareCodeToInput(String input);
+
+    protected void compileResults() {
+        long timeDifference = System.currentTimeMillis() - testStartTime;
+        long tempVar;
+
+        long minutes = timeDifference / 60000;
+        tempVar = timeDifference % 60000;
+
+        long seconds = tempVar / 1000;
+        String secondsString = Long.toString(seconds);
+        if(secondsString.length() < 2)
+            secondsString = "0" + secondsString;
+
+        long milliseconds = timeDifference % 1000;
+        String milliString = Long.toString(milliseconds);
+        while(milliString.length() < 3)
+            milliString = "0" + milliString;
+
+        String toastText = minutes + ":" + secondsString + "." + milliString ;
+        Toast.makeText(getApplicationContext(),toastText,Toast.LENGTH_LONG).show();
+        //TODO: Make a new activity and start it as an Intent here with the necessary extra content
+    }
 }
