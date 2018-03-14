@@ -105,6 +105,6 @@ public class MainActivity extends AppCompatActivity implements DifficultyDialogF
     @Override
     public void OnDifficultyPicked(CodeResolveDifficulty difficulty) {
         currentDifficulty = difficulty;
-        Toast.makeText(this,difficulty.toString(),Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this,difficulty.toString(),Toast.LENGTH_SHORT).show();
     }
 }

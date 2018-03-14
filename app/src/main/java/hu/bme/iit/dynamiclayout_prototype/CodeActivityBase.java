@@ -64,8 +64,6 @@ public abstract class CodeActivityBase extends AppCompatActivity {
             milliString = "0" + milliString;
 
         String compTimeText = minutes + ":" + secondsString + "." + milliString ;
-        Toast.makeText(getApplicationContext(),compTimeText,Toast.LENGTH_LONG).show();
-        //TODO: Make a new activity and start it as an Intent here with the necessary extra content
         Intent resultIntent = new Intent(this,TestResultActivity.class);
 
         resultIntent.putExtra(getString(R.string.diff_key),currentDifficulty)

@@ -163,6 +163,7 @@ public class GraphicCodeActivity extends CodeActivityBase {
             else{
                 ++fails;
                 Toast.makeText(getApplicationContext(),getString(R.string.code_incorrect_test_mode),Toast.LENGTH_LONG).show();
+                codeInput = "";
             }
         }
 
