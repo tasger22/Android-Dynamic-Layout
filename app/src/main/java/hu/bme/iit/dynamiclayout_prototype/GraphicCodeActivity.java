@@ -30,7 +30,7 @@ public class GraphicCodeActivity extends CodeActivityBase {
         TextView codeView = (TextView) findViewById(R.id.randomCodeText);
 
         setCodeToRandom();
-        codeView.setText(code);
+        codeView.setText(getCode());
 
         buttonSetup();
     }
@@ -48,15 +48,15 @@ public class GraphicCodeActivity extends CodeActivityBase {
         float dx = rand.nextFloat() * displayMetrics.widthPixels - dpToPx(buttonSize);
         float dy = rand.nextFloat() * 1000;
 
-        for(int i = 0; i < 2*code.length();i++){ //start of button creation
+        for(int i = 0; i < 2*getCode().length();i++){ //start of button creation
             Button b = new Button(getApplicationContext());
             boolean isLetter = rand.nextBoolean();
 
 
             b.setBackgroundColor(getResources().getColor(R.color.defaultButtonColor));
             b.setTextColor(Color.BLACK);
-            if(i < code.length()){
-                Character c = code.charAt(i);
+            if(i < getCode().length()){
+                Character c = getCode().charAt(i);
                 b.setText(c.toString());
             }
             else{
@@ -104,7 +104,7 @@ public class GraphicCodeActivity extends CodeActivityBase {
                     codeInput = codeInput + clickedButton.getText().toString();
                     compareCodeToInput(codeInput);
 
-                    if(currentDifficulty == CodeResolveDifficulty.EVIL)
+                    if(getCurrentDifficulty() == CodeResolveDifficulty.EVIL)
                         buttonSetup();
                 }
             });
@@ -112,7 +112,7 @@ public class GraphicCodeActivity extends CodeActivityBase {
     }
 
     private int buttonSizeChanger() { // returning a value depending on the length of the code, to set the button size (length is between 4 and 8)
-        if(code.length() < 6)   return 80;
+        if(getCode().length() < 6)   return 80;
         else return 65;
     }
 
@@ -133,35 +133,35 @@ public class GraphicCodeActivity extends CodeActivityBase {
         Random rand = new Random();
         boolean isLetter = rand.nextBoolean();
         int codeLength = rand.nextInt(8);
-        code = "";
+        setCode("");
 
         while(codeLength < 4) codeLength = rand.nextInt(8);
 
         for(int i = 0; i < codeLength; i++){
-            if(isLetter)    code = code + (char)((int)'A'+rand.nextDouble()*((int)'Z'-(int)'A'+1));
-            else    code = code + Integer.toString(rand.nextInt(10));
+            if(isLetter)    setCode(getCode()+ (char)((int)'A'+rand.nextDouble()*((int)'Z'-(int)'A'+1)));
+            else    setCode(getCode() + Integer.toString(rand.nextInt(10)));
             isLetter = rand.nextBoolean();
         }
     }
 
     protected void compareCodeToInput(String input) {
-        String codeSnippet = code.substring(0,codeInput.length());
+        String codeSnippet = getCode().substring(0,codeInput.length());
 
-        if (isTestMode) {
+        if (isTestMode()) {
             if(codeSnippet.equals(codeInput)){
-                if(code.equals(codeInput)){
-                    tries--;
+                if(getCode().equals(codeInput)){
+                    decrementTries();
                     codeInput = "";
 
-                    if(tries > 0)
-                        Toast.makeText(getApplicationContext(), getString(R.string.code_accepted_test_mode,initialTries - tries,initialTries),Toast.LENGTH_SHORT).show();
+                    if(getTries() > 0)
+                        Toast.makeText(getApplicationContext(), getString(R.string.code_accepted_test_mode,getInitialTries() - getTries(),getInitialTries()),Toast.LENGTH_SHORT).show();
                     else
                         compileResults();
                 }
             }
 
             else{
-                ++fails;
+                incrementFails();
                 Toast.makeText(getApplicationContext(),getString(R.string.code_incorrect_test_mode),Toast.LENGTH_LONG).show();
                 codeInput = "";
             }
@@ -169,18 +169,18 @@ public class GraphicCodeActivity extends CodeActivityBase {
 
         else{
             if(codeSnippet.equals(codeInput)){
-                if(code.equals(codeInput)){
+                if(getCode().equals(codeInput)){
                     Toast.makeText(getApplicationContext(), R.string.code_accepted,Toast.LENGTH_SHORT).show();
                     codeInput = "";
-                    tries = 2;
+                    setTries(getInitialTries());
                 }
             }
 
             else{
-                if(tries > 0){
-                    Toast.makeText(getApplicationContext(),getString(R.string.code_incorrect,tries),Toast.LENGTH_LONG).show();
+                if(getTries() > 0){
+                    Toast.makeText(getApplicationContext(),getString(R.string.code_incorrect,getTries()),Toast.LENGTH_LONG).show();
                     codeInput = "";
-                    --tries;
+                    decrementTries();
                 }
 
                 else

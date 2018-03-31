@@ -5,16 +5,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import hu.bme.iit.dynamiclayout_prototype.MainActivity.CodeResolveDifficulty;
+
 public abstract class CodeActivityBase extends AppCompatActivity {
 
-    //TODO: encapsulate all protected fields and create setter/getter or inc/dec for them
-    protected String code;
-    protected MainActivity.CodeResolveDifficulty currentDifficulty;
-    protected boolean isTestMode;
-    protected int tries = 2;
-    protected int fails;
+    private String code;
+    private CodeResolveDifficulty currentDifficulty;
+    private boolean isTestMode;
+    private int tries = 2;
+    private int fails;
     private long testStartTime;
-    protected int initialTries;
+    private int initialTries;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,11 @@ public abstract class CodeActivityBase extends AppCompatActivity {
             tries = initialTries = 10;
             fails = 0;
             testStartTime = System.currentTimeMillis();
+        }
+
+        else{
+            tries = initialTries = 2;
+            fails = 0;
         }
     }
 
@@ -73,5 +79,41 @@ public abstract class CodeActivityBase extends AppCompatActivity {
                     .putExtra(getString(R.string.fails_key),fails);
 
         startActivity(resultIntent);
+    }
+
+    protected int getInitialTries() {
+        return initialTries;
+    }
+
+    protected void incrementFails(){
+        ++fails;
+    }
+
+    protected int getTries() {
+        return tries;
+    }
+
+    protected void setTries(int tries) {
+        this.tries = tries;
+    }
+
+    protected void decrementTries(){
+        --tries;
+    }
+
+    protected boolean isTestMode(){
+        return isTestMode;
+    }
+
+    protected CodeResolveDifficulty getCurrentDifficulty(){
+        return currentDifficulty;
+    }
+
+    protected void setCode(String code) {
+        this.code = code;
+    }
+
+    protected String getCode() {
+        return code;
     }
 }

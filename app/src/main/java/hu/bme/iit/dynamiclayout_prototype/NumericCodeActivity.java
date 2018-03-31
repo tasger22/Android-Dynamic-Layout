@@ -50,9 +50,9 @@ public class NumericCodeActivity extends CodeActivityBase {
         });
 
         setCodeToRandom();
-        codeView.setText(code);
+        codeView.setText(getCode());
 
-        if(currentDifficulty != CodeResolveDifficulty.EASY)
+        if(getCurrentDifficulty() != CodeResolveDifficulty.EASY)
             randomizeButtons();
 
     }
@@ -64,19 +64,19 @@ public class NumericCodeActivity extends CodeActivityBase {
 
         passwordLine.append(numberButton.getText().toString());
 
-        if(currentDifficulty == CodeResolveDifficulty.EVIL)
+        if(getCurrentDifficulty() == CodeResolveDifficulty.EVIL)
             randomizeButtons();
     }
 
     protected void setCodeToRandom(){
         Random rand = new Random();
         int codeLength = rand.nextInt(8);
-        code = "";
+        setCode("");
 
         while(codeLength < 4) codeLength = rand.nextInt(8);
 
         for(int i = 0; i < codeLength; i++){
-            code = code + Integer.toString(rand.nextInt(10));
+            setCode(getCode() + Integer.toString(rand.nextInt(10)));
         }
 
     }
@@ -87,36 +87,36 @@ public class NumericCodeActivity extends CodeActivityBase {
             return;
         }
 
-        if (isTestMode) {
-            if(!code.equals("")){
-                if(code.equals(input)){
-                    --tries;
-                    if(tries > 0)
-                        Toast.makeText(getApplicationContext(), getString(R.string.code_accepted_test_mode,initialTries - tries,initialTries),Toast.LENGTH_SHORT).show();
+        if (isTestMode()) {
+            if(!getCode().equals("")){
+                if(getCode().equals(input)){
+                    decrementTries();
+                    if(getTries() > 0)
+                        Toast.makeText(getApplicationContext(), getString(R.string.code_accepted_test_mode,getInitialTries() - getTries(),getInitialTries()),Toast.LENGTH_SHORT).show();
                     passwordLine.setText("");
                 }
                 else{
                     Toast.makeText(getApplicationContext(),getString(R.string.code_incorrect_test_mode),Toast.LENGTH_LONG).show();
-                    ++fails;
+                    incrementFails();
                 }
             }
 
-            if(tries <= 0){
+            if(getTries() <= 0){
 
                 compileResults();
             }
 
         } else {
-            if(!code.equals("")){
-                if(code.equals(input)){
+            if(!getCode().equals("")){
+                if(getCode().equals(input)){
                     Toast.makeText(getApplicationContext(), R.string.code_accepted,Toast.LENGTH_SHORT).show();
-                    tries = 2;
+                    setTries(getInitialTries());
                     return;
                 }
 
-                else if(tries > 0){
-                    Toast.makeText(getApplicationContext(),getString(R.string.code_incorrect,tries),Toast.LENGTH_LONG).show();
-                    --tries;
+                else if(getTries() > 0){
+                    Toast.makeText(getApplicationContext(),getString(R.string.code_incorrect,getTries()),Toast.LENGTH_LONG).show();
+                    decrementTries();
                 }
 
                 else
