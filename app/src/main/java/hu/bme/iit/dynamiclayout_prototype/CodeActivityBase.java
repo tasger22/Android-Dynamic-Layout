@@ -18,6 +18,8 @@ public abstract class CodeActivityBase extends AppCompatActivity {
     private int fails;
     private long testStartTime;
     private int initialTries;
+    private boolean isCodeRandomized;
+    private String userCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,13 +32,19 @@ public abstract class CodeActivityBase extends AppCompatActivity {
             if(extras == null) {
                  currentDifficulty = CodeResolveDifficulty.EASY;
                  isTestMode = false;
+                 isCodeRandomized = true;
+
             } else {
                 currentDifficulty = (CodeResolveDifficulty) extras.get(getString(R.string.diff_key));
                 isTestMode = extras.getBoolean(getString(R.string.test_mode_key));
+                isCodeRandomized = extras.getBoolean(getString(R.string.randomized_code_key));
+                if(!isCodeRandomized)   userCode = extras.getString(getString(R.string.user_code_key));
             }
         } else {
             currentDifficulty = (CodeResolveDifficulty) savedInstanceState.getSerializable(getString(R.string.diff_key));
             isTestMode = savedInstanceState.getBoolean(getString(R.string.test_mode_key));
+            isCodeRandomized = savedInstanceState.getBoolean(getString(R.string.randomized_code_key));
+            if(!isCodeRandomized)   userCode = savedInstanceState.getString(getString(R.string.user_code_key));
         }
 
         if(isTestMode){

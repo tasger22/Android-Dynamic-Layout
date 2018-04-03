@@ -1,11 +1,12 @@
 package hu.bme.iit.dynamiclayout_prototype;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
+
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,14 +15,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements DifficultyDialogFragment.DifficultyPickedListener {
 
     private CodeResolveDifficulty currentDifficulty = CodeResolveDifficulty.EASY;
-    private SharedPreferences settings;
+    private boolean istestMode, isCodeRandomized;
+    private String userCode;
 
     public enum CodeResolveDifficulty{ //Enumeration to indicate the toughness of the code resolution
         EASY,HARD,EVIL;
@@ -43,14 +44,11 @@ public class MainActivity extends AppCompatActivity implements DifficultyDialogF
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.mainToolbar);
         setSupportActionBar(toolbar);
-
-        settings = PreferenceManager.getDefaultSharedPreferences(this);
+        setDataFromSharedPreferences(PreferenceManager.getDefaultSharedPreferences(this));
 
         final Button numericButton = (Button) findViewById(R.id.numericButton);
         final Button graphicButton = (Button) findViewById(R.id.graphicButton);
         Button difficultyButton = (Button) findViewById(R.id.difficultyButton);
-        String difficultyString = settings.getString(SettingsActivity.KEY_PREF_DIFFICULTY,"EASY");
-        currentDifficulty = getCodeResolveDifficultyFromString(difficultyString);
 
         View.OnClickListener activityStarterListener = new View.OnClickListener() { //OnClickListener to unify the listeners of the two activity start buttons to reduce repetition
             @Override
@@ -62,11 +60,11 @@ public class MainActivity extends AppCompatActivity implements DifficultyDialogF
                 else if (view == graphicButton)
                     activityIntent = new Intent(getApplicationContext(),GraphicCodeActivity.class);
 
-                boolean testMode = settings.getBoolean(SettingsActivity.KEY_PREF_TESTMODE,false);
-
                 activityIntent.putExtra(getString(R.string.diff_key), currentDifficulty);
-                activityIntent.putExtra(getString(R.string.test_mode_key), testMode); //Test mode is default off
-                if(testMode){
+                activityIntent.putExtra(getString(R.string.test_mode_key), istestMode); //Test mode is default off
+                activityIntent.putExtra(getString(R.string.randomized_code_key), isCodeRandomized);
+                activityIntent.putExtra(getString(R.string.user_code_key),userCode);
+                if(istestMode){
 
                     final Intent finalIntent = (Intent) activityIntent.clone();
 
@@ -120,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements DifficultyDialogF
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
+
                 Intent settingsActivityIntent = new Intent(getApplicationContext(),SettingsActivity.class);
                 startActivity(settingsActivityIntent);
                 return true;
@@ -138,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements DifficultyDialogF
         //Toast.makeText(this,difficulty.toString(),Toast.LENGTH_SHORT).show();
     }
 
-    //Receive a CodeResolveDifficulty object by saying which you need
+    //Receive a CodeResolveDifficulty object by saying which you need by name
     public static CodeResolveDifficulty getCodeResolveDifficultyFromString(String string){
         switch(string){
             case "EASY": return CodeResolveDifficulty.EASY;
@@ -146,5 +145,21 @@ public class MainActivity extends AppCompatActivity implements DifficultyDialogF
             case "EVIL" : return CodeResolveDifficulty.EVIL;
             default: return CodeResolveDifficulty.EASY;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setDataFromSharedPreferences(PreferenceManager.getDefaultSharedPreferences(this)); //TODO: change it to something less resource hungry
+    }
+
+    private void setDataFromSharedPreferences(SharedPreferences settings){
+
+        istestMode = settings.getBoolean(SettingsActivity.KEY_PREF_TESTMODE,false);
+        currentDifficulty = getCodeResolveDifficultyFromString(settings.getString(SettingsActivity.KEY_PREF_DIFFICULTY,"EASY"));
+        isCodeRandomized = settings.getBoolean(SettingsActivity.KEY_PREF_RANDOMCODE,true);
+        userCode = settings.getString(SettingsActivity.KEY_PREF_CODEINPUT,"0000");
+        while(userCode.length() < 4)
+            userCode = "0" + userCode;
     }
 }
