@@ -16,6 +16,7 @@ public class SettingsActivity extends Activity {
     public static final String KEY_PREF_USERCODE = "pref_usercode";
     public static final String KEY_PREF_CODEINPUT = "pref_codeinput";
     public static final String KEY_PREF_DIFFICULTY = "pref_difficulty";
+    public static final String KEY_PREF_LAYOUT = "pref_layout";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

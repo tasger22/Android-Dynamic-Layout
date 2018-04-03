@@ -31,5 +31,13 @@
         android:entryValues="@array/difficulty_save_array"
         android:defaultValue="@string/difficulty_array_default"/>
 
+    <ListPreference
+        android:key="pref_layout"
+        android:title="Code layout on startup"
+        android:summary="Change code layout"
+        android:entries="@array/layout_array"
+        android:entryValues="@array/layout_save_array"
+        android:defaultValue="@string/layout_array_default"/>
+
 
 </PreferenceScreen>
