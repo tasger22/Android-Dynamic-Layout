@@ -27,11 +27,7 @@ public class DifficultyDialogFragment extends AppCompatDialogFragment{
             throw new RuntimeException("The activity does not implement the" +
                     "DifficultyPickedListener interface");
         }
-        choices = new String[3];
-        choices[0] = getResources().getString(R.string.easy_difficulty);
-        choices[1] = getResources().getString(R.string.hard_difficulty);
-        choices[2] = getResources().getString(R.string.evil_difficulty);
-
+        choices = getResources().getStringArray(R.array.difficulty_array);
         listener = (DifficultyPickedListener) getActivity();
     }
 

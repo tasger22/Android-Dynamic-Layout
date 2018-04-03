@@ -6,9 +6,6 @@
     <string name="code_accepted_test_mode">The code is right, you have done %1$d out of %2$d</string>
     <string name="code_incorrect">Incorrect code, %d tries remaining</string>
     <string name="code_incorrect_test_mode">Incorrect code</string>
-    <string name="easy_difficulty">Default</string>
-    <string name="hard_difficulty">Complicated</string>
-    <string name="evil_difficulty">Highly complicated</string>
     <string name="dif_change">Difficulty change</string>
     <string name="cancel">Cancel</string>
     <string name="attention_dialog_disclaimer">In the next minutes the application will test how fast you can write the random code in 10 times. Are you ready?</string>
@@ -16,4 +13,5 @@
     <string name="title_activity_test_result">TestResultActivity</string>
     <string name="diff_key">difficulty</string>
     <string name="comp_time_sec_key">sec completion time</string>
+    <string name="action_settings">Settings</string>
 </resources>

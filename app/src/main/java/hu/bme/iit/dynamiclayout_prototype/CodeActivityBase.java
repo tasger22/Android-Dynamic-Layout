@@ -28,14 +28,14 @@ public abstract class CodeActivityBase extends AppCompatActivity {
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if(extras == null) {
-                 currentDifficulty = MainActivity.CodeResolveDifficulty.EASY;
+                 currentDifficulty = CodeResolveDifficulty.EASY;
                  isTestMode = false;
             } else {
-                currentDifficulty = (MainActivity.CodeResolveDifficulty) extras.get(getString(R.string.diff_key));
+                currentDifficulty = (CodeResolveDifficulty) extras.get(getString(R.string.diff_key));
                 isTestMode = extras.getBoolean(getString(R.string.test_mode_key));
             }
         } else {
-            currentDifficulty = (MainActivity.CodeResolveDifficulty) savedInstanceState.getSerializable(getString(R.string.diff_key));
+            currentDifficulty = (CodeResolveDifficulty) savedInstanceState.getSerializable(getString(R.string.diff_key));
             isTestMode = savedInstanceState.getBoolean(getString(R.string.test_mode_key));
         }
 

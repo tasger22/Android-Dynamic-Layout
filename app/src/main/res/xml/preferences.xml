@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+        android:key="pref_testmode"
+        android:title="Turn test mode on"
+        android:summary="Test how fast you can type the code in 10 times"
+        android:defaultValue="false" />
+
+    <CheckBoxPreference
+        android:key="pref_randomcode"
+        android:title="Using custom code"
+        android:summary=""
+        android:defaultValue="false"
+        />
+
+    <EditTextPreference
+        android:dependency="pref_randomcode"
+        android:key="pref_codeinput"
+        android:defaultValue="0000"
+        android:title="Code"
+        android:summary="Only numbers (4-8 characters long)"
+        />
+
+    <ListPreference
+        android:key="pref_difficulty"
+        android:title="Code difficulty"
+        android:summary="Change difficulty"
+        android:entries="@array/difficulty_array"/>
+
+
+</PreferenceScreen>

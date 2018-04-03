@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import hu.bme.iit.dynamiclayout_prototype.MainActivity.*;
+import hu.bme.iit.dynamiclayout_prototype.MainActivity.CodeResolveDifficulty;
 
 public class TestResultActivity extends AppCompatActivity implements KeyListener{
 
@@ -66,10 +66,11 @@ public class TestResultActivity extends AppCompatActivity implements KeyListener
     }
 
     private String getLocalizedDifficultyString(CodeResolveDifficulty difficulty){
+        String[] localizedDifficultyArray = getResources().getStringArray(R.array.difficulty_array);
         switch(difficulty){
-            case EASY: return getString(R.string.easy_difficulty);
-            case HARD: return getString(R.string.hard_difficulty);
-            case EVIL: return getString(R.string.evil_difficulty);
+            case EASY: return localizedDifficultyArray[0];
+            case HARD: return localizedDifficultyArray[1];
+            case EVIL: return localizedDifficultyArray[2];
             default: return "Unknown difficulty";
         }
     }
