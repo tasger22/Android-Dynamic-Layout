@@ -5,4 +5,9 @@
         <item name="hard_difficulty">Complicated</item>
         <item name="evil_difficulty">Highly complicated</item>
     </string-array>
+    <string-array name="difficulty_save_array">
+        <item>EASY</item>
+        <item>HARD</item>
+        <item>EVIL</item>
+    </string-array>
 </resources>

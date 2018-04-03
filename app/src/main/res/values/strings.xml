@@ -14,4 +14,6 @@
     <string name="diff_key">difficulty</string>
     <string name="comp_time_sec_key">sec completion time</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="difficulty_array_default">Default</string>
 </resources>

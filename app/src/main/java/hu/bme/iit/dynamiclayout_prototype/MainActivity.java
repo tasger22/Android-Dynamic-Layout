@@ -4,6 +4,9 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -13,9 +16,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.util.Set;
+
 public class MainActivity extends AppCompatActivity implements DifficultyDialogFragment.DifficultyPickedListener {
 
     private CodeResolveDifficulty currentDifficulty = CodeResolveDifficulty.EASY;
+    private SharedPreferences settings;
 
     public enum CodeResolveDifficulty{ //Enumeration to indicate the toughness of the code resolution
         EASY,HARD,EVIL;
@@ -38,9 +44,13 @@ public class MainActivity extends AppCompatActivity implements DifficultyDialogF
         Toolbar toolbar = (Toolbar) findViewById(R.id.mainToolbar);
         setSupportActionBar(toolbar);
 
+        settings = PreferenceManager.getDefaultSharedPreferences(this);
+
         final Button numericButton = (Button) findViewById(R.id.numericButton);
         final Button graphicButton = (Button) findViewById(R.id.graphicButton);
         Button difficultyButton = (Button) findViewById(R.id.difficultyButton);
+        String difficultyString = settings.getString(SettingsActivity.KEY_PREF_DIFFICULTY,"EASY");
+        currentDifficulty = getCodeResolveDifficultyFromString(difficultyString);
 
         View.OnClickListener activityStarterListener = new View.OnClickListener() { //OnClickListener to unify the listeners of the two activity start buttons to reduce repetition
             @Override
@@ -52,29 +62,33 @@ public class MainActivity extends AppCompatActivity implements DifficultyDialogF
                 else if (view == graphicButton)
                     activityIntent = new Intent(getApplicationContext(),GraphicCodeActivity.class);
 
+                boolean testMode = settings.getBoolean(SettingsActivity.KEY_PREF_TESTMODE,false);
+
                 activityIntent.putExtra(getString(R.string.diff_key), currentDifficulty);
-                activityIntent.putExtra(getString(R.string.test_mode_key), false); //Test mode is default off
+                activityIntent.putExtra(getString(R.string.test_mode_key), testMode); //Test mode is default off
+                if(testMode){
 
-                final Intent finalIntent = (Intent) activityIntent.clone();
+                    final Intent finalIntent = (Intent) activityIntent.clone();
 
-                AlertDialog.Builder attentionDialog = new AlertDialog.Builder(view.getContext());
-                attentionDialog.setMessage(R.string.attention_dialog_disclaimer);
-                attentionDialog.setTitle(R.string.attention_dialog_title);
-                attentionDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        finalIntent.putExtra(getString(R.string.test_mode_key),true);
-                        startActivity(finalIntent);
-                    }
-                });
-                attentionDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
+                    AlertDialog.Builder attentionDialog = new AlertDialog.Builder(view.getContext());
+                    attentionDialog.setMessage(R.string.attention_dialog_disclaimer);
+                    attentionDialog.setTitle(R.string.attention_dialog_title);
+                    attentionDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            startActivity(finalIntent);
+                        }
+                    });
+                    attentionDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
 
-                attentionDialog.show();
+                    attentionDialog.show();
+                }
+                else startActivity(activityIntent);
             }
         };
 
@@ -86,19 +100,7 @@ public class MainActivity extends AppCompatActivity implements DifficultyDialogF
             public void onClick(View view) {
                 Bundle b = new Bundle();
 
-                switch (currentDifficulty){
-                    case EASY: b.putInt(getString(R.string.postition_key),0);
-                        break;
-
-                    case HARD: b.putInt(getString(R.string.postition_key),1);
-                        break;
-
-                    case EVIL: b.putInt(getString(R.string.postition_key),2);
-                        break;
-
-                    default: b.putInt(getString(R.string.postition_key),0);
-                        break;
-                }
+                b.putInt(getString(R.string.postition_key),currentDifficulty.ordinal());
 
                 DifficultyDialogFragment difficultyDialogFragment = new DifficultyDialogFragment();
                 difficultyDialogFragment.setArguments(b);
@@ -118,7 +120,8 @@ public class MainActivity extends AppCompatActivity implements DifficultyDialogF
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
-                // User chose the "Settings" item, show the app settings UI...
+                Intent settingsActivityIntent = new Intent(getApplicationContext(),SettingsActivity.class);
+                startActivity(settingsActivityIntent);
                 return true;
 
             default:
@@ -133,5 +136,15 @@ public class MainActivity extends AppCompatActivity implements DifficultyDialogF
     public void OnDifficultyPicked(CodeResolveDifficulty difficulty) {
         currentDifficulty = difficulty;
         //Toast.makeText(this,difficulty.toString(),Toast.LENGTH_SHORT).show();
+    }
+
+    //Receive a CodeResolveDifficulty object by saying which you need
+    public static CodeResolveDifficulty getCodeResolveDifficultyFromString(String string){
+        switch(string){
+            case "EASY": return CodeResolveDifficulty.EASY;
+            case "HARD" : return CodeResolveDifficulty.HARD;
+            case "EVIL" : return CodeResolveDifficulty.EVIL;
+            default: return CodeResolveDifficulty.EASY;
+        }
     }
 }

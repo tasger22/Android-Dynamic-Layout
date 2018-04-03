@@ -19,13 +19,17 @@
         android:defaultValue="0000"
         android:title="Code"
         android:summary="Only numbers (4-8 characters long)"
+        android:inputType="number"
+        android:maxLength="8"
         />
 
     <ListPreference
         android:key="pref_difficulty"
         android:title="Code difficulty"
         android:summary="Change difficulty"
-        android:entries="@array/difficulty_array"/>
+        android:entries="@array/difficulty_array"
+        android:entryValues="@array/difficulty_save_array"
+        android:defaultValue="@string/difficulty_array_default"/>
 
 
 </PreferenceScreen>
