@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import java.security.InvalidParameterException;
+
 import hu.bme.iit.dynamiclayout_prototype.MainActivity.CodeResolveDifficulty;
 
 public abstract class CodeActivityBase extends AppCompatActivity {
@@ -94,6 +96,12 @@ public abstract class CodeActivityBase extends AppCompatActivity {
     }
 
     protected void setTries(int tries) {
+        try{
+            if(tries < 0)   throw new InvalidParameterException("'tries' value cannot be negative");
+        }
+        catch (InvalidParameterException e){
+            //TODO: write the catch clause
+        }
         this.tries = tries;
     }
 
