@@ -29,7 +29,8 @@ public class GraphicCodeActivity extends CodeActivityBase {
 
         TextView codeView = (TextView) findViewById(R.id.randomCodeText);
 
-        setCodeToRandom();
+        if(!isCodeUserCode())  setCodeToRandom();
+        else setCodeToUserCode();
         codeView.setText(getCode());
 
         buttonSetup();
@@ -157,6 +158,8 @@ public class GraphicCodeActivity extends CodeActivityBase {
                         Toast.makeText(getApplicationContext(), getString(R.string.code_accepted_test_mode,getInitialTries() - getTries(),getInitialTries()),Toast.LENGTH_SHORT).show();
                     else
                         compileResults();
+
+                    if(getCurrentDifficulty() == CodeResolveDifficulty.HARD)    buttonSetup();
                 }
             }
 
@@ -173,6 +176,7 @@ public class GraphicCodeActivity extends CodeActivityBase {
                     Toast.makeText(getApplicationContext(), R.string.code_accepted,Toast.LENGTH_SHORT).show();
                     codeInput = "";
                     setTries(getInitialTries());
+                    if(getCurrentDifficulty() == CodeResolveDifficulty.HARD)    buttonSetup();
                 }
             }
 

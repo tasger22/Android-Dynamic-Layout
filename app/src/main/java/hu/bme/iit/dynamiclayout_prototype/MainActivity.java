@@ -2,8 +2,6 @@ package hu.bme.iit.dynamiclayout_prototype;
 
 import android.app.AlertDialog;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,12 +14,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import java.util.Set;
-
 public class MainActivity extends AppCompatActivity implements DifficultyDialogFragment.DifficultyPickedListener {
 
     private CodeResolveDifficulty currentDifficulty = CodeResolveDifficulty.EASY;
-    private boolean istestMode, isCodeRandomized;
+    private boolean istestMode, isCodeUserCode;
     private String userCode;
 
     public enum CodeResolveDifficulty{ //Enumeration to indicate the toughness of the code resolution
@@ -48,7 +44,6 @@ public class MainActivity extends AppCompatActivity implements DifficultyDialogF
 
         final Button numericButton = (Button) findViewById(R.id.numericButton);
         final Button graphicButton = (Button) findViewById(R.id.graphicButton);
-        Button difficultyButton = (Button) findViewById(R.id.difficultyButton);
 
         View.OnClickListener activityStarterListener = new View.OnClickListener() { //OnClickListener to unify the listeners of the two activity start buttons to reduce repetition
             @Override
@@ -62,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements DifficultyDialogF
 
                 activityIntent.putExtra(getString(R.string.diff_key), currentDifficulty);
                 activityIntent.putExtra(getString(R.string.test_mode_key), istestMode); //Test mode is default off
-                activityIntent.putExtra(getString(R.string.randomized_code_key), isCodeRandomized);
+                activityIntent.putExtra(getString(R.string.randomized_code_key), isCodeUserCode);
                 activityIntent.putExtra(getString(R.string.user_code_key),userCode);
                 if(istestMode){
 
@@ -93,19 +88,6 @@ public class MainActivity extends AppCompatActivity implements DifficultyDialogF
         numericButton.setOnClickListener(activityStarterListener);
         graphicButton.setOnClickListener(activityStarterListener);
 
-        difficultyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Bundle b = new Bundle();
-
-                b.putInt(getString(R.string.postition_key),currentDifficulty.ordinal());
-
-                DifficultyDialogFragment difficultyDialogFragment = new DifficultyDialogFragment();
-                difficultyDialogFragment.setArguments(b);
-
-                difficultyDialogFragment.show(getSupportFragmentManager(), DifficultyDialogFragment.TAG);
-            }
-        });
     }
 
     @Override
@@ -157,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements DifficultyDialogF
 
         istestMode = settings.getBoolean(SettingsActivity.KEY_PREF_TESTMODE,false);
         currentDifficulty = getCodeResolveDifficultyFromString(settings.getString(SettingsActivity.KEY_PREF_DIFFICULTY,"EASY"));
-        isCodeRandomized = settings.getBoolean(SettingsActivity.KEY_PREF_RANDOMCODE,true);
+        isCodeUserCode = settings.getBoolean(SettingsActivity.KEY_PREF_USERCODE,false);
         userCode = settings.getString(SettingsActivity.KEY_PREF_CODEINPUT,"0000");
         while(userCode.length() < 4)
             userCode = "0" + userCode;

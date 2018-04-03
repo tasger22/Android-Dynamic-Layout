@@ -49,7 +49,8 @@ public class NumericCodeActivity extends CodeActivityBase {
             }
         });
 
-        setCodeToRandom();
+        if(!isCodeUserCode())  setCodeToRandom();
+        else setCodeToUserCode();
         codeView.setText(getCode());
 
         if(getCurrentDifficulty() != CodeResolveDifficulty.EASY)
@@ -94,6 +95,7 @@ public class NumericCodeActivity extends CodeActivityBase {
                     if(getTries() > 0)
                         Toast.makeText(getApplicationContext(), getString(R.string.code_accepted_test_mode,getInitialTries() - getTries(),getInitialTries()),Toast.LENGTH_SHORT).show();
                     passwordLine.setText("");
+                    if(getCurrentDifficulty() == CodeResolveDifficulty.HARD) randomizeButtons();
                 }
                 else{
                     Toast.makeText(getApplicationContext(),getString(R.string.code_incorrect_test_mode),Toast.LENGTH_LONG).show();
@@ -111,7 +113,7 @@ public class NumericCodeActivity extends CodeActivityBase {
                 if(getCode().equals(input)){
                     Toast.makeText(getApplicationContext(), R.string.code_accepted,Toast.LENGTH_SHORT).show();
                     setTries(getInitialTries());
-                    return;
+                    if(getCurrentDifficulty() == CodeResolveDifficulty.HARD) randomizeButtons();
                 }
 
                 else if(getTries() > 0){

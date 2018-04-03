@@ -3,7 +3,6 @@ package hu.bme.iit.dynamiclayout_prototype;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import java.security.InvalidParameterException;
 
@@ -18,7 +17,7 @@ public abstract class CodeActivityBase extends AppCompatActivity {
     private int fails;
     private long testStartTime;
     private int initialTries;
-    private boolean isCodeRandomized;
+    private boolean isCodeUserCode;
     private String userCode;
 
     @Override
@@ -32,19 +31,19 @@ public abstract class CodeActivityBase extends AppCompatActivity {
             if(extras == null) {
                  currentDifficulty = CodeResolveDifficulty.EASY;
                  isTestMode = false;
-                 isCodeRandomized = true;
+                 isCodeUserCode = false;
 
             } else {
                 currentDifficulty = (CodeResolveDifficulty) extras.get(getString(R.string.diff_key));
                 isTestMode = extras.getBoolean(getString(R.string.test_mode_key));
-                isCodeRandomized = extras.getBoolean(getString(R.string.randomized_code_key));
-                if(!isCodeRandomized)   userCode = extras.getString(getString(R.string.user_code_key));
+                isCodeUserCode = extras.getBoolean(getString(R.string.randomized_code_key));
+                if(isCodeUserCode)   userCode = extras.getString(getString(R.string.user_code_key));
             }
         } else {
             currentDifficulty = (CodeResolveDifficulty) savedInstanceState.getSerializable(getString(R.string.diff_key));
             isTestMode = savedInstanceState.getBoolean(getString(R.string.test_mode_key));
-            isCodeRandomized = savedInstanceState.getBoolean(getString(R.string.randomized_code_key));
-            if(!isCodeRandomized)   userCode = savedInstanceState.getString(getString(R.string.user_code_key));
+            isCodeUserCode = savedInstanceState.getBoolean(getString(R.string.randomized_code_key));
+            if(isCodeUserCode)   userCode = savedInstanceState.getString(getString(R.string.user_code_key));
         }
 
         if(isTestMode){
@@ -125,11 +124,13 @@ public abstract class CodeActivityBase extends AppCompatActivity {
         return currentDifficulty;
     }
 
-    protected void setCode(String code) {
-        this.code = code;
-    }
+    protected void setCode(String code) { this.code = code; }
 
     protected String getCode() {
         return code;
     }
+
+    protected boolean isCodeUserCode(){ return isCodeUserCode; }
+
+    protected void setCodeToUserCode() { code = userCode; }
 }

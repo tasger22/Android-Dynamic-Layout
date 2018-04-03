@@ -13,7 +13,7 @@ import android.support.annotation.Nullable;
 public class SettingsActivity extends Activity {
 
     public static final String KEY_PREF_TESTMODE = "pref_testmode";
-    public static final String KEY_PREF_RANDOMCODE = "pref_randomcode";
+    public static final String KEY_PREF_USERCODE = "pref_usercode";
     public static final String KEY_PREF_CODEINPUT = "pref_codeinput";
     public static final String KEY_PREF_DIFFICULTY = "pref_difficulty";
 
