@@ -22,7 +22,7 @@ public abstract class CodeActivityBase extends AppCompatActivity  {
     private int initialTries;
     private boolean isCodeUserCode;
     private String userCode;
-    private boolean isBroadcastStart;
+    private boolean wasStartedByBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +34,9 @@ public abstract class CodeActivityBase extends AppCompatActivity  {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
         Bundle b = getIntent().getExtras();
-        if(b != null) isBroadcastStart = b.getBoolean("broadcastReceiverStart",false);
+        if(b != null) wasStartedByBroadcastReceiver = b.getBoolean("broadcastReceiverStart",false);
 
-        if(isBroadcastStart)    isTestMode = false;
+        if(wasStartedByBroadcastReceiver)    isTestMode = false;
         else isTestMode = settings.getBoolean(SettingsActivity.KEY_PREF_TESTMODE,false);
 
         currentDifficulty = MainActivity.getCodeResolveDifficultyFromString(settings.getString(SettingsActivity.KEY_PREF_DIFFICULTY,"EASY"));
@@ -133,12 +133,14 @@ public abstract class CodeActivityBase extends AppCompatActivity  {
 
     protected void setCodeToUserCode() { code = userCode; }
 
+    protected boolean wasStartedByBroadcastReceiver(){return wasStartedByBroadcastReceiver;}
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (Integer.parseInt(android.os.Build.VERSION.SDK) > 5
                 && keyCode == KeyEvent.KEYCODE_BACK
                 && event.getRepeatCount() == 0
-                && isBroadcastStart) {
+                && wasStartedByBroadcastReceiver) {
             return true;
         }
         return super.onKeyDown(keyCode, event);

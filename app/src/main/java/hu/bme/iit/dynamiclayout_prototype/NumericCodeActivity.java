@@ -114,6 +114,7 @@ public class NumericCodeActivity extends CodeActivityBase {
                     Toast.makeText(getApplicationContext(), R.string.code_accepted,Toast.LENGTH_SHORT).show();
                     setTries(getInitialTries());
                     if(getCurrentDifficulty() == CodeResolveDifficulty.HARD) randomizeButtons();
+                    if(wasStartedByBroadcastReceiver()) finish();
                 }
 
                 else if(getTries() > 0){
@@ -122,7 +123,7 @@ public class NumericCodeActivity extends CodeActivityBase {
                 }
 
                 else
-                    System.exit(1);
+                    finish();
             }
         }
     }

@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -101,7 +100,7 @@ public class MainActivity extends AppCompatActivity{
 
         }
     }
-    
+
     //Receive a CodeResolveDifficulty object by saying which you need by name
     public static CodeResolveDifficulty getCodeResolveDifficultyFromString(String string){
         switch(string){

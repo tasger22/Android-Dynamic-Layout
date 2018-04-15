@@ -177,6 +177,7 @@ public class GraphicCodeActivity extends CodeActivityBase {
                     codeInput = "";
                     setTries(getInitialTries());
                     if(getCurrentDifficulty() == CodeResolveDifficulty.HARD)    buttonSetup();
+                    if(wasStartedByBroadcastReceiver()) finish();
                 }
             }
 
@@ -188,7 +189,7 @@ public class GraphicCodeActivity extends CodeActivityBase {
                 }
 
                 else
-                    System.exit(1);
+                    finish();
             }
         }
     }
