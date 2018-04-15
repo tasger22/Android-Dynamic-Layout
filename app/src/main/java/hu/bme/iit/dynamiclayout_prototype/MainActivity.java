@@ -14,12 +14,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity implements DifficultyDialogFragment.DifficultyPickedListener {
+public class MainActivity extends AppCompatActivity{
 
-    private CodeResolveDifficulty currentDifficulty = CodeResolveDifficulty.EASY;
-    private boolean isTestMode, isCodeUserCode;
-    private String userCode;
-    private String chosenLayout;
+    private boolean isTestMode;
 
     public enum CodeResolveDifficulty{ //Enumeration to indicate the toughness of the code resolution
         EASY,HARD,EVIL;
@@ -40,9 +37,11 @@ public class MainActivity extends AppCompatActivity implements DifficultyDialogF
 
         setContentView(R.layout.activity_main);
 
+        startService(new Intent(this,ScreenOnWatcherService.class));
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.mainToolbar);
         setSupportActionBar(toolbar);
-        setDataFromSharedPreferences(PreferenceManager.getDefaultSharedPreferences(this));
+        isTestMode = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SettingsActivity.KEY_PREF_TESTMODE,false);
 
         final Button numericButton = (Button) findViewById(R.id.numericButton);
         final Button graphicButton = (Button) findViewById(R.id.graphicButton);
@@ -55,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements DifficultyDialogF
                     activityIntent = new Intent(getApplicationContext(),NumericCodeActivity.class);
                 else if (view == graphicButton)
                     activityIntent = new Intent(getApplicationContext(),GraphicCodeActivity.class);
-                putExtrasForCodeActivites(activityIntent);
                 if(isTestMode){
                     final Intent finalIntent = (Intent) activityIntent.clone();
                     AlertDialog.Builder attentionDialog = new AlertDialog.Builder(view.getContext());
@@ -69,7 +67,9 @@ public class MainActivity extends AppCompatActivity implements DifficultyDialogF
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             dialogInterface.dismiss(); }});
-                    attentionDialog.show(); } else startActivity(activityIntent);
+                    attentionDialog.show(); }
+
+                    else startActivity(activityIntent);
             }
         };
 
@@ -77,13 +77,6 @@ public class MainActivity extends AppCompatActivity implements DifficultyDialogF
             graphicButton.setOnClickListener(activityStarterListener);
 
 
-    }
-
-    private void putExtrasForCodeActivites(Intent activityIntent) {
-        activityIntent.putExtra(getString(R.string.diff_key), currentDifficulty);
-        activityIntent.putExtra(getString(R.string.test_mode_key), isTestMode); //Test mode is default off
-        activityIntent.putExtra(getString(R.string.randomized_code_key), isCodeUserCode);
-        activityIntent.putExtra(getString(R.string.user_code_key),userCode);
     }
 
     @Override
@@ -108,12 +101,7 @@ public class MainActivity extends AppCompatActivity implements DifficultyDialogF
 
         }
     }
-
-    @Override
-    public void OnDifficultyPicked(CodeResolveDifficulty difficulty) {
-        currentDifficulty = difficulty;
-    }
-
+    
     //Receive a CodeResolveDifficulty object by saying which you need by name
     public static CodeResolveDifficulty getCodeResolveDifficultyFromString(String string){
         switch(string){
@@ -127,19 +115,7 @@ public class MainActivity extends AppCompatActivity implements DifficultyDialogF
     @Override
     protected void onResume() {
         super.onResume();
-        setDataFromSharedPreferences(PreferenceManager.getDefaultSharedPreferences(this)); //TODO: change it to something less resource hungry
-    }
-
-    private void setDataFromSharedPreferences(SharedPreferences settings){
-
-        isTestMode = settings.getBoolean(SettingsActivity.KEY_PREF_TESTMODE,false);
-        currentDifficulty = getCodeResolveDifficultyFromString(settings.getString(SettingsActivity.KEY_PREF_DIFFICULTY,"EASY"));
-        isCodeUserCode = settings.getBoolean(SettingsActivity.KEY_PREF_USERCODE,false);
-        userCode = settings.getString(SettingsActivity.KEY_PREF_CODEINPUT,"0000");
-        while(userCode.length() < 4)
-            userCode = "0" + userCode;
-
-        chosenLayout = settings.getString(SettingsActivity.KEY_PREF_LAYOUT,"numeric");
+        isTestMode = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SettingsActivity.KEY_PREF_TESTMODE,false); //TODO: change it to something less resource hungry
     }
 
 }

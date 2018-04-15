@@ -34,7 +34,7 @@ public abstract class CodeActivityBase extends AppCompatActivity  {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
         Bundle b = getIntent().getExtras();
-        isBroadcastStart = b.getBoolean("broadcastReceiverStart",false);
+        if(b != null) isBroadcastStart = b.getBoolean("broadcastReceiverStart",false);
 
         if(isBroadcastStart)    isTestMode = false;
         else isTestMode = settings.getBoolean(SettingsActivity.KEY_PREF_TESTMODE,false);
