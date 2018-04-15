@@ -28,11 +28,17 @@
 
         <receiver
             android:name=".EventHappenedReceiver"
-            android:label="StartActivityAtBootReceiver">
-            <intent-filter>
+            android:label="StartActivityAtActionReceiver">
+            <intent-filter android:priority="100">
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.SCREEN_ON"/>
             </intent-filter>
         </receiver>
+
+        <service android:name=".ScreenOnWatcherService">
+
+        </service>
+
     </application>
 
 </manifest>

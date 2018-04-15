@@ -37,74 +37,45 @@ public class MainActivity extends AppCompatActivity implements DifficultyDialogF
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle b = getIntent().getExtras();
-        boolean bootStart = false;
 
-        if(b != null)  bootStart = b.getBoolean("bootStart");
+        setContentView(R.layout.activity_main);
 
-        if(bootStart){
-            setDataFromSharedPreferences(PreferenceManager.getDefaultSharedPreferences(this));
+        Toolbar toolbar = (Toolbar) findViewById(R.id.mainToolbar);
+        setSupportActionBar(toolbar);
+        setDataFromSharedPreferences(PreferenceManager.getDefaultSharedPreferences(this));
 
-            Intent startupIntent = new Intent();
+        final Button numericButton = (Button) findViewById(R.id.numericButton);
+        final Button graphicButton = (Button) findViewById(R.id.graphicButton);
 
-            putExtrasForCodeActivites(startupIntent);
-
-            if(chosenLayout.equals("numeric"))  startupIntent.setClass(getApplicationContext(),NumericCodeActivity.class);
-            else startupIntent.setClass(getApplicationContext(),GraphicCodeActivity.class);
-
-            startupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(startupIntent);
-        }
-        else{
-            setContentView(R.layout.activity_main);
-
-            Toolbar toolbar = (Toolbar) findViewById(R.id.mainToolbar);
-            setSupportActionBar(toolbar);
-            setDataFromSharedPreferences(PreferenceManager.getDefaultSharedPreferences(this));
-
-            final Button numericButton = (Button) findViewById(R.id.numericButton);
-            final Button graphicButton = (Button) findViewById(R.id.graphicButton);
-
-            View.OnClickListener activityStarterListener = new View.OnClickListener() { //OnClickListener to unify the listeners of the two activity start buttons to reduce repetition
-                @Override
-                public void onClick(View view) {
-                    Intent activityIntent = new Intent();
-
-                    if(view == numericButton)
-                        activityIntent = new Intent(getApplicationContext(),NumericCodeActivity.class);
-                    else if (view == graphicButton)
-                        activityIntent = new Intent(getApplicationContext(),GraphicCodeActivity.class);
-
-                    putExtrasForCodeActivites(activityIntent);
-                    if(isTestMode){
-
-                        final Intent finalIntent = (Intent) activityIntent.clone();
-
-                        AlertDialog.Builder attentionDialog = new AlertDialog.Builder(view.getContext());
-                        attentionDialog.setMessage(R.string.attention_dialog_disclaimer);
-                        attentionDialog.setTitle(R.string.attention_dialog_title);
-                        attentionDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                startActivity(finalIntent);
-                            }
-                        });
-                        attentionDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                            }
-                        });
-
-                        attentionDialog.show();
-                    }
-                    else startActivity(activityIntent);
-                }
-            };
+        View.OnClickListener activityStarterListener = new View.OnClickListener() { //OnClickListener to unify the listeners of the two activity start buttons to reduce repetition
+            @Override
+            public void onClick(View view) {
+                Intent activityIntent = new Intent();
+                if(view == numericButton)
+                    activityIntent = new Intent(getApplicationContext(),NumericCodeActivity.class);
+                else if (view == graphicButton)
+                    activityIntent = new Intent(getApplicationContext(),GraphicCodeActivity.class);
+                putExtrasForCodeActivites(activityIntent);
+                if(isTestMode){
+                    final Intent finalIntent = (Intent) activityIntent.clone();
+                    AlertDialog.Builder attentionDialog = new AlertDialog.Builder(view.getContext());
+                    attentionDialog.setMessage(R.string.attention_dialog_disclaimer);
+                    attentionDialog.setTitle(R.string.attention_dialog_title);
+                    attentionDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            startActivity(finalIntent); }});
+                    attentionDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss(); }});
+                    attentionDialog.show(); } else startActivity(activityIntent);
+            }
+        };
 
             numericButton.setOnClickListener(activityStarterListener);
             graphicButton.setOnClickListener(activityStarterListener);
-        }
+
 
     }
 
