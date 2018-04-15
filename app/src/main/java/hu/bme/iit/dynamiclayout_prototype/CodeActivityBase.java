@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.method.KeyListener;
 import android.view.KeyEvent;
 
 import java.security.InvalidParameterException;
@@ -45,28 +44,6 @@ public abstract class CodeActivityBase extends AppCompatActivity  {
         userCode = settings.getString(SettingsActivity.KEY_PREF_CODEINPUT,"0000");
         while(userCode.length() < 4)
             userCode = "0" + userCode;
-
-
-
-        /*if (savedInstanceState == null) {
-            Bundle extras = getIntent().getExtras();
-            if(extras == null) {
-                 currentDifficulty = CodeResolveDifficulty.EASY;
-                 isTestMode = false;
-                 isCodeUserCode = false;
-
-            } else {
-                currentDifficulty = (CodeResolveDifficulty) extras.get(getString(R.string.diff_key));
-                isTestMode = extras.getBoolean(getString(R.string.test_mode_key));
-                isCodeUserCode = extras.getBoolean(getString(R.string.randomized_code_key));
-                if(isCodeUserCode)   userCode = extras.getString(getString(R.string.user_code_key));
-            }
-        } else {
-            currentDifficulty = (CodeResolveDifficulty) savedInstanceState.getSerializable(getString(R.string.diff_key));
-            isTestMode = savedInstanceState.getBoolean(getString(R.string.test_mode_key));
-            isCodeUserCode = savedInstanceState.getBoolean(getString(R.string.randomized_code_key));
-            if(isCodeUserCode)   userCode = savedInstanceState.getString(getString(R.string.user_code_key));
-        }*/
 
         if(isTestMode){
             tries = initialTries = 10;
