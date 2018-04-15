@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import hu.bme.iit.dynamiclayout_prototype.MainActivity.CodeResolveDifficulty;
 
-public class TestResultActivity extends AppCompatActivity implements KeyListener{
+public class TestResultActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,30 +92,5 @@ public class TestResultActivity extends AppCompatActivity implements KeyListener
         Intent setIntent = new Intent(getApplicationContext(),MainActivity.class);
         setIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(setIntent);
-    }
-
-    @Override
-    public int getInputType() {
-        return 0;
-    }
-
-    @Override
-    public boolean onKeyDown(View view, Editable text, int keyCode, KeyEvent event) {
-        return false;
-    }
-
-    @Override
-    public boolean onKeyUp(View view, Editable text, int keyCode, KeyEvent event) {
-        return false;
-    }
-
-    @Override
-    public boolean onKeyOther(View view, Editable text, KeyEvent event) {
-        return false;
-    }
-
-    @Override
-    public void clearMetaKeyState(View view, Editable content, int states) {
-
     }
 }

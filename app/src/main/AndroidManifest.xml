@@ -27,7 +27,7 @@
         <activity android:name=".SettingsActivity"/>
 
         <receiver
-            android:name=".BootCompletedReceiver"
+            android:name=".EventHappenedReceiver"
             android:label="StartActivityAtBootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
