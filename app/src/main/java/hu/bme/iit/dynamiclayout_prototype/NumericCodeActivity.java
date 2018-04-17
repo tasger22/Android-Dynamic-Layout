@@ -22,7 +22,7 @@ public class NumericCodeActivity extends CodeActivityBase {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.numeric_layout);
 
-        initialSetup(savedInstanceState);
+        initialSetup();
 
         TextView codeView = (TextView) findViewById(R.id.randomCodeText);
         passwordLine = (EditText) findViewById(R.id.passwordLine);

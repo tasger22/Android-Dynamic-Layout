@@ -25,7 +25,7 @@ public class GraphicCodeActivity extends CodeActivityBase {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.graphic_layout);
 
-        initialSetup(savedInstanceState);
+        initialSetup();
 
         TextView codeView = (TextView) findViewById(R.id.randomCodeText);
 

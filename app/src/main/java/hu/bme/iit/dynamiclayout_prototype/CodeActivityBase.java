@@ -13,7 +13,7 @@ import hu.bme.iit.dynamiclayout_prototype.MainActivity.CodeResolveDifficulty;
 
 public abstract class CodeActivityBase extends AppCompatActivity  {
 
-    private String code;
+    private String code; //Security code for the CodeActivities
     private CodeResolveDifficulty currentDifficulty;
     private boolean isTestMode;
     private int tries = 2;
@@ -29,7 +29,8 @@ public abstract class CodeActivityBase extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
     }
 
-    protected void initialSetup(Bundle savedInstanceState) {
+    //Method to define all the private variables from the SharedPreferences
+    protected void initialSetup() {
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -57,9 +58,12 @@ public abstract class CodeActivityBase extends AppCompatActivity  {
         }
     }
 
+    //Unique implementation for any CodeActivity to generate a random security code
     protected abstract void setCodeToRandom();
+
     protected abstract void compareCodeToInput(String input);
 
+    //Used when the user is in test mode where we have to compile the result screen
     protected void compileResults() {
         long timeDifference = System.currentTimeMillis() - testStartTime;
         long tempVar;
