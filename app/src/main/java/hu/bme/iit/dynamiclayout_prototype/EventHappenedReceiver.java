@@ -13,7 +13,6 @@ import android.preference.PreferenceManager;
 public class EventHappenedReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        //TODO: maybe put the activity start here so the MainActivity doesn't have to start
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction()) || Intent.ACTION_SCREEN_ON.equals(intent.getAction())) {
 
             if(Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) context.startService(new Intent(context,ScreenOnWatcherService.class));
@@ -21,7 +20,7 @@ public class EventHappenedReceiver extends BroadcastReceiver {
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
             String layoutSetting = settings.getString(SettingsActivity.KEY_PREF_LAYOUT,"numeric"); //The second parameter is "numeric" which defaults NumericCodeActivity as used CodeActivity
 
-            Intent codeIntent = new Intent();
+            Intent codeIntent;
 
             if(layoutSetting.equals("numeric")) codeIntent = new Intent(context, NumericCodeActivity.class); //TODO: Find a better way to check the set layout
             else codeIntent = new Intent(context, GraphicCodeActivity.class);

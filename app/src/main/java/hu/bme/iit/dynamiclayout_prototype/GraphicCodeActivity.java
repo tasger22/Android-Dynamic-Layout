@@ -46,7 +46,7 @@ public class GraphicCodeActivity extends CodeActivityBase {
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
         int buttonSize = buttonSizeChanger();
-        int buttonAreaHeight = 380; //The height of the area in which the buttons from 'buttonList' are going
+        int buttonAreaHeight = 380; //The height of the area in which the buttons from 'buttonList' are going (380 is a tested dpi value which works)
 
         Random rand = new Random();
         float dx = rand.nextFloat() * displayMetrics.widthPixels - dpToPx(buttonSize);

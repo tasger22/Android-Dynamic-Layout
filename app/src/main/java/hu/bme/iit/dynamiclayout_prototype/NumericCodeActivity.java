@@ -31,8 +31,9 @@ public class NumericCodeActivity extends CodeActivityBase {
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!passwordLine.getText().toString().equals("")) {
-                    compareCodeToInput(passwordLine.getText().toString());
+                String codeInput = passwordLine.getText().toString();
+                if (!codeInput.equals("")) {
+                    compareCodeToInput(codeInput);
                 }
             }
         });
@@ -41,9 +42,10 @@ public class NumericCodeActivity extends CodeActivityBase {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!passwordLine.getText().toString().equals("")){
-                    int passLength = passwordLine.getText().toString().length();
-                    String newPassLineText = passwordLine.getText().toString().substring(0,passLength-1);
+                String codeInput = passwordLine.getText().toString();
+                if(codeInput.equals("")){
+                    int passLength = codeInput.length();
+                    String newPassLineText = codeInput.substring(0,passLength-1);
                     passwordLine.setText(newPassLineText);
                 }
             }
