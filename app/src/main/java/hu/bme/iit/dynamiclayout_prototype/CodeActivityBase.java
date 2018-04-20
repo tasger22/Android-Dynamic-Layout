@@ -29,7 +29,7 @@ public abstract class CodeActivityBase extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
     }
 
-    //Method to define all the private variables from the SharedPreferences
+    //Method to initialize all the private variables from the SharedPreferences
     protected void initialSetup() {
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
@@ -133,7 +133,7 @@ public abstract class CodeActivityBase extends AppCompatActivity  {
         return code;
     }
 
-    protected boolean isCodeUserCode(){ return isCodeUserCode; }
+    protected boolean isCodeNotUserCode(){ return !isCodeUserCode; }
 
     protected void setCodeToUserCode() { code = userCode; }
 

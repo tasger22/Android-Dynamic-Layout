@@ -18,7 +18,7 @@ import hu.bme.iit.dynamiclayout_prototype.MainActivity.CodeResolveDifficulty;
 
 public class GraphicCodeActivity extends CodeActivityBase {
 
-    private String codeInput = "";
+    private String codeInput = ""; //String which contains the character from all the previously pressed buttons
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,13 +29,14 @@ public class GraphicCodeActivity extends CodeActivityBase {
 
         TextView codeView = (TextView) findViewById(R.id.randomCodeText);
 
-        if(!isCodeUserCode())  setCodeToRandom();
+        if(isCodeNotUserCode())  setCodeToRandom();
         else setCodeToUserCode();
         codeView.setText(getCode());
 
         buttonSetup();
     }
 
+    //Randomize the location of on screen buttons
     private void buttonSetup() {
         RelativeLayout codeInsertLayout = (RelativeLayout) findViewById(R.id.codeInsertLayout);
         codeInsertLayout.removeAllViews();
@@ -45,9 +46,11 @@ public class GraphicCodeActivity extends CodeActivityBase {
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
         int buttonSize = buttonSizeChanger();
+        int buttonAreaHeight = 380; //The height of the area in which the buttons from 'buttonList' are going
+
         Random rand = new Random();
         float dx = rand.nextFloat() * displayMetrics.widthPixels - dpToPx(buttonSize);
-        float dy = rand.nextFloat() * 1000;
+        float dy = rand.nextFloat() * dpToPx(buttonAreaHeight);
 
         for(int i = 0; i < 2*getCode().length();i++){ //start of button creation
             Button b = new Button(getApplicationContext());
@@ -56,6 +59,8 @@ public class GraphicCodeActivity extends CodeActivityBase {
 
             b.setBackgroundColor(getResources().getColor(R.color.defaultButtonColor));
             b.setTextColor(Color.BLACK);
+
+            //Sets the text of the button to the next character of the code, otherwise it creates a random digit or letter
             if(i < getCode().length()){
                 Character c = getCode().charAt(i);
                 b.setText(c.toString());
@@ -80,7 +85,7 @@ public class GraphicCodeActivity extends CodeActivityBase {
 
             while(isButtonColliding(buttonList,b,buttonSize)){
                 dx = rand.nextFloat() * displayMetrics.widthPixels - dpToPx(buttonSize);
-                dy = rand.nextFloat() * 1000; //TODO: find better way to calculate this value instead of just 1000
+                dy = rand.nextFloat() * dpToPx(buttonAreaHeight);
 
                 if(dx < dpToPx(buttonSize))
                     b.setX(dx + dpToPx(buttonSize));
@@ -93,7 +98,7 @@ public class GraphicCodeActivity extends CodeActivityBase {
             }
 
             dx = rand.nextFloat() * displayMetrics.widthPixels - dpToPx(buttonSize);
-            dy = rand.nextFloat() * 1000;
+            dy = rand.nextFloat() * dpToPx(buttonAreaHeight);
 
             buttonList.add(b);
             codeInsertLayout.addView(b);
@@ -112,11 +117,13 @@ public class GraphicCodeActivity extends CodeActivityBase {
         }
     }
 
-    private int buttonSizeChanger() { // returning a value depending on the length of the code, to set the button size (length is between 4 and 8)
+    // returning a value depending on the length of the code, to set the button size (length is between 4 and 8)
+    private int buttonSizeChanger() {
         if(getCode().length() < 6)   return 80;
         else return 65;
     }
 
+    //Checks if 'currentButton' is touching any button in the 'buttons' array depending how big is the button in pixels given by 'buttonSize'
     private boolean isButtonColliding(ArrayList<Button> buttons, Button currentButton, int buttonSize){
         Rect currentButtonBounds = new Rect((int)currentButton.getX(),(int)currentButton.getY(),(int)currentButton.getX() + dpToPx(buttonSize),(int)currentButton.getY() + dpToPx(buttonSize));
         for (Button b:
@@ -194,7 +201,8 @@ public class GraphicCodeActivity extends CodeActivityBase {
         }
     }
 
-    private int dpToPx(int dp) { //Convert a DP value to pixel value
+    //Convert a DP value to pixel value
+    private int dpToPx(int dp) {
         float density = getApplicationContext().getResources()
                 .getDisplayMetrics()
                 .density;

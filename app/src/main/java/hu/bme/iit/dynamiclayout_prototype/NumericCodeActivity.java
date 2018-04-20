@@ -49,7 +49,7 @@ public class NumericCodeActivity extends CodeActivityBase {
             }
         });
 
-        if(!isCodeUserCode())  setCodeToRandom();
+        if(isCodeNotUserCode())  setCodeToRandom();
         else setCodeToUserCode();
         codeView.setText(getCode());
 
