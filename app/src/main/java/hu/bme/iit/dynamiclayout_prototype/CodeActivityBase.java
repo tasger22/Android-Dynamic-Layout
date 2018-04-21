@@ -11,17 +11,18 @@ import java.security.InvalidParameterException;
 
 import hu.bme.iit.dynamiclayout_prototype.MainActivity.CodeResolveDifficulty;
 
+//Class which provides all the necessary components for a CodeActivity
 public abstract class CodeActivityBase extends AppCompatActivity  {
 
     private String code; //Security code for the CodeActivities
     private CodeResolveDifficulty currentDifficulty;
     private boolean isTestMode;
-    private int tries = 2;
-    private int fails;
+    private int tries = 2; //How many times you can try to input the code until it rejects input
+    private int fails; //(Only in TestMode) Counting how many times you failed to input the right code
     private long testStartTime;
     private int initialTries;
     private boolean isCodeUserCode;
-    private String userCode;
+    private String userCode; //Custom security code by the user (encrypted) TODO: Actually make it encrypted or never use it only SharedPref
     private boolean wasStartedByBroadcastReceiver;
 
     @Override
@@ -116,7 +117,7 @@ public abstract class CodeActivityBase extends AppCompatActivity  {
     }
 
     protected void decrementTries(){
-        --tries;
+        setTries(tries-1);
     }
 
     protected boolean isTestMode(){
@@ -127,10 +128,11 @@ public abstract class CodeActivityBase extends AppCompatActivity  {
         return currentDifficulty;
     }
 
+    //TODO: Encrypt the code
     protected void setCode(String code) { this.code = code; }
 
     protected String getCode() {
-        return code;
+        return code; //TODO: Decrypt the encrypted code from the SharedPref
     }
 
     protected boolean isCodeNotUserCode(){ return !isCodeUserCode; }

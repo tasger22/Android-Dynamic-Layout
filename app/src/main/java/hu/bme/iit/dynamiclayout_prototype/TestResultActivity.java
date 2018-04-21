@@ -91,4 +91,5 @@ public class TestResultActivity extends AppCompatActivity{
         setIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(setIntent);
     }
+
 }
