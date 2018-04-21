@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
+//Service which starts a Broadcast Receiver to listen for a SCREEN_ON broadcast
 public class ScreenOnWatcherService extends Service {
     private BroadcastReceiver screenOnEventReceiver;
 

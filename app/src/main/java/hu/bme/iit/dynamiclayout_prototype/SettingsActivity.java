@@ -10,6 +10,8 @@ import android.support.annotation.Nullable;
  * Created by Stealth on 2018. 04. 03..
  */
 
+//Activity for the settings menu containing a fragment
+// for the menu view, also the necessary static String variables when looking for specific options
 public class SettingsActivity extends Activity {
 
     public static final String KEY_PREF_TESTMODE = "pref_testmode";

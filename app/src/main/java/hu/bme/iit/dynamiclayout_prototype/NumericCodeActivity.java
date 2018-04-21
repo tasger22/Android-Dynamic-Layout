@@ -13,6 +13,7 @@ import java.util.Random;
 
 import hu.bme.iit.dynamiclayout_prototype.MainActivity.CodeResolveDifficulty;
 
+//Code activity in which the user has to input the code with a number pad
 public class NumericCodeActivity extends CodeActivityBase {
 
     private EditText passwordLine;

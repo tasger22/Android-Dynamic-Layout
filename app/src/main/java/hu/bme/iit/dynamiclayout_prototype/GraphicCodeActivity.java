@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import hu.bme.iit.dynamiclayout_prototype.MainActivity.CodeResolveDifficulty;
 
+//Code activity in which the user has to input the security code with randomly placed buttons
 public class GraphicCodeActivity extends CodeActivityBase {
 
     private String codeInput = ""; //String which contains the character from all the previously pressed buttons
