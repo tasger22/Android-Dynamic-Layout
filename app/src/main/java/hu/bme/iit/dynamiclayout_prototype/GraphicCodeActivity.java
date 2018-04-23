@@ -173,7 +173,7 @@ public class GraphicCodeActivity extends CodeActivityBase {
 
             else{
                 incrementFails();
-                Toast.makeText(getApplicationContext(),getString(R.string.code_incorrect_test_mode),Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),getString(R.string.code_incorrect_test_mode),Toast.LENGTH_SHORT).show();
                 codeInput = "";
             }
         }
@@ -191,7 +191,7 @@ public class GraphicCodeActivity extends CodeActivityBase {
 
             else{
                 if(getTries() > 0){
-                    Toast.makeText(getApplicationContext(),getString(R.string.code_incorrect,getTries()),Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),getString(R.string.code_incorrect,getTries()),Toast.LENGTH_SHORT).show();
                     codeInput = "";
                     decrementTries();
                 }

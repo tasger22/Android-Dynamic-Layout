@@ -87,7 +87,7 @@ public class NumericCodeActivity extends CodeActivityBase {
 
     protected void compareCodeToInput(String input){
         if(input.length() < 4){
-            Toast.makeText(getApplicationContext(),"Code must be 4-8 characters long",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"Code must be 4-8 characters long",Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -101,7 +101,7 @@ public class NumericCodeActivity extends CodeActivityBase {
                     if(getCurrentDifficulty() == CodeResolveDifficulty.HARD) randomizeButtons();
                 }
                 else{
-                    Toast.makeText(getApplicationContext(),getString(R.string.code_incorrect_test_mode),Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),getString(R.string.code_incorrect_test_mode),Toast.LENGTH_SHORT).show();
                     incrementFails();
                 }
             }
@@ -121,7 +121,7 @@ public class NumericCodeActivity extends CodeActivityBase {
                 }
 
                 else if(getTries() > 0){
-                    Toast.makeText(getApplicationContext(),getString(R.string.code_incorrect,getTries()),Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),getString(R.string.code_incorrect,getTries()),Toast.LENGTH_SHORT).show();
                     decrementTries();
                 }
 
