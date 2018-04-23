@@ -74,7 +74,7 @@ public class TestResultActivity extends AppCompatActivity{
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+    public boolean onKeyDown(int keyCode, KeyEvent event)  { //A method override to ignore default function of the back button
         if (Integer.parseInt(android.os.Build.VERSION.SDK) > 5
                 && keyCode == KeyEvent.KEYCODE_BACK
                 && event.getRepeatCount() == 0) {
