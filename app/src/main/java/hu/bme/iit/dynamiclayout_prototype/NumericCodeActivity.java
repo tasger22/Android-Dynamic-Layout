@@ -44,7 +44,7 @@ public class NumericCodeActivity extends CodeActivityBase {
             @Override
             public void onClick(View view) {
                 String codeInput = passwordLine.getText().toString();
-                if(codeInput.equals("")){
+                if(!codeInput.equals("")){
                     int passLength = codeInput.length();
                     String newPassLineText = codeInput.substring(0,passLength-1);
                     passwordLine.setText(newPassLineText);
