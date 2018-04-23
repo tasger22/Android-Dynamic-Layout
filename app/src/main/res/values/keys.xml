@@ -7,4 +7,5 @@
     <string name="postition_key">position</string>
     <string name="randomized_code_key">randomizedCode</string>
     <string name="user_code_key">userCode</string>
+    <string name="encrypted_code_key">encrypted_code</string>
 </resources>

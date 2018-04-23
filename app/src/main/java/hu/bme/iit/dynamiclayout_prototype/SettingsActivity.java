@@ -1,10 +1,12 @@
 package hu.bme.iit.dynamiclayout_prototype;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.support.annotation.Nullable;
 
+import hu.bme.iit.dynamiclayout_prototype.CodeActivityBase.*;
 
 /**
  * Created by Stealth on 2018. 04. 03..
@@ -30,12 +32,46 @@ public class SettingsActivity extends Activity {
 
 
     }
-    public static class SettingsFragment extends PreferenceFragment{
+    public static class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener{
         @Override
         public void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
 
             addPreferencesFromResource(R.xml.preferences);
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+        }
+
+        @Override
+        public void onPause() {
+            getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+            super.onPause();
+        }
+
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            if(key.equals(KEY_PREF_CODEINPUT)){
+                String customSecurityCode = sharedPreferences.getString(KEY_PREF_CODEINPUT,"0000");
+                CryptClass encrypter = new CryptClass();
+
+                SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
+
+                try {
+                    byte[] stringByteArray = encrypter.encrypt(customSecurityCode);
+                    String encryptedStr = CryptClass.byteArrayToHexString(stringByteArray);
+                    sharedPreferencesEditor.putString(getResources().getString(R.string.encrypted_code_key),encryptedStr);
+                    sharedPreferencesEditor.apply();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                sharedPreferencesEditor.putString(KEY_PREF_CODEINPUT,""); //We clear the SharedPreferences to never see the cleartext security code
+                sharedPreferencesEditor.apply();
+            }
         }
     }
 }

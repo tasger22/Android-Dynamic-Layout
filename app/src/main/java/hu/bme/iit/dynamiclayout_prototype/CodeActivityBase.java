@@ -6,8 +6,15 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.widget.Toast;
 
 import java.security.InvalidParameterException;
+import java.security.NoSuchAlgorithmException;
+
+import javax.crypto.Cipher;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 import hu.bme.iit.dynamiclayout_prototype.MainActivity.CodeResolveDifficulty;
 
@@ -24,6 +31,8 @@ public abstract class CodeActivityBase extends AppCompatActivity  {
     private boolean isCodeUserCode;
     private String userCode; //Custom security code by the user (encrypted) TODO: Actually make it encrypted or never use it only SharedPref
     private boolean wasStartedByBroadcastReceiver;
+    private CryptClass decrypter = new CryptClass();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +40,7 @@ public abstract class CodeActivityBase extends AppCompatActivity  {
     }
 
     //Method to initialize all the private variables from the SharedPreferences
-    protected void initialSetup() {
+    protected void initialSetup() throws Exception {
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -43,9 +52,9 @@ public abstract class CodeActivityBase extends AppCompatActivity  {
 
         currentDifficulty = MainActivity.getCodeResolveDifficultyFromString(settings.getString(SettingsActivity.KEY_PREF_DIFFICULTY,"EASY"));
         isCodeUserCode = settings.getBoolean(SettingsActivity.KEY_PREF_USERCODE,false);
-        userCode = settings.getString(SettingsActivity.KEY_PREF_CODEINPUT,"0000");
-        while(userCode.length() < 4)
-            userCode = "0" + userCode;
+        userCode = settings.getString(getString(R.string.encrypted_code_key),CryptClass.byteArrayToHexString(decrypter.encrypt("0000")));
+        /*while(userCode.length() < 4)
+            userCode = "0" + userCode;*/
 
         if(isTestMode){
             tries = initialTries = 10;
@@ -132,7 +141,14 @@ public abstract class CodeActivityBase extends AppCompatActivity  {
     protected void setCode(String code) { this.code = code; }
 
     protected String getCode() {
-        return code; //TODO: Decrypt the encrypted code from the SharedPref
+        try {
+            String decryptedCode = new String(decrypter.decrypt(userCode));
+            //Toast.makeText(this,decryptedCode,Toast.LENGTH_SHORT).show();
+            return decryptedCode.trim();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new String ("");
     }
 
     protected boolean isCodeNotUserCode(){ return !isCodeUserCode; }

@@ -26,7 +26,11 @@ public class GraphicCodeActivity extends CodeActivityBase {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.graphic_layout);
 
-        initialSetup();
+        try {
+            initialSetup();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         TextView codeView = (TextView) findViewById(R.id.randomCodeText);
 
@@ -38,7 +42,7 @@ public class GraphicCodeActivity extends CodeActivityBase {
     }
 
     //Randomize the location of on screen buttons
-    private void buttonSetup() {
+    protected void buttonSetup() {
         RelativeLayout codeInsertLayout = (RelativeLayout) findViewById(R.id.codeInsertLayout);
         codeInsertLayout.removeAllViews();
         final ArrayList<Button> buttonList = new ArrayList<>();

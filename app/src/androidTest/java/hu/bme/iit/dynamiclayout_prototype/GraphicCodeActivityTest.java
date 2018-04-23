@@ -13,6 +13,7 @@ import android.widget.EditText;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -54,6 +55,12 @@ public class GraphicCodeActivityTest {
         //Since the check for preference values happen in onCreate, but that starts with the test we have to reset the variables and set the code to the one we gave in testCode
         startedGraphicActivity.initialSetup();
         startedGraphicActivity.setCodeToUserCode();
+        startedGraphicActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                startedGraphicActivity.buttonSetup();
+            }
+        });
     }
 
     @Rule
@@ -121,5 +128,11 @@ public class GraphicCodeActivityTest {
                 return matcher.matches(view) && currentIndex++ == index;
             }
         };
+    }
+
+    @After
+    public void tearDown(){
+        appPrefEditor.putString(SettingsActivity.KEY_PREF_CODEINPUT,"0000"); //We have to set it back since NumeriCodeActivity only deals in digits
+        appPrefEditor.apply();
     }
 }
