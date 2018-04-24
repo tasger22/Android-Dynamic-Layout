@@ -28,7 +28,6 @@ public class NumericCodeActivity extends CodeActivityBase {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         TextView codeView = (TextView) findViewById(R.id.randomCodeText);
         passwordLine = (EditText) findViewById(R.id.passwordLine);
 
@@ -62,6 +61,7 @@ public class NumericCodeActivity extends CodeActivityBase {
 
         if(getCurrentDifficulty() != CodeResolveDifficulty.EASY)
             randomizeButtons();
+
 
     }
 
@@ -121,7 +121,9 @@ public class NumericCodeActivity extends CodeActivityBase {
                     Toast.makeText(getApplicationContext(), R.string.code_accepted,Toast.LENGTH_SHORT).show();
                     setTries(getInitialTries());
                     if(getCurrentDifficulty() == CodeResolveDifficulty.HARD) randomizeButtons();
-                    if(wasStartedByBroadcastReceiver()) finish();
+                    if(wasStartedByBroadcastReceiver()) {
+                        finish();
+                    }
                 }
 
                 else if(getTries() > 0){

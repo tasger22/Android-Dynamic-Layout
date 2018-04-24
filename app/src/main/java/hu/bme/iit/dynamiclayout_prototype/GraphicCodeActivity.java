@@ -1,8 +1,11 @@
 package hu.bme.iit.dynamiclayout_prototype;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Dimension;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -213,4 +216,6 @@ public class GraphicCodeActivity extends CodeActivityBase {
                 .density;
         return Math.round((float) dp * density);
     }
+
+
 }

@@ -59,14 +59,15 @@ public class SettingsActivity extends Activity {
                 CryptClass encrypter = new CryptClass();
 
                 SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
-
-                try {
-                    byte[] stringByteArray = encrypter.encrypt(customSecurityCode);
-                    String encryptedStr = CryptClass.byteArrayToHexString(stringByteArray);
-                    sharedPreferencesEditor.putString(getResources().getString(R.string.encrypted_code_key),encryptedStr);
-                    sharedPreferencesEditor.apply();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if(!customSecurityCode.equals("")) {
+                    try {
+                        byte[] stringByteArray = encrypter.encrypt(customSecurityCode);
+                        String encryptedStr = CryptClass.byteArrayToHexString(stringByteArray);
+                        sharedPreferencesEditor.putString(getResources().getString(R.string.encrypted_code_key), encryptedStr);
+                        sharedPreferencesEditor.apply();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 sharedPreferencesEditor.putString(KEY_PREF_CODEINPUT,""); //We clear the SharedPreferences to never see the cleartext security code

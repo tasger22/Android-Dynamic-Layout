@@ -1,20 +1,21 @@
 package hu.bme.iit.dynamiclayout_prototype;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.widget.Toast;
 
 import java.security.InvalidParameterException;
-import java.security.NoSuchAlgorithmException;
-
-import javax.crypto.Cipher;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 
 import hu.bme.iit.dynamiclayout_prototype.MainActivity.CodeResolveDifficulty;
 
@@ -33,7 +34,6 @@ public abstract class CodeActivityBase extends AppCompatActivity  {
     private boolean wasStartedByBroadcastReceiver;
     private CryptClass decrypter = new CryptClass();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +45,9 @@ public abstract class CodeActivityBase extends AppCompatActivity  {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
         Bundle b = getIntent().getExtras();
-        if(b != null) wasStartedByBroadcastReceiver = b.getBoolean("broadcastReceiverStart",false);
+        if(b != null) {
+            wasStartedByBroadcastReceiver = b.getBoolean("broadcastReceiverStart",false);
+        }
 
         if(wasStartedByBroadcastReceiver)    isTestMode = false;
         else isTestMode = settings.getBoolean(SettingsActivity.KEY_PREF_TESTMODE,false);
@@ -53,8 +55,6 @@ public abstract class CodeActivityBase extends AppCompatActivity  {
         currentDifficulty = MainActivity.getCodeResolveDifficultyFromString(settings.getString(SettingsActivity.KEY_PREF_DIFFICULTY,"EASY"));
         isCodeUserCode = settings.getBoolean(SettingsActivity.KEY_PREF_USERCODE,false);
         userCode = settings.getString(getString(R.string.encrypted_code_key),CryptClass.byteArrayToHexString(decrypter.encrypt("0000")));
-        /*while(userCode.length() < 4)
-            userCode = "0" + userCode;*/
 
         if(isTestMode){
             tries = initialTries = 10;
