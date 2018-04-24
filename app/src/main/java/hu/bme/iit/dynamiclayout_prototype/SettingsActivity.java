@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.support.annotation.Nullable;
 
-import hu.bme.iit.dynamiclayout_prototype.CodeActivityBase.*;
-
 /**
  * Created by Stealth on 2018. 04. 03..
  */
