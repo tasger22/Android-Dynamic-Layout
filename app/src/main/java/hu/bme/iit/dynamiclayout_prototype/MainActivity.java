@@ -146,5 +146,4 @@ public class MainActivity extends AppCompatActivity{
         super.onResume();
         isTestMode = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SettingsActivity.KEY_PREF_TESTMODE,false); //TODO: change it to something less resource hungry
     }
-
 }
