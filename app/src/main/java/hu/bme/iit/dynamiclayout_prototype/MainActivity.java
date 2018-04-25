@@ -17,6 +17,8 @@ import android.widget.Button;
 public class MainActivity extends AppCompatActivity{
 
     private boolean isTestMode;
+    private boolean wasStartedByBroadcastReceiver;
+    private CodeDialogBase dialogBase;
 
     public enum CodeResolveDifficulty{ //Enumeration to indicate the toughness of the code resolution
         EASY,HARD,EVIL;
@@ -40,7 +42,6 @@ public class MainActivity extends AppCompatActivity{
         startService(new Intent(this,ScreenOnWatcherService.class)); //Just to start the service when the app is started TODO: it is not necessary if the user set it to off
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        final boolean wasStartedByBroadcastReceiver;
         Bundle b = getIntent().getExtras();
         if(b != null) {
             wasStartedByBroadcastReceiver = b.getBoolean(getString(R.string.started_by_br),false);
@@ -48,13 +49,10 @@ public class MainActivity extends AppCompatActivity{
         else wasStartedByBroadcastReceiver = false;
 
         if (wasStartedByBroadcastReceiver) {
-            CodeDialogBase codeDialog;
 
             String layoutFromSettings = settings.getString(SettingsActivity.KEY_PREF_LAYOUT,"numeric");
-            if(layoutFromSettings.equals("numeric")) codeDialog = new NumericCodeDialog(this,wasStartedByBroadcastReceiver);
-            else codeDialog = new GraphicCodeDialog(this,wasStartedByBroadcastReceiver);
-
-            codeDialog.show();
+            if(layoutFromSettings.equals("numeric")) dialogBase = new NumericCodeDialog(this,wasStartedByBroadcastReceiver);
+            else dialogBase = new GraphicCodeDialog(this,wasStartedByBroadcastReceiver);
 
         } else {
             Toolbar toolbar = (Toolbar) findViewById(R.id.mainToolbar);
@@ -67,17 +65,6 @@ public class MainActivity extends AppCompatActivity{
             View.OnClickListener activityStarterListener = new View.OnClickListener() { //OnClickListener to unify the listeners of the two activity start buttons to reduce repetition
                 @Override
                 public void onClick(View view) {
-                    CodeDialogBase dialogBase = new CodeDialogBase(MainActivity.this,wasStartedByBroadcastReceiver) {
-                        @Override
-                        protected void setCodeToRandom() {
-
-                        }
-
-                        @Override
-                        protected void compareCodeToInput(String input) {
-
-                        }
-                    };
                     if(view == numericButton)
                         dialogBase = new NumericCodeDialog(MainActivity.this,wasStartedByBroadcastReceiver);
                     else if (view == graphicButton)
@@ -145,5 +132,11 @@ public class MainActivity extends AppCompatActivity{
     protected void onResume() {
         super.onResume();
         isTestMode = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SettingsActivity.KEY_PREF_TESTMODE,false); //TODO: change it to something less resource hungry
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (wasStartedByBroadcastReceiver) dialogBase.show();
     }
 }

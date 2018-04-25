@@ -21,6 +21,7 @@ public class EventHappenedReceiver extends BroadcastReceiver {
 
             Intent codeIntent = new Intent(context,MainActivity.class);
             codeIntent.putExtra(context.getString(R.string.started_by_br),true);
+            codeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(codeIntent);
         }
     }
