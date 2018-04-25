@@ -1,5 +1,6 @@
 package hu.bme.iit.dynamiclayout_prototype;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,11 +9,18 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.WindowManager;
 
 import java.security.InvalidParameterException;
 
 import hu.bme.iit.dynamiclayout_prototype.MainActivity.CodeResolveDifficulty;
+
+import static android.view.WindowManager.LayoutParams.FLAG_LOCAL_FOCUS_MODE;
+import static android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+import static android.view.WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
+import static android.view.WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
 
 //Class which provides all the necessary components for a CodeActivity
 public abstract class CodeDialogBase extends AlertDialog {
@@ -28,9 +36,22 @@ public abstract class CodeDialogBase extends AlertDialog {
     private String userCode; //Custom security code by the user (encrypted) TODO: Actually make it encrypted or never use it only SharedPref
     private boolean wasStartedByBroadcastReceiver = false;
     private CryptClass decrypter = new CryptClass();
+    private Activity callerActivity;
 
-    protected CodeDialogBase(@NonNull Context context) {
-        super(context,R.style.AppTheme);
+    protected CodeDialogBase(@NonNull Activity activity, boolean wasStartedByBroadcastReceiver) {
+        super(activity,R.style.AppTheme);
+        this.wasStartedByBroadcastReceiver = wasStartedByBroadcastReceiver;
+        callerActivity = activity;
+        if(wasStartedByBroadcastReceiver){
+            WindowManager.LayoutParams params = getWindow().getAttributes();
+            params.type = TYPE_SYSTEM_ERROR;
+            params.dimAmount = 0.0F; // transparent
+            params.gravity = Gravity.BOTTOM;
+            getWindow().setAttributes(params);
+            getWindow().setFlags(FLAG_SHOW_WHEN_LOCKED | FLAG_NOT_TOUCH_MODAL | FLAG_LOCAL_FOCUS_MODE, 0xffffff);
+            setOwnerActivity(activity);
+            setCancelable(false);
+        }
     }
 
     @Override
@@ -163,5 +184,9 @@ public abstract class CodeDialogBase extends AlertDialog {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    public Activity getCallerActivity() {
+        return callerActivity;
     }
 }

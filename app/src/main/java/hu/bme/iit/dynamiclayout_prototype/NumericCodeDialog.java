@@ -1,5 +1,6 @@
 package hu.bme.iit.dynamiclayout_prototype;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,8 +21,8 @@ public class NumericCodeDialog extends CodeDialogBase {
 
     private EditText passwordLine;
 
-    protected NumericCodeDialog(@NonNull Context context) {
-        super(context);
+    protected NumericCodeDialog(@NonNull Activity activity, boolean wasStartedByBroadcastReceiver) {
+        super(activity,wasStartedByBroadcastReceiver);
     }
 
     @Override
@@ -158,6 +159,7 @@ public class NumericCodeDialog extends CodeDialogBase {
                     if(getCurrentDifficulty() == CodeResolveDifficulty.HARD) randomizeButtons();
                     if(wasStartedByBroadcastReceiver()) {
                         dismiss();
+                        getCallerActivity().finish();
                     }
                 }
 

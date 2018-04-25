@@ -1,5 +1,6 @@
 package hu.bme.iit.dynamiclayout_prototype;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -24,8 +25,8 @@ public class GraphicCodeDialog extends CodeDialogBase {
 
     private String codeInput = ""; //String which contains the character from all the previously pressed buttons
 
-    protected GraphicCodeDialog(@NonNull Context context) {
-        super(context);
+    protected GraphicCodeDialog(@NonNull Activity context, boolean wasStartedByBroadcastReceiver) {
+        super(context,wasStartedByBroadcastReceiver);
     }
 
     @Override
@@ -197,7 +198,10 @@ public class GraphicCodeDialog extends CodeDialogBase {
                     codeInput = "";
                     setTries(getInitialTries());
                     if(getCurrentDifficulty() == CodeResolveDifficulty.HARD)    buttonSetup();
-                    if(wasStartedByBroadcastReceiver()) dismiss();
+                    if(wasStartedByBroadcastReceiver()){
+                        getCallerActivity().finish();
+                        dismiss();
+                    }
                 }
             }
 

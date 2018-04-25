@@ -18,16 +18,10 @@ public class EventHappenedReceiver extends BroadcastReceiver {
             if(Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) context.startService(new Intent(context,ScreenOnWatcherService.class));
 
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-            String layoutSetting = settings.getString(SettingsActivity.KEY_PREF_LAYOUT,"numeric"); //The second parameter is "numeric" which defaults NumericCodeActivity as used CodeActivity
 
-            CodeDialogBase codeIntent;
-
-            if(layoutSetting.equals("numeric")) codeIntent = new NumericCodeDialog(context); //TODO: Find a better way to check the set layout
-            else codeIntent = new GraphicCodeDialog(context);
-
-            //codeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            //codeIntent.putExtra("broadcastReceiverStart",true);
-            codeIntent.show();
+            Intent codeIntent = new Intent(context,MainActivity.class);
+            codeIntent.putExtra(context.getString(R.string.started_by_br),true);
+            context.startActivity(codeIntent);
         }
     }
 }
