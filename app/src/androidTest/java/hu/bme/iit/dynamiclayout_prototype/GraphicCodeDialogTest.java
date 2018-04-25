@@ -54,7 +54,7 @@ public class GraphicCodeDialogTest {
         activityContext.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                shownGraphicDialog = new GraphicCodeDialog(activityContext);
+                shownGraphicDialog = new GraphicCodeDialog(activityContext,false);
                 shownGraphicDialog.show();
             }
         });
@@ -74,8 +74,6 @@ public class GraphicCodeDialogTest {
 
     @Test
     public void inputCodeMatchesSetSecurityCode() throws InterruptedException{
-        onView(withId(R.id.graphicButton)).perform(click());
-
         //Pressing buttons to put in security code
         onView(withIndex(withText("E"),0)).perform(click());
         onView(withIndex(withText("Z"),0)).perform(click());
@@ -93,8 +91,7 @@ public class GraphicCodeDialogTest {
     //This test shows that when we fail, then we try again, out previously failed attempt does not affect the input code
     @Test
     public void inputCodeSnippetClearsAfterFail() throws InterruptedException{
-        onView(withId(R.id.graphicButton)).perform(click());
-
+        //Fail the test once to have wrong values in the input code
         onView(withIndex(withText("E"),0)).perform(click());
         onView(withIndex(withText("Z"),0)).perform(click());
         onView(withIndex(withText("Z"),0)).perform(click());
