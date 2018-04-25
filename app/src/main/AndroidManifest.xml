@@ -13,7 +13,7 @@
             android:name=".NumericCodeActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".GraphicCodeActivity"
+            android:name=".GraphicCodeDialog"
             android:screenOrientation="portrait"/>
         <activity android:name=".TestResultActivity"
             android:screenOrientation="portrait"/>

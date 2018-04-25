@@ -33,14 +33,14 @@ public class NumericCodeActivityTest {
     Context appContext;
     String testCode = "1996";
     SharedPreferences.Editor appPrefEditor;
-    NumericCodeActivity startedNumericActivity;
+    NumericCodeDialog startedNumericActivity;
 
     @Before
     public void setUp() throws Exception {
         appContext = InstrumentationRegistry.getContext();
 
-        startedNumericActivity = mActivityRule.launchActivity(new Intent(appContext,NumericCodeActivity.class));
-        SharedPreferences appPref = PreferenceManager.getDefaultSharedPreferences(startedNumericActivity);
+        startedNumericActivity = new NumericCodeDialog(appContext);
+        SharedPreferences appPref = PreferenceManager.getDefaultSharedPreferences(appContext);
         appPrefEditor = appPref.edit();
         appPrefEditor.putBoolean(SettingsActivity.KEY_PREF_USERCODE,true);
         appPrefEditor.putString(SettingsActivity.KEY_PREF_CODEINPUT,testCode);
@@ -51,9 +51,9 @@ public class NumericCodeActivityTest {
         startedNumericActivity.setCodeToUserCode();
     }
 
-    @Rule
+    /*@Rule
     public ActivityTestRule<NumericCodeActivity> mActivityRule = new ActivityTestRule<>(
-            NumericCodeActivity.class);
+            NumericCodeActivity.class);*/
 
     @Test
     public void testCodeMatchesSetSecurityCode(){

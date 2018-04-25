@@ -1,8 +1,11 @@
 package hu.bme.iit.dynamiclayout_prototype;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -12,7 +15,7 @@ import java.security.InvalidParameterException;
 import hu.bme.iit.dynamiclayout_prototype.MainActivity.CodeResolveDifficulty;
 
 //Class which provides all the necessary components for a CodeActivity
-public abstract class CodeActivityBase extends AppCompatActivity  {
+public abstract class CodeDialogBase extends AlertDialog {
 
     private String code; //Security code for the CodeActivities
     private CodeResolveDifficulty currentDifficulty;
@@ -23,8 +26,12 @@ public abstract class CodeActivityBase extends AppCompatActivity  {
     private int initialTries;
     private boolean isCodeUserCode;
     private String userCode; //Custom security code by the user (encrypted) TODO: Actually make it encrypted or never use it only SharedPref
-    private boolean wasStartedByBroadcastReceiver;
+    private boolean wasStartedByBroadcastReceiver = false;
     private CryptClass decrypter = new CryptClass();
+
+    protected CodeDialogBase(@NonNull Context context) {
+        super(context,R.style.AppTheme);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,19 +41,19 @@ public abstract class CodeActivityBase extends AppCompatActivity  {
     //Method to initialize all the private variables from the SharedPreferences
     protected void initialSetup() throws Exception {
 
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
 
-        Bundle b = getIntent().getExtras();
+        /*Bundle b = getOwnerActivity().getIntent().getExtras();
         if(b != null) {
             wasStartedByBroadcastReceiver = b.getBoolean("broadcastReceiverStart",false);
-        }
+        }*///TODO:Fix this by changing the BroadcastReceiver
 
         if(wasStartedByBroadcastReceiver)    isTestMode = false;
         else isTestMode = settings.getBoolean(SettingsActivity.KEY_PREF_TESTMODE,false);
 
         currentDifficulty = MainActivity.getCodeResolveDifficultyFromString(settings.getString(SettingsActivity.KEY_PREF_DIFFICULTY,"EASY"));
         isCodeUserCode = settings.getBoolean(SettingsActivity.KEY_PREF_USERCODE,false);
-        userCode = settings.getString(getString(R.string.encrypted_code_key),CryptClass.byteArrayToHexString(decrypter.encrypt("0000")));
+        userCode = settings.getString(getContext().getString(R.string.encrypted_code_key),CryptClass.byteArrayToHexString(decrypter.encrypt("0000")));
 
         if(isTestMode){
             tries = initialTries = 10;
@@ -84,15 +91,15 @@ public abstract class CodeActivityBase extends AppCompatActivity  {
             milliString = "0" + milliString;
 
         String compTimeText = minutes + ":" + secondsString + "." + milliString ;
-        Intent resultIntent = new Intent(this,TestResultActivity.class);
+        Intent resultIntent = new Intent(getContext(),TestResultActivity.class);
 
-        resultIntent.putExtra(getString(R.string.diff_key),currentDifficulty)
-                    .putExtra(getString(R.string.code_length_key),code.length())
-                    .putExtra(getString(R.string.comp_time_key),compTimeText)
-                    .putExtra(getString(R.string.comp_time_sec_key),(int)timeDifference/1000)
-                    .putExtra(getString(R.string.fails_key),fails);
+        resultIntent.putExtra(getContext().getString(R.string.diff_key),currentDifficulty)
+                    .putExtra(getContext().getString(R.string.code_length_key),code.length())
+                    .putExtra(getContext().getString(R.string.comp_time_key),compTimeText)
+                    .putExtra(getContext().getString(R.string.comp_time_sec_key),(int)timeDifference/1000)
+                    .putExtra(getContext().getString(R.string.fails_key),fails);
 
-        startActivity(resultIntent);
+        getOwnerActivity().startActivity(resultIntent);
     }
 
     protected int getInitialTries() {
@@ -128,8 +135,6 @@ public abstract class CodeActivityBase extends AppCompatActivity  {
     protected CodeResolveDifficulty getCurrentDifficulty(){
         return currentDifficulty;
     }
-
-    //TODO: Encrypt the code
     protected void setCode(String code) { this.code = code; }
 
     protected String getCode() {

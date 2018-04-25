@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity{
 
         setContentView(R.layout.activity_main);
 
-        startService(new Intent(this,ScreenOnWatcherService.class)); //Just to start the service when the app is started TODO: it is not necessary if the user set it to off
+        //startService(new Intent(this,ScreenOnWatcherService.class)); //Just to start the service when the app is started TODO: it is not necessary if the user set it to off
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.mainToolbar);
         setSupportActionBar(toolbar);
@@ -48,27 +48,37 @@ public class MainActivity extends AppCompatActivity{
         View.OnClickListener activityStarterListener = new View.OnClickListener() { //OnClickListener to unify the listeners of the two activity start buttons to reduce repetition
             @Override
             public void onClick(View view) {
-                Intent activityIntent = new Intent();
+                CodeDialogBase dialogBase = new CodeDialogBase(MainActivity.this) {
+                    @Override
+                    protected void setCodeToRandom() {
+
+                    }
+
+                    @Override
+                    protected void compareCodeToInput(String input) {
+
+                    }
+                };
                 if(view == numericButton)
-                    activityIntent = new Intent(getApplicationContext(),NumericCodeActivity.class);
+                    dialogBase = new NumericCodeDialog(MainActivity.this);
                 else if (view == graphicButton)
-                    activityIntent = new Intent(getApplicationContext(),GraphicCodeActivity.class);
+                    dialogBase = new GraphicCodeDialog(MainActivity.this);
                 if(isTestMode){
-                    final Intent finalIntent = (Intent) activityIntent.clone();
+                    final CodeDialogBase finalDialog = dialogBase;
                     AlertDialog.Builder attentionDialog = new AlertDialog.Builder(view.getContext());
                     attentionDialog.setMessage(R.string.attention_dialog_disclaimer);
                     attentionDialog.setTitle(R.string.attention_dialog_title);
                     attentionDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            startActivity(finalIntent); }});
+                            finalDialog.show(); }});
                     attentionDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             dialogInterface.dismiss(); }});
                     attentionDialog.show(); }
 
-                    else startActivity(activityIntent);
+                    else dialogBase.show();
             }
         };
 
@@ -89,7 +99,7 @@ public class MainActivity extends AppCompatActivity{
         switch (item.getItemId()) {
             case R.id.action_settings:
 
-                Intent settingsActivityIntent = new Intent(getApplicationContext(),SettingsActivity.class);
+                Intent settingsActivityIntent = new Intent(MainActivity.this,SettingsActivity.class);
                 startActivity(settingsActivityIntent);
                 return true;
 

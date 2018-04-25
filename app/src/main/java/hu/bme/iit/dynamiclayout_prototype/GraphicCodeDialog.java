@@ -1,12 +1,15 @@
 package hu.bme.iit.dynamiclayout_prototype;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Dimension;
+import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -17,9 +20,13 @@ import java.util.Random;
 import hu.bme.iit.dynamiclayout_prototype.MainActivity.CodeResolveDifficulty;
 
 //Code activity in which the user has to input the security code with randomly placed buttons
-public class GraphicCodeActivity extends CodeActivityBase {
+public class GraphicCodeDialog extends CodeDialogBase {
 
     private String codeInput = ""; //String which contains the character from all the previously pressed buttons
+
+    protected GraphicCodeDialog(@NonNull Context context) {
+        super(context);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +55,8 @@ public class GraphicCodeActivity extends CodeActivityBase {
         final ArrayList<Button> buttonList = new ArrayList<>();
 
         final DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+        wm.getDefaultDisplay().getMetrics(displayMetrics);
 
         int buttonSize = buttonSizeChanger();
         int buttonAreaHeight = 380; //The height of the area in which the buttons from 'buttonList' are going (380 is a tested dpi value which works)
@@ -58,11 +66,11 @@ public class GraphicCodeActivity extends CodeActivityBase {
         float dy = rand.nextFloat() * dpToPx(buttonAreaHeight);
 
         for(int i = 0; i < 2*getCode().length();i++){ //start of button creation
-            Button b = new Button(getApplicationContext());
+            Button b = new Button(getContext());
             boolean isLetter = rand.nextBoolean();
 
 
-            b.setBackgroundColor(getResources().getColor(R.color.defaultButtonColor));
+            b.setBackgroundColor(getContext().getResources().getColor(R.color.defaultButtonColor));
             b.setTextColor(Color.BLACK);
 
             //Sets the text of the button to the next character of the code, otherwise it creates a random digit or letter
@@ -167,7 +175,7 @@ public class GraphicCodeActivity extends CodeActivityBase {
                     codeInput = "";
 
                     if(getTries() > 0)
-                        Toast.makeText(getApplicationContext(), getString(R.string.code_accepted_test_mode,getInitialTries() - getTries(),getInitialTries()),Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getContext().getString(R.string.code_accepted_test_mode,getInitialTries() - getTries(),getInitialTries()),Toast.LENGTH_SHORT).show();
                     else
                         compileResults();
 
@@ -177,7 +185,7 @@ public class GraphicCodeActivity extends CodeActivityBase {
 
             else{
                 incrementFails();
-                Toast.makeText(getApplicationContext(),getString(R.string.code_incorrect_test_mode),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),getContext().getString(R.string.code_incorrect_test_mode),Toast.LENGTH_SHORT).show();
                 codeInput = "";
             }
         }
@@ -185,30 +193,30 @@ public class GraphicCodeActivity extends CodeActivityBase {
         else{
             if(codeSnippet.equals(codeInput)){
                 if(getCode().equals(codeInput)){
-                    Toast.makeText(getApplicationContext(), R.string.code_accepted,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.code_accepted,Toast.LENGTH_SHORT).show();
                     codeInput = "";
                     setTries(getInitialTries());
                     if(getCurrentDifficulty() == CodeResolveDifficulty.HARD)    buttonSetup();
-                    if(wasStartedByBroadcastReceiver()) finish();
+                    if(wasStartedByBroadcastReceiver()) dismiss();
                 }
             }
 
             else{
                 if(getTries() > 0){
-                    Toast.makeText(getApplicationContext(),getString(R.string.code_incorrect,getTries()),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),getContext().getString(R.string.code_incorrect,getTries()),Toast.LENGTH_SHORT).show();
                     codeInput = "";
                     decrementTries();
                 }
 
                 else
-                    finish();
+                    dismiss();
             }
         }
     }
 
     //Convert a DP value to pixel value
     private int dpToPx(int dp) {
-        float density = getApplicationContext().getResources()
+        float density = getContext().getResources()
                 .getDisplayMetrics()
                 .density;
         return Math.round((float) dp * density);

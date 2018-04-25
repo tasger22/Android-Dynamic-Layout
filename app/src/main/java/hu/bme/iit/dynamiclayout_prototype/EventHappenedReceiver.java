@@ -20,14 +20,14 @@ public class EventHappenedReceiver extends BroadcastReceiver {
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
             String layoutSetting = settings.getString(SettingsActivity.KEY_PREF_LAYOUT,"numeric"); //The second parameter is "numeric" which defaults NumericCodeActivity as used CodeActivity
 
-            Intent codeIntent;
+            CodeDialogBase codeIntent;
 
-            if(layoutSetting.equals("numeric")) codeIntent = new Intent(context, NumericCodeActivity.class); //TODO: Find a better way to check the set layout
-            else codeIntent = new Intent(context, GraphicCodeActivity.class);
+            if(layoutSetting.equals("numeric")) codeIntent = new NumericCodeDialog(context); //TODO: Find a better way to check the set layout
+            else codeIntent = new GraphicCodeDialog(context);
 
-            codeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            codeIntent.putExtra("broadcastReceiverStart",true);
-            context.startActivity(codeIntent);
+            //codeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            //codeIntent.putExtra("broadcastReceiverStart",true);
+            codeIntent.show();
         }
     }
 }

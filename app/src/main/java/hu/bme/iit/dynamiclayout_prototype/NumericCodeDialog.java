@@ -1,6 +1,8 @@
 package hu.bme.iit.dynamiclayout_prototype;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,9 +16,13 @@ import java.util.Random;
 import hu.bme.iit.dynamiclayout_prototype.MainActivity.CodeResolveDifficulty;
 
 //Code activity in which the user has to input the code with a number pad
-public class NumericCodeActivity extends CodeActivityBase {
+public class NumericCodeDialog extends CodeDialogBase {
 
     private EditText passwordLine;
+
+    protected NumericCodeDialog(@NonNull Context context) {
+        super(context);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +34,9 @@ public class NumericCodeActivity extends CodeActivityBase {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        setUpAllButtons();
+
         TextView codeView = (TextView) findViewById(R.id.randomCodeText);
         passwordLine = (EditText) findViewById(R.id.passwordLine);
 
@@ -65,6 +74,32 @@ public class NumericCodeActivity extends CodeActivityBase {
 
     }
 
+    private void setUpAllButtons(){
+        ArrayList<Button> buttonList = new ArrayList<>();
+
+        //TODO: change the following code into more practical
+        buttonList.add((Button) findViewById(R.id.button1));
+        buttonList.add((Button) findViewById(R.id.button2));
+        buttonList.add((Button) findViewById(R.id.button3));
+        buttonList.add((Button) findViewById(R.id.button4));
+        buttonList.add((Button) findViewById(R.id.button5));
+        buttonList.add((Button) findViewById(R.id.button6));
+        buttonList.add((Button) findViewById(R.id.button7));
+        buttonList.add((Button) findViewById(R.id.button8));
+        buttonList.add((Button) findViewById(R.id.button9));
+        buttonList.add((Button) findViewById(R.id.button10));
+
+        for (Button b:
+             buttonList) {
+            b.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    processNumberPress(view);
+                }
+            });
+        }
+    }
+
     public void processNumberPress(View view) {
         Button numberButton = (Button) view;
 
@@ -91,7 +126,7 @@ public class NumericCodeActivity extends CodeActivityBase {
 
     protected void compareCodeToInput(String input){
         if(input.length() < 4){
-            Toast.makeText(getApplicationContext(),"Code must be 4-8 characters long",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),"Code must be 4-8 characters long",Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -100,12 +135,12 @@ public class NumericCodeActivity extends CodeActivityBase {
                 if(getCode().equals(input)){
                     decrementTries();
                     if(getTries() > 0)
-                        Toast.makeText(getApplicationContext(), getString(R.string.code_accepted_test_mode,getInitialTries() - getTries(),getInitialTries()),Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getContext().getString(R.string.code_accepted_test_mode,getInitialTries() - getTries(),getInitialTries()),Toast.LENGTH_SHORT).show();
                     passwordLine.setText("");
                     if(getCurrentDifficulty() == CodeResolveDifficulty.HARD) randomizeButtons();
                 }
                 else{
-                    Toast.makeText(getApplicationContext(),getString(R.string.code_incorrect_test_mode),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),getContext().getString(R.string.code_incorrect_test_mode),Toast.LENGTH_SHORT).show();
                     incrementFails();
                 }
             }
@@ -118,21 +153,21 @@ public class NumericCodeActivity extends CodeActivityBase {
         } else {
             if(!getCode().equals("")){
                 if(getCode().equals(input)){
-                    Toast.makeText(getApplicationContext(), R.string.code_accepted,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.code_accepted,Toast.LENGTH_SHORT).show();
                     setTries(getInitialTries());
                     if(getCurrentDifficulty() == CodeResolveDifficulty.HARD) randomizeButtons();
                     if(wasStartedByBroadcastReceiver()) {
-                        finish();
+                        dismiss();
                     }
                 }
 
                 else if(getTries() > 0){
-                    Toast.makeText(getApplicationContext(),getString(R.string.code_incorrect,getTries()),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),getContext().getString(R.string.code_incorrect,getTries()),Toast.LENGTH_SHORT).show();
                     decrementTries();
                 }
 
                 else
-                    finish();
+                    dismiss();
             }
         }
     }
