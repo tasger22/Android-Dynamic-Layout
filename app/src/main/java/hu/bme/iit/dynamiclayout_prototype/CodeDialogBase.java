@@ -156,7 +156,15 @@ public abstract class CodeDialogBase extends AlertDialog {
     protected CodeResolveDifficulty getCurrentDifficulty(){
         return currentDifficulty;
     }
-    protected void setCode(String code) { this.code = code; }
+    protected void setCode(String code) {
+        try {
+            byte[] newCodeBytes = decrypter.encrypt(code);
+            String newCodeStr = CryptClass.byteArrayToHexString(newCodeBytes);
+            this.code = newCodeStr;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     protected String getCode() {
         try {
