@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -36,12 +35,10 @@ public abstract class CodeDialogBase extends AlertDialog {
     private String userCode; //Custom security code by the user (encrypted) TODO: Actually make it encrypted or never use it only SharedPref
     private boolean wasStartedByBroadcastReceiver = false;
     private CryptClass decrypter = new CryptClass();
-    private Activity callerActivity;
 
     protected CodeDialogBase(@NonNull Context context, boolean wasStartedByBroadcastReceiver) {
         super(context,R.style.AppTheme);
         this.wasStartedByBroadcastReceiver = wasStartedByBroadcastReceiver;
-        //callerActivity = activity;
         if(wasStartedByBroadcastReceiver){
             WindowManager.LayoutParams params = getWindow().getAttributes();
             params.type = TYPE_SYSTEM_ERROR;
@@ -188,7 +185,4 @@ public abstract class CodeDialogBase extends AlertDialog {
         return super.onKeyDown(keyCode, event);
     }
 
-    public Activity getCallerActivity() {
-        return callerActivity;
-    }
 }

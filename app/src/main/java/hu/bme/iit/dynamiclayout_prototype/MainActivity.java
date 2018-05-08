@@ -42,55 +42,38 @@ public class MainActivity extends AppCompatActivity{
         startService(new Intent(this,ScreenOnWatcherService.class)); //Just to start the service when the app is started TODO: it is not necessary if the user set it to off
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        Bundle b = getIntent().getExtras();
-        if(b != null) {
-            wasStartedByBroadcastReceiver = b.getBoolean(getString(R.string.started_by_br),false);
-        }
-        else wasStartedByBroadcastReceiver = false;
 
-        if (wasStartedByBroadcastReceiver) {
-
-            //String layoutFromSettings = settings.getString(SettingsActivity.KEY_PREF_LAYOUT,"numeric");
-            //if(layoutFromSettings.equals("numeric")) dialogBase = new NumericCodeDialog(this,wasStartedByBroadcastReceiver);
-            //else dialogBase = new GraphicCodeDialog(this,wasStartedByBroadcastReceiver);
-
-        } else {
-            Toolbar toolbar = (Toolbar) findViewById(R.id.mainToolbar);
-            setSupportActionBar(toolbar);
-            isTestMode = settings.getBoolean(SettingsActivity.KEY_PREF_TESTMODE,false);
-
-            final Button numericButton = (Button) findViewById(R.id.numericButton);
-            final Button graphicButton = (Button) findViewById(R.id.graphicButton);
-
-            View.OnClickListener activityStarterListener = new View.OnClickListener() { //OnClickListener to unify the listeners of the two activity start buttons to reduce repetition
-                @Override
-                public void onClick(View view) {
-                    if(view == numericButton)
-                        dialogBase = new NumericCodeDialog(MainActivity.this,wasStartedByBroadcastReceiver);
-                    else if (view == graphicButton)
-                        dialogBase = new GraphicCodeDialog(MainActivity.this,wasStartedByBroadcastReceiver);
-                    if(isTestMode){
-                        final CodeDialogBase finalDialog = dialogBase;
-                        AlertDialog.Builder attentionDialog = new AlertDialog.Builder(view.getContext());
-                        attentionDialog.setMessage(R.string.attention_dialog_disclaimer);
-                        attentionDialog.setTitle(R.string.attention_dialog_title);
-                        attentionDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                finalDialog.show(); }});
-                        attentionDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss(); }});
-                        attentionDialog.show(); }
-
-                    else dialogBase.show();
-                }
-            };
-
-            numericButton.setOnClickListener(activityStarterListener);
-            graphicButton.setOnClickListener(activityStarterListener);
-        }
+        Toolbar toolbar = (Toolbar) findViewById(R.id.mainToolbar);
+        setSupportActionBar(toolbar);
+        isTestMode = settings.getBoolean(SettingsActivity.KEY_PREF_TESTMODE,false);
+        final Button numericButton = (Button) findViewById(R.id.numericButton);
+        final Button graphicButton = (Button) findViewById(R.id.graphicButton);
+        View.OnClickListener activityStarterListener = new View.OnClickListener() { //OnClickListener to unify the listeners of the two activity start buttons to reduce repetition
+            @Override
+            public void onClick(View view) {
+                if(view == numericButton)
+                    dialogBase = new NumericCodeDialog(MainActivity.this,wasStartedByBroadcastReceiver);
+                else if (view == graphicButton)
+                    dialogBase = new GraphicCodeDialog(MainActivity.this,wasStartedByBroadcastReceiver);
+                if(isTestMode){
+                    final CodeDialogBase finalDialog = dialogBase;
+                    AlertDialog.Builder attentionDialog = new AlertDialog.Builder(view.getContext());
+                    attentionDialog.setMessage(R.string.attention_dialog_disclaimer);
+                    attentionDialog.setTitle(R.string.attention_dialog_title);
+                    attentionDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            finalDialog.show(); }});
+                    attentionDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss(); }});
+                    attentionDialog.show(); }
+                else dialogBase.show();
+            }
+        };
+        numericButton.setOnClickListener(activityStarterListener);
+        graphicButton.setOnClickListener(activityStarterListener);
 
 
     }
