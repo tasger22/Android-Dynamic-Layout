@@ -45,7 +45,7 @@ public class NumericCodeDialog extends CodeDialogBase {
             @Override
             public void onClick(View view) {
                 String codeInput = passwordLine.getText().toString();
-                if (!codeInput.equals("")) {
+                if (!"".equals(codeInput)) {
                     compareCodeToInput(codeInput);
                 }
             }
@@ -56,7 +56,7 @@ public class NumericCodeDialog extends CodeDialogBase {
             @Override
             public void onClick(View view) {
                 String codeInput = passwordLine.getText().toString();
-                if(!codeInput.equals("")){
+                if(!"".equals(codeInput)){
                     int passLength = codeInput.length();
                     String newPassLineText = codeInput.substring(0,passLength-1);
                     passwordLine.setText(newPassLineText);
@@ -73,6 +73,21 @@ public class NumericCodeDialog extends CodeDialogBase {
     }
 
     private void setUpAllButtons(){
+        ArrayList<Button> buttonList = getViewButtons();
+
+        for (Button b:
+             buttonList) {
+            b.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    processNumberPress(view);
+                }
+            });
+        }
+    }
+
+    @NonNull
+    private ArrayList<Button> getViewButtons() {
         ArrayList<Button> buttonList = new ArrayList<>();
 
         //TODO: change the following code into more practical
@@ -86,16 +101,7 @@ public class NumericCodeDialog extends CodeDialogBase {
         buttonList.add((Button) findViewById(R.id.button8));
         buttonList.add((Button) findViewById(R.id.button9));
         buttonList.add((Button) findViewById(R.id.button10));
-
-        for (Button b:
-             buttonList) {
-            b.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    processNumberPress(view);
-                }
-            });
-        }
+        return buttonList;
     }
 
     public void processNumberPress(View view) {
@@ -173,19 +179,7 @@ public class NumericCodeDialog extends CodeDialogBase {
     }
 
     private void randomizeButtons(){
-        ArrayList<Button> buttonList = new ArrayList<>();
-
-        //TODO: change the following code into more practical
-        buttonList.add((Button) findViewById(R.id.button1));
-        buttonList.add((Button) findViewById(R.id.button2));
-        buttonList.add((Button) findViewById(R.id.button3));
-        buttonList.add((Button) findViewById(R.id.button4));
-        buttonList.add((Button) findViewById(R.id.button5));
-        buttonList.add((Button) findViewById(R.id.button6));
-        buttonList.add((Button) findViewById(R.id.button7));
-        buttonList.add((Button) findViewById(R.id.button8));
-        buttonList.add((Button) findViewById(R.id.button9));
-        buttonList.add((Button) findViewById(R.id.button10));
+        ArrayList<Button> buttonList = getViewButtons();
 
         boolean[] numberWasUsed = new boolean[10];
         Random rand = new Random();

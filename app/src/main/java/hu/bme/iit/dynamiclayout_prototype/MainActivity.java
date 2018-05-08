@@ -51,9 +51,9 @@ public class MainActivity extends AppCompatActivity{
         View.OnClickListener activityStarterListener = new View.OnClickListener() { //OnClickListener to unify the listeners of the two activity start buttons to reduce repetition
             @Override
             public void onClick(View view) {
-                if(view == numericButton)
+                if(view.equals(numericButton))
                     dialogBase = new NumericCodeDialog(MainActivity.this,wasStartedByBroadcastReceiver);
-                else if (view == graphicButton)
+                else if (view.equals(graphicButton))
                     dialogBase = new GraphicCodeDialog(MainActivity.this,wasStartedByBroadcastReceiver);
                 if(isTestMode){
                     final CodeDialogBase finalDialog = dialogBase;
