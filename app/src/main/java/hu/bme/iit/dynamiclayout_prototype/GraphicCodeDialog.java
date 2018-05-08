@@ -41,8 +41,6 @@ public class GraphicCodeDialog extends CodeDialogBase {
 
         TextView codeView = (TextView) findViewById(R.id.randomCodeText);
 
-        if(isCodeNotUserCode())  setCodeToRandom();
-        else setCodeToUserCode();
         codeView.setText(getCode());
 
         buttonSetup();
@@ -149,6 +147,7 @@ public class GraphicCodeDialog extends CodeDialogBase {
         return false;
     }
 
+    @Deprecated
     @Override
     protected void setCodeToRandom() {
         Random rand = new Random();

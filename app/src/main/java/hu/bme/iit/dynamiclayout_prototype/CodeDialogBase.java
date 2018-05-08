@@ -24,15 +24,13 @@ import static android.view.WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
 //Class which provides all the necessary components for a CodeActivity
 public abstract class CodeDialogBase extends AlertDialog {
 
-    private String code; //Security code for the CodeActivities
+    private String code; //Security code for the CodeDialogs, encrypted
     private CodeResolveDifficulty currentDifficulty;
     private boolean isTestMode;
     private int tries = 2; //How many times you can try to input the code until it rejects input
     private int fails; //(Only in TestMode) Counting how many times you failed to input the right code
     private long testStartTime;
     private int initialTries;
-    private boolean isCodeUserCode;
-    private String userCode; //Custom security code by the user (encrypted) TODO: Actually make it encrypted or never use it only SharedPref
     private boolean wasStartedByBroadcastReceiver = false;
     private CryptClass decrypter = new CryptClass();
 
@@ -64,8 +62,7 @@ public abstract class CodeDialogBase extends AlertDialog {
         else isTestMode = settings.getBoolean(SettingsActivity.KEY_PREF_TESTMODE,false);
 
         currentDifficulty = MainActivity.getCodeResolveDifficultyFromString(settings.getString(SettingsActivity.KEY_PREF_DIFFICULTY,"EASY"));
-        isCodeUserCode = settings.getBoolean(SettingsActivity.KEY_PREF_USERCODE,false);
-        userCode = settings.getString(getContext().getString(R.string.encrypted_code_key),CryptClass.byteArrayToHexString(decrypter.encrypt("0000")));
+        code = settings.getString(getContext().getString(R.string.encrypted_code_key),CryptClass.byteArrayToHexString(decrypter.encrypt("0000")));
 
         if(isTestMode){
             tries = initialTries = 10;
@@ -79,6 +76,7 @@ public abstract class CodeDialogBase extends AlertDialog {
         }
     }
 
+    @Deprecated
     //Unique implementation for any CodeActivity to generate a random security code
     protected abstract void setCodeToRandom();
 
@@ -159,18 +157,14 @@ public abstract class CodeDialogBase extends AlertDialog {
 
     protected String getCode() {
         try {
-            String decryptedCode = new String(decrypter.decrypt(userCode));
+            String decryptedCode = new String(decrypter.decrypt(code));
             //Toast.makeText(this,decryptedCode,Toast.LENGTH_SHORT).show();
             return decryptedCode.trim();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new String ("");
+        return "";
     }
-
-    protected boolean isCodeNotUserCode(){ return !isCodeUserCode; }
-
-    protected void setCodeToUserCode() { code = userCode; }
 
     protected boolean wasStartedByBroadcastReceiver(){return wasStartedByBroadcastReceiver;}
 

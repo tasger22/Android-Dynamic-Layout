@@ -64,8 +64,6 @@ public class NumericCodeDialog extends CodeDialogBase {
             }
         });
 
-        if(isCodeNotUserCode())  setCodeToRandom();
-        else setCodeToUserCode();
         codeView.setText(getCode());
 
         if(getCurrentDifficulty() != CodeResolveDifficulty.EASY)
@@ -111,6 +109,7 @@ public class NumericCodeDialog extends CodeDialogBase {
             randomizeButtons();
     }
 
+    @Deprecated
     protected void setCodeToRandom(){
         Random rand = new Random();
         int codeLength = rand.nextInt(8);

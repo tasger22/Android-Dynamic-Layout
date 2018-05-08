@@ -19,6 +19,7 @@ public class SettingsActivity extends Activity {
     public static final String KEY_PREF_CODEINPUT = "pref_codeinput"; // Key for a string, user defined code (default: 0000)
     public static final String KEY_PREF_DIFFICULTY = "pref_difficulty"; //Key for a string, string which defines the difficulty of the code input method
     public static final String KEY_PREF_LAYOUT = "pref_layout"; //Key for a string, should be either "numeric" or "graphic"
+    public static final String KEY_PREF_LOCKSCREEN = "pref_lockscreen"; //Key for a boolean, shows whether the app shows code dialog on lockscreen or boot
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,6 +66,13 @@ public class SettingsActivity extends Activity {
                         sharedPreferencesEditor.apply();
                     } catch (Exception e) {
                         e.printStackTrace();
+                    }
+                }
+
+                else if(key.equals(KEY_PREF_LOCKSCREEN)){
+                    boolean isLockScreenEnabled = sharedPreferences.getBoolean(KEY_PREF_LOCKSCREEN,false);
+                    if(isLockScreenEnabled){
+                        
                     }
                 }
 

@@ -21,10 +21,12 @@ public class EventHappenedReceiver extends BroadcastReceiver {
             CodeDialogBase dialogBase;
 
             String layoutFromSettings = settings.getString(SettingsActivity.KEY_PREF_LAYOUT,"numeric");
-            if(layoutFromSettings.equals("numeric")) dialogBase = new NumericCodeDialog(context,true);
-            else dialogBase = new GraphicCodeDialog(context,true);
-
-            dialogBase.show();
+            boolean isLockScreenEnabled = settings.getBoolean(SettingsActivity.KEY_PREF_LOCKSCREEN,false);
+            if (isLockScreenEnabled){
+                if(layoutFromSettings.equals("numeric")) dialogBase = new NumericCodeDialog(context,true);
+                else dialogBase = new GraphicCodeDialog(context,true);
+                dialogBase.show();
+            }
         }
     }
 }
