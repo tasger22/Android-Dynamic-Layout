@@ -25,7 +25,7 @@ public class GraphicCodeDialog extends CodeDialogBase {
 
     private String codeInput = ""; //String which contains the character from all the previously pressed buttons
 
-    protected GraphicCodeDialog(@NonNull Activity context, boolean wasStartedByBroadcastReceiver) {
+    protected GraphicCodeDialog(@NonNull Context context, boolean wasStartedByBroadcastReceiver) {
         super(context,wasStartedByBroadcastReceiver);
     }
 
@@ -199,7 +199,6 @@ public class GraphicCodeDialog extends CodeDialogBase {
                     setTries(getInitialTries());
                     if(getCurrentDifficulty() == CodeResolveDifficulty.HARD)    buttonSetup();
                     if(wasStartedByBroadcastReceiver()){
-                        getCallerActivity().finish();
                         dismiss();
                     }
                 }

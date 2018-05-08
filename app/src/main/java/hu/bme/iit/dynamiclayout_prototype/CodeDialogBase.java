@@ -38,10 +38,10 @@ public abstract class CodeDialogBase extends AlertDialog {
     private CryptClass decrypter = new CryptClass();
     private Activity callerActivity;
 
-    protected CodeDialogBase(@NonNull Activity activity, boolean wasStartedByBroadcastReceiver) {
-        super(activity,R.style.AppTheme);
+    protected CodeDialogBase(@NonNull Context context, boolean wasStartedByBroadcastReceiver) {
+        super(context,R.style.AppTheme);
         this.wasStartedByBroadcastReceiver = wasStartedByBroadcastReceiver;
-        callerActivity = activity;
+        //callerActivity = activity;
         if(wasStartedByBroadcastReceiver){
             WindowManager.LayoutParams params = getWindow().getAttributes();
             params.type = TYPE_SYSTEM_ERROR;
@@ -49,7 +49,6 @@ public abstract class CodeDialogBase extends AlertDialog {
             params.gravity = Gravity.BOTTOM;
             getWindow().setAttributes(params);
             getWindow().setFlags(FLAG_SHOW_WHEN_LOCKED | FLAG_NOT_TOUCH_MODAL | FLAG_LOCAL_FOCUS_MODE, 0xffffff);
-            setOwnerActivity(activity);
             setCancelable(false);
         }
     }
@@ -63,11 +62,6 @@ public abstract class CodeDialogBase extends AlertDialog {
     protected void initialSetup() throws Exception {
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
-
-        /*Bundle b = getOwnerActivity().getIntent().getExtras();
-        if(b != null) {
-            wasStartedByBroadcastReceiver = b.getBoolean("broadcastReceiverStart",false);
-        }*///TODO:Fix this by changing the BroadcastReceiver
 
         if(wasStartedByBroadcastReceiver)    isTestMode = false;
         else isTestMode = settings.getBoolean(SettingsActivity.KEY_PREF_TESTMODE,false);

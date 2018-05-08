@@ -21,8 +21,8 @@ public class NumericCodeDialog extends CodeDialogBase {
 
     private EditText passwordLine;
 
-    protected NumericCodeDialog(@NonNull Activity activity, boolean wasStartedByBroadcastReceiver) {
-        super(activity,wasStartedByBroadcastReceiver);
+    protected NumericCodeDialog(@NonNull Context context, boolean wasStartedByBroadcastReceiver) {
+        super(context,wasStartedByBroadcastReceiver);
     }
 
     @Override
@@ -159,7 +159,7 @@ public class NumericCodeDialog extends CodeDialogBase {
                     if(getCurrentDifficulty() == CodeResolveDifficulty.HARD) randomizeButtons();
                     if(wasStartedByBroadcastReceiver()) {
                         dismiss();
-                        getCallerActivity().finish();
+                        //getCallerActivity().finish();
                     }
                 }
 

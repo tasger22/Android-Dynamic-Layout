@@ -50,9 +50,9 @@ public class MainActivity extends AppCompatActivity{
 
         if (wasStartedByBroadcastReceiver) {
 
-            String layoutFromSettings = settings.getString(SettingsActivity.KEY_PREF_LAYOUT,"numeric");
-            if(layoutFromSettings.equals("numeric")) dialogBase = new NumericCodeDialog(this,wasStartedByBroadcastReceiver);
-            else dialogBase = new GraphicCodeDialog(this,wasStartedByBroadcastReceiver);
+            //String layoutFromSettings = settings.getString(SettingsActivity.KEY_PREF_LAYOUT,"numeric");
+            //if(layoutFromSettings.equals("numeric")) dialogBase = new NumericCodeDialog(this,wasStartedByBroadcastReceiver);
+            //else dialogBase = new GraphicCodeDialog(this,wasStartedByBroadcastReceiver);
 
         } else {
             Toolbar toolbar = (Toolbar) findViewById(R.id.mainToolbar);

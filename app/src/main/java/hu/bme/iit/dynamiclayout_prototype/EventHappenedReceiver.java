@@ -18,11 +18,13 @@ public class EventHappenedReceiver extends BroadcastReceiver {
             if(Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) context.startService(new Intent(context,ScreenOnWatcherService.class));
 
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+            CodeDialogBase dialogBase;
 
-            Intent codeIntent = new Intent(context,MainActivity.class);
-            codeIntent.putExtra(context.getString(R.string.started_by_br),true);
-            codeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(codeIntent);
+            String layoutFromSettings = settings.getString(SettingsActivity.KEY_PREF_LAYOUT,"numeric");
+            if(layoutFromSettings.equals("numeric")) dialogBase = new NumericCodeDialog(context,true);
+            else dialogBase = new GraphicCodeDialog(context,true);
+
+            dialogBase.show();
         }
     }
 }
