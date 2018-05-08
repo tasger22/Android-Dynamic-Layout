@@ -1,9 +1,14 @@
 package hu.bme.iit.dynamiclayout_prototype;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 
 /**
@@ -21,9 +26,12 @@ public class SettingsActivity extends Activity {
     public static final String KEY_PREF_LAYOUT = "pref_layout"; //Key for a string, should be either "numeric" or "graphic"
     public static final String KEY_PREF_LOCKSCREEN = "pref_lockscreen"; //Key for a boolean, shows whether the app shows code dialog on lockscreen or boot
 
+    public static String staticPackageName;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        staticPackageName = getApplicationContext().getPackageName();
 
         getFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new SettingsFragment())
@@ -69,15 +77,36 @@ public class SettingsActivity extends Activity {
                     }
                 }
 
-                else if(key.equals(KEY_PREF_LOCKSCREEN)){
-                    boolean isLockScreenEnabled = sharedPreferences.getBoolean(KEY_PREF_LOCKSCREEN,false);
-                    if(isLockScreenEnabled){
-                        
-                    }
-                }
-
                 sharedPreferencesEditor.putString(KEY_PREF_CODEINPUT,""); //We clear the SharedPreferences to never see the cleartext security code
                 sharedPreferencesEditor.apply();
+            }
+
+            else if(key.equals(KEY_PREF_LOCKSCREEN)){
+                checkDrawOverlayPermission();
+            }
+
+
+        }
+
+        public final static int REQUEST_CODE = 5463;
+
+        public void checkDrawOverlayPermission() {
+            /** check if we already  have permission to draw over other apps */
+            if (!Settings.canDrawOverlays(getContext())) {
+                final AlertDialog.Builder drawOverAppsAlert = new AlertDialog.Builder(getContext());
+                drawOverAppsAlert.setTitle("ATTENTION!");
+                drawOverAppsAlert.setMessage("Pressing OK opens up the app settings where you have to give permission to draw over other apps");
+                drawOverAppsAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        /** if not construct intent to request permission */
+                        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                                Uri.parse("package:" + staticPackageName));
+                        /** request permission via start activity for result */
+                        startActivityForResult(intent, REQUEST_CODE);
+                    }
+                });
+                drawOverAppsAlert.show();
             }
         }
     }
