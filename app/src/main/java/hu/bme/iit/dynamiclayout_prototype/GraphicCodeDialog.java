@@ -41,8 +41,6 @@ public class GraphicCodeDialog extends CodeDialogBase {
 
         TextView codeView = (TextView) findViewById(R.id.randomCodeText);
 
-        codeView.setText(getCode());
-
         buttonSetup();
     }
 
@@ -145,23 +143,6 @@ public class GraphicCodeDialog extends CodeDialogBase {
             }
         }
         return false;
-    }
-
-    @Deprecated
-    @Override
-    protected void setCodeToRandom() {
-        Random rand = new Random();
-        boolean isLetter = rand.nextBoolean();
-        int codeLength = rand.nextInt(8);
-        setCode("");
-
-        while(codeLength < 4) codeLength = rand.nextInt(8);
-
-        for(int i = 0; i < codeLength; i++){
-            if(isLetter)    setCode(getCode()+ (char)((int)'A'+rand.nextDouble()*((int)'Z'-(int)'A'+1)));
-            else    setCode(getCode() + Integer.toString(rand.nextInt(10)));
-            isLetter = rand.nextBoolean();
-        }
     }
 
     protected void compareCodeToInput(String input) {

@@ -64,8 +64,6 @@ public class NumericCodeDialog extends CodeDialogBase {
             }
         });
 
-        codeView.setText(getCode());
-
         if(getCurrentDifficulty() != CodeResolveDifficulty.EASY)
             randomizeButtons();
 
@@ -115,20 +113,6 @@ public class NumericCodeDialog extends CodeDialogBase {
             randomizeButtons();
     }
 
-    @Deprecated
-    protected void setCodeToRandom(){
-        Random rand = new Random();
-        int codeLength = rand.nextInt(8);
-        setCode("");
-
-        while(codeLength < 4) codeLength = rand.nextInt(8);
-
-        for(int i = 0; i < codeLength; i++){
-            setCode(getCode() + Integer.toString(rand.nextInt(10)));
-        }
-
-    }
-
     protected void compareCodeToInput(String input){
         if(input.length() < 4){
             Toast.makeText(getContext(),"Code must be 4-8 characters long",Toast.LENGTH_SHORT).show();
@@ -136,8 +120,8 @@ public class NumericCodeDialog extends CodeDialogBase {
         }
 
         if (isTestMode()) {
-            if(!getCode().equals("")){
-                if(getCode().equals(input)){
+            if(!isInputCodeCorrect("")){
+                if(isInputCodeCorrect(input)){
                     decrementTries();
                     if(getTries() > 0)
                         Toast.makeText(getContext(), getContext().getString(R.string.code_accepted_test_mode,getInitialTries() - getTries(),getInitialTries()),Toast.LENGTH_SHORT).show();
@@ -156,14 +140,13 @@ public class NumericCodeDialog extends CodeDialogBase {
             }
 
         } else {
-            if(!getCode().equals("")){
-                if(getCode().equals(input)){
+            if(!isInputCodeCorrect("")){
+                if(isInputCodeCorrect(input)){
                     Toast.makeText(getContext(), R.string.code_accepted,Toast.LENGTH_SHORT).show();
                     setTries(getInitialTries());
                     if(getCurrentDifficulty() == CodeResolveDifficulty.HARD) randomizeButtons();
                     if(wasStartedByBroadcastReceiver()) {
                         dismiss();
-                        //getCallerActivity().finish();
                     }
                 }
 

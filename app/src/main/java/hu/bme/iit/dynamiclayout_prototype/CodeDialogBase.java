@@ -1,6 +1,5 @@
 package hu.bme.iit.dynamiclayout_prototype;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,7 +31,7 @@ public abstract class CodeDialogBase extends AlertDialog {
     private long testStartTime;
     private int initialTries;
     private boolean wasStartedByBroadcastReceiver = false;
-    private CryptClass decrypter = new CryptClass();
+    private CryptClass crypter = new CryptClass();
 
     protected CodeDialogBase(@NonNull Context context, boolean wasStartedByBroadcastReceiver) {
         super(context,R.style.AppTheme);
@@ -62,7 +61,7 @@ public abstract class CodeDialogBase extends AlertDialog {
         else isTestMode = settings.getBoolean(SettingsActivity.KEY_PREF_TESTMODE,false);
 
         currentDifficulty = MainActivity.getCodeResolveDifficultyFromString(settings.getString(SettingsActivity.KEY_PREF_DIFFICULTY,"EASY"));
-        code = settings.getString(getContext().getString(R.string.encrypted_code_key),CryptClass.byteArrayToHexString(decrypter.encrypt("0000")));
+        code = settings.getString(getContext().getString(R.string.encrypted_code_key),CryptClass.byteArrayToHexString(crypter.encrypt("0000")));
 
         if(isTestMode){
             tries = initialTries = 10;
@@ -75,10 +74,6 @@ public abstract class CodeDialogBase extends AlertDialog {
             fails = 0;
         }
     }
-
-    @Deprecated
-    //Unique implementation for any CodeActivity to generate a random security code
-    protected abstract void setCodeToRandom();
 
     protected abstract void compareCodeToInput(String input);
 
@@ -147,7 +142,7 @@ public abstract class CodeDialogBase extends AlertDialog {
     }
     protected void setCode(String code) {
         try {
-            byte[] newCodeBytes = decrypter.encrypt(code);
+            byte[] newCodeBytes = crypter.encrypt(code);
             String newCodeStr = CryptClass.byteArrayToHexString(newCodeBytes);
             this.code = newCodeStr;
         } catch (Exception e) {
@@ -155,15 +150,15 @@ public abstract class CodeDialogBase extends AlertDialog {
         }
     }
 
-    protected String getCode() {
+    protected boolean isInputCodeCorrect(String inputCode) {
         try {
-            String decryptedCode = new String(decrypter.decrypt(code));
-            //Toast.makeText(this,decryptedCode,Toast.LENGTH_SHORT).show();
-            return decryptedCode.trim();
+            byte[] inputCodeBytes = crypter.encrypt(inputCode);
+            String inputCodeEncryptedStr = CryptClass.byteArrayToHexString(inputCodeBytes);
+            return code.equals(inputCodeEncryptedStr);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "";
+        return false;
     }
 
     protected boolean wasStartedByBroadcastReceiver(){return wasStartedByBroadcastReceiver;}
@@ -178,5 +173,8 @@ public abstract class CodeDialogBase extends AlertDialog {
         }
         return super.onKeyDown(keyCode, event);
     }
+
+    //Only for GraphicCodeDialog, since the numeric system doesn't need this and uses isInputCodeCorrect instead (which is more secure)
+    protected String getCode(){return "0000";}
 
 }
