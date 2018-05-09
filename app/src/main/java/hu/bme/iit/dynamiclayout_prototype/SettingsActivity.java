@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.provider.Settings;
@@ -90,21 +91,23 @@ public class SettingsActivity extends Activity {
 
         public void checkDrawOverlayPermission() {
             /** check if we already  have permission to draw over other apps */
-            if (!Settings.canDrawOverlays(getContext())) {
-                final AlertDialog.Builder drawOverAppsAlert = new AlertDialog.Builder(getContext());
-                drawOverAppsAlert.setTitle("ATTENTION!");
-                drawOverAppsAlert.setMessage("Pressing OK opens up the app settings where you have to give permission to draw over other apps");
-                drawOverAppsAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        /** if not construct intent to request permission */
-                        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                                Uri.parse("package:" + staticPackageName));
-                        /** request permission via start activity for result */
-                        startActivityForResult(intent, REQUEST_CODE);
-                    }
-                });
-                drawOverAppsAlert.show();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (!Settings.canDrawOverlays(getContext())) {
+                    final AlertDialog.Builder drawOverAppsAlert = new AlertDialog.Builder(getContext());
+                    drawOverAppsAlert.setTitle("ATTENTION!");
+                    drawOverAppsAlert.setMessage("Pressing OK opens up the app settings where you have to give permission to draw over other apps");
+                    drawOverAppsAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            /** if not construct intent to request permission */
+                            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                                    Uri.parse("package:" + staticPackageName));
+                            /** request permission via start activity for result */
+                            startActivityForResult(intent, REQUEST_CODE);
+                        }
+                    });
+                    drawOverAppsAlert.show();
+                }
             }
         }
     }
