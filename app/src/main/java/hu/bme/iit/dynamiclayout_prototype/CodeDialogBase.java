@@ -1,30 +1,51 @@
 package hu.bme.iit.dynamiclayout_prototype;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.WindowManager;
 
 import java.security.InvalidParameterException;
 
 import hu.bme.iit.dynamiclayout_prototype.MainActivity.CodeResolveDifficulty;
 
-//Class which provides all the necessary components for a CodeActivity
-public abstract class CodeActivityBase extends AppCompatActivity  {
+import static android.view.WindowManager.LayoutParams.FLAG_LOCAL_FOCUS_MODE;
+import static android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+import static android.view.WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
+import static android.view.WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
 
-    private String code; //Security code for the CodeActivities
+//Class which provides all the necessary components for a CodeActivity
+public abstract class CodeDialogBase extends AlertDialog {
+
+    private String code; //Security code for the CodeDialogs, encrypted
     private CodeResolveDifficulty currentDifficulty;
     private boolean isTestMode;
     private int tries = 2; //How many times you can try to input the code until it rejects input
     private int fails; //(Only in TestMode) Counting how many times you failed to input the right code
     private long testStartTime;
     private int initialTries;
-    private boolean isCodeUserCode;
-    private String userCode; //Custom security code by the user (encrypted) TODO: Actually make it encrypted or never use it only SharedPref
-    private boolean wasStartedByBroadcastReceiver;
-    private CryptClass decrypter = new CryptClass();
+    private boolean wasStartedByBroadcastReceiver = false;
+    private CryptClass crypter = new CryptClass();
+
+    protected CodeDialogBase(@NonNull Context context, boolean wasStartedByBroadcastReceiver) {
+        super(context,R.style.AppTheme);
+        this.wasStartedByBroadcastReceiver = wasStartedByBroadcastReceiver;
+        if(wasStartedByBroadcastReceiver){
+            WindowManager.LayoutParams params = getWindow().getAttributes();
+            params.type = TYPE_SYSTEM_ERROR;
+            params.dimAmount = 0.0F; // transparent
+            params.gravity = Gravity.BOTTOM;
+            getWindow().setAttributes(params);
+            getWindow().setFlags(FLAG_SHOW_WHEN_LOCKED | FLAG_NOT_TOUCH_MODAL | FLAG_LOCAL_FOCUS_MODE, 0xffffff);
+            setCancelable(false);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,19 +55,13 @@ public abstract class CodeActivityBase extends AppCompatActivity  {
     //Method to initialize all the private variables from the SharedPreferences
     protected void initialSetup() throws Exception {
 
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-
-        Bundle b = getIntent().getExtras();
-        if(b != null) {
-            wasStartedByBroadcastReceiver = b.getBoolean("broadcastReceiverStart",false);
-        }
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         if(wasStartedByBroadcastReceiver)    isTestMode = false;
         else isTestMode = settings.getBoolean(SettingsActivity.KEY_PREF_TESTMODE,false);
 
         currentDifficulty = MainActivity.getCodeResolveDifficultyFromString(settings.getString(SettingsActivity.KEY_PREF_DIFFICULTY,"EASY"));
-        isCodeUserCode = settings.getBoolean(SettingsActivity.KEY_PREF_USERCODE,false);
-        userCode = settings.getString(getString(R.string.encrypted_code_key),CryptClass.byteArrayToHexString(decrypter.encrypt("0000")));
+        code = settings.getString(getContext().getString(R.string.encrypted_code_key),CryptClass.byteArrayToHexString(crypter.encrypt("0000")));
 
         if(isTestMode){
             tries = initialTries = 10;
@@ -59,9 +74,6 @@ public abstract class CodeActivityBase extends AppCompatActivity  {
             fails = 0;
         }
     }
-
-    //Unique implementation for any CodeActivity to generate a random security code
-    protected abstract void setCodeToRandom();
 
     protected abstract void compareCodeToInput(String input);
 
@@ -84,15 +96,15 @@ public abstract class CodeActivityBase extends AppCompatActivity  {
             milliString = "0" + milliString;
 
         String compTimeText = minutes + ":" + secondsString + "." + milliString ;
-        Intent resultIntent = new Intent(this,TestResultActivity.class);
+        Intent resultIntent = new Intent(getContext(),TestResultActivity.class);
 
-        resultIntent.putExtra(getString(R.string.diff_key),currentDifficulty)
-                    .putExtra(getString(R.string.code_length_key),code.length())
-                    .putExtra(getString(R.string.comp_time_key),compTimeText)
-                    .putExtra(getString(R.string.comp_time_sec_key),(int)timeDifference/1000)
-                    .putExtra(getString(R.string.fails_key),fails);
+        resultIntent.putExtra(getContext().getString(R.string.diff_key),currentDifficulty)
+                    .putExtra(getContext().getString(R.string.code_length_key),code.length())
+                    .putExtra(getContext().getString(R.string.comp_time_key),compTimeText)
+                    .putExtra(getContext().getString(R.string.comp_time_sec_key),(int)timeDifference/1000)
+                    .putExtra(getContext().getString(R.string.fails_key),fails);
 
-        startActivity(resultIntent);
+        getOwnerActivity().startActivity(resultIntent);
     }
 
     protected int getInitialTries() {
@@ -128,24 +140,26 @@ public abstract class CodeActivityBase extends AppCompatActivity  {
     protected CodeResolveDifficulty getCurrentDifficulty(){
         return currentDifficulty;
     }
-
-    //TODO: Encrypt the code
-    protected void setCode(String code) { this.code = code; }
-
-    protected String getCode() {
+    protected void setCode(String code) {
         try {
-            String decryptedCode = new String(decrypter.decrypt(userCode));
-            //Toast.makeText(this,decryptedCode,Toast.LENGTH_SHORT).show();
-            return decryptedCode.trim();
+            byte[] newCodeBytes = crypter.encrypt(code);
+            String newCodeStr = CryptClass.byteArrayToHexString(newCodeBytes);
+            this.code = newCodeStr;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new String ("");
     }
 
-    protected boolean isCodeNotUserCode(){ return !isCodeUserCode; }
-
-    protected void setCodeToUserCode() { code = userCode; }
+    protected boolean isInputCodeCorrect(String inputCode) {
+        try {
+            byte[] inputCodeBytes = crypter.encrypt(inputCode);
+            String inputCodeEncryptedStr = CryptClass.byteArrayToHexString(inputCodeBytes);
+            return code.equals(inputCodeEncryptedStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     protected boolean wasStartedByBroadcastReceiver(){return wasStartedByBroadcastReceiver;}
 
@@ -159,4 +173,8 @@ public abstract class CodeActivityBase extends AppCompatActivity  {
         }
         return super.onKeyDown(keyCode, event);
     }
+
+    //Only for GraphicCodeDialog, since the numeric system doesn't need this and uses isInputCodeCorrect instead (which is more secure)
+    protected String getCode(){return "0000";}
+
 }

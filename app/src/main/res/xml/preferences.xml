@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <CheckBoxPreference
+        android:key="pref_lockscreen"
+        android:title="Enable lock screen"
+        android:summary="Turn on the main feature of the app"
+        android:defaultValue="false"/>
+
+    <CheckBoxPreference
         android:key="pref_testmode"
         android:title="Turn test mode on"
         android:summary="Test how fast you can type the code in 10 times"
         android:defaultValue="false" />
 
-    <CheckBoxPreference
-        android:key="pref_usercode"
-        android:title="Using custom code"
-        android:summary=""
-        android:defaultValue="false"
-        />
-
     <EditTextPreference
-        android:dependency="pref_usercode"
         android:key="pref_codeinput"
         android:defaultValue="0000"
         android:title="Code"
@@ -38,6 +36,5 @@
         android:entries="@array/layout_array"
         android:entryValues="@array/layout_save_array"
         android:defaultValue="@string/layout_array_default"/>
-
 
 </PreferenceScreen>

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +17,8 @@ import android.widget.Button;
 public class MainActivity extends AppCompatActivity{
 
     private boolean isTestMode;
+    private boolean wasStartedByBroadcastReceiver;
+    private CodeDialogBase dialogBase;
 
     public enum CodeResolveDifficulty{ //Enumeration to indicate the toughness of the code resolution
         EASY,HARD,EVIL;
@@ -38,42 +41,39 @@ public class MainActivity extends AppCompatActivity{
 
         startService(new Intent(this,ScreenOnWatcherService.class)); //Just to start the service when the app is started TODO: it is not necessary if the user set it to off
 
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.mainToolbar);
         setSupportActionBar(toolbar);
-        isTestMode = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SettingsActivity.KEY_PREF_TESTMODE,false);
-
+        isTestMode = settings.getBoolean(SettingsActivity.KEY_PREF_TESTMODE,false);
         final Button numericButton = (Button) findViewById(R.id.numericButton);
         final Button graphicButton = (Button) findViewById(R.id.graphicButton);
-
         View.OnClickListener activityStarterListener = new View.OnClickListener() { //OnClickListener to unify the listeners of the two activity start buttons to reduce repetition
             @Override
             public void onClick(View view) {
-                Intent activityIntent = new Intent();
-                if(view == numericButton)
-                    activityIntent = new Intent(getApplicationContext(),NumericCodeActivity.class);
-                else if (view == graphicButton)
-                    activityIntent = new Intent(getApplicationContext(),GraphicCodeActivity.class);
+                if(view.equals(numericButton))
+                    dialogBase = new NumericCodeDialog(MainActivity.this,wasStartedByBroadcastReceiver);
+                else if (view.equals(graphicButton))
+                    dialogBase = new GraphicCodeDialog(MainActivity.this,wasStartedByBroadcastReceiver);
                 if(isTestMode){
-                    final Intent finalIntent = (Intent) activityIntent.clone();
+                    final CodeDialogBase finalDialog = dialogBase;
                     AlertDialog.Builder attentionDialog = new AlertDialog.Builder(view.getContext());
                     attentionDialog.setMessage(R.string.attention_dialog_disclaimer);
                     attentionDialog.setTitle(R.string.attention_dialog_title);
                     attentionDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            startActivity(finalIntent); }});
+                            finalDialog.show(); }});
                     attentionDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             dialogInterface.dismiss(); }});
                     attentionDialog.show(); }
-
-                    else startActivity(activityIntent);
+                else dialogBase.show();
             }
         };
-
-            numericButton.setOnClickListener(activityStarterListener);
-            graphicButton.setOnClickListener(activityStarterListener);
+        numericButton.setOnClickListener(activityStarterListener);
+        graphicButton.setOnClickListener(activityStarterListener);
 
 
     }
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity{
         switch (item.getItemId()) {
             case R.id.action_settings:
 
-                Intent settingsActivityIntent = new Intent(getApplicationContext(),SettingsActivity.class);
+                Intent settingsActivityIntent = new Intent(MainActivity.this,SettingsActivity.class);
                 startActivity(settingsActivityIntent);
                 return true;
 
@@ -117,4 +117,9 @@ public class MainActivity extends AppCompatActivity{
         isTestMode = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SettingsActivity.KEY_PREF_TESTMODE,false); //TODO: change it to something less resource hungry
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (wasStartedByBroadcastReceiver) dialogBase.show();
+    }
 }

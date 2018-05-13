@@ -90,14 +90,15 @@ public class CryptClass {
     }
 
     private static String padString(String source) {
+        String src = source;
         char paddingChar = 0;
         int size = 16;
-        int x = source.length() % size;
+        int x = src.length() % size;
         int padLength = size - x;
         for (int i = 0; i < padLength; i++) {
-            source += paddingChar;
+            src += paddingChar;
         }
-        return source;
+        return src;
     }
 }
 

@@ -18,16 +18,15 @@ public class EventHappenedReceiver extends BroadcastReceiver {
             if(Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) context.startService(new Intent(context,ScreenOnWatcherService.class));
 
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-            String layoutSetting = settings.getString(SettingsActivity.KEY_PREF_LAYOUT,"numeric"); //The second parameter is "numeric" which defaults NumericCodeActivity as used CodeActivity
+            CodeDialogBase dialogBase;
 
-            Intent codeIntent;
-
-            if(layoutSetting.equals("numeric")) codeIntent = new Intent(context, NumericCodeActivity.class); //TODO: Find a better way to check the set layout
-            else codeIntent = new Intent(context, GraphicCodeActivity.class);
-
-            codeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            codeIntent.putExtra("broadcastReceiverStart",true);
-            context.startActivity(codeIntent);
+            String layoutFromSettings = settings.getString(SettingsActivity.KEY_PREF_LAYOUT,"numeric");
+            boolean isLockScreenEnabled = settings.getBoolean(SettingsActivity.KEY_PREF_LOCKSCREEN,false);
+            if (isLockScreenEnabled){
+                if(layoutFromSettings.equals("numeric")) dialogBase = new NumericCodeDialog(context,true);
+                else dialogBase = new GraphicCodeDialog(context,true);
+                dialogBase.show();
+            }
         }
     }
 }
