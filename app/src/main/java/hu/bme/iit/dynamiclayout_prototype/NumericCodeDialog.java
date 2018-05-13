@@ -1,6 +1,7 @@
 package hu.bme.iit.dynamiclayout_prototype;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -20,8 +21,8 @@ public class NumericCodeDialog extends CodeDialogBase {
 
     private EditText passwordLine;
 
-    protected NumericCodeDialog(@NonNull Context context, boolean wasStartedByBroadcastReceiver) {
-        super(context,wasStartedByBroadcastReceiver);
+    protected NumericCodeDialog(@NonNull Context context, boolean wasStartedByBroadcastReceiver, SharedPreferences customSharedPref) {
+        super(context,wasStartedByBroadcastReceiver,customSharedPref);
     }
 
     @Override

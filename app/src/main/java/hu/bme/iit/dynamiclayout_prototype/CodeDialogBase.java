@@ -32,10 +32,12 @@ public abstract class CodeDialogBase extends AlertDialog {
     private int initialTries;
     private boolean wasStartedByBroadcastReceiver = false;
     private CryptClass crypter = new CryptClass();
+    private SharedPreferences settings;
 
-    protected CodeDialogBase(@NonNull Context context, boolean wasStartedByBroadcastReceiver) {
+    protected CodeDialogBase(@NonNull Context context, boolean wasStartedByBroadcastReceiver, SharedPreferences customSharedPref) {
         super(context,R.style.AppTheme);
         this.wasStartedByBroadcastReceiver = wasStartedByBroadcastReceiver;
+        settings = customSharedPref;
         if(wasStartedByBroadcastReceiver){
             WindowManager.LayoutParams params = getWindow().getAttributes();
             params.type = TYPE_SYSTEM_ERROR;
@@ -54,8 +56,6 @@ public abstract class CodeDialogBase extends AlertDialog {
 
     //Method to initialize all the private variables from the SharedPreferences
     protected void initialSetup() throws Exception {
-
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         if(wasStartedByBroadcastReceiver)    isTestMode = false;
         else isTestMode = settings.getBoolean(SettingsActivity.KEY_PREF_TESTMODE,false);

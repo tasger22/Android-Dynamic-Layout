@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity{
 
         startService(new Intent(this,ScreenOnWatcherService.class)); //Just to start the service when the app is started TODO: it is not necessary if the user set it to off
 
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.mainToolbar);
         setSupportActionBar(toolbar);
@@ -52,9 +52,9 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 if(view.equals(numericButton))
-                    dialogBase = new NumericCodeDialog(MainActivity.this,wasStartedByBroadcastReceiver);
+                    dialogBase = new NumericCodeDialog(MainActivity.this,wasStartedByBroadcastReceiver,settings);
                 else if (view.equals(graphicButton))
-                    dialogBase = new GraphicCodeDialog(MainActivity.this,wasStartedByBroadcastReceiver);
+                    dialogBase = new GraphicCodeDialog(MainActivity.this,wasStartedByBroadcastReceiver,settings);
                 if(isTestMode){
                     final CodeDialogBase finalDialog = dialogBase;
                     AlertDialog.Builder attentionDialog = new AlertDialog.Builder(view.getContext());
