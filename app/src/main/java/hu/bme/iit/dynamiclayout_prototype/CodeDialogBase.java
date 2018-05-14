@@ -3,6 +3,7 @@ package hu.bme.iit.dynamiclayout_prototype;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -15,6 +16,7 @@ import java.security.InvalidParameterException;
 
 import hu.bme.iit.dynamiclayout_prototype.MainActivity.CodeResolveDifficulty;
 
+import static android.view.WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD;
 import static android.view.WindowManager.LayoutParams.FLAG_LOCAL_FOCUS_MODE;
 import static android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
 import static android.view.WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
@@ -44,7 +46,10 @@ public abstract class CodeDialogBase extends AlertDialog {
             params.dimAmount = 0.0F; // transparent
             params.gravity = Gravity.BOTTOM;
             getWindow().setAttributes(params);
-            getWindow().setFlags(FLAG_SHOW_WHEN_LOCKED | FLAG_NOT_TOUCH_MODAL | FLAG_LOCAL_FOCUS_MODE, 0xffffff);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                getWindow().addFlags(FLAG_LOCAL_FOCUS_MODE);
+            }
+            getWindow().addFlags(FLAG_SHOW_WHEN_LOCKED | FLAG_NOT_TOUCH_MODAL | FLAG_DISMISS_KEYGUARD);
             setCancelable(false);
         }
     }
