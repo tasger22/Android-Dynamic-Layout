@@ -2,8 +2,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="9"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:weightSum="8"
     android:orientation="vertical">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/mainToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:title="@string/app_name"
+        app:titleTextColor="#FFFFFF">
+    </android.support.v7.widget.Toolbar>
     <Button
         android:id="@+id/numericButton"
         android:layout_width="fill_parent"
@@ -16,10 +27,4 @@
         android:layout_height="0dp"
         android:layout_weight="4"
         android:text="Graphical codesystem" />
-    <Button
-        android:id="@+id/difficultyButton"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="Code difficulty" />
 </LinearLayout>

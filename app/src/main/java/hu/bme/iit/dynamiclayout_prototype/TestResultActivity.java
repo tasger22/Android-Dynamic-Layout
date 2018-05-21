@@ -3,16 +3,14 @@ package hu.bme.iit.dynamiclayout_prototype;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.method.KeyListener;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import hu.bme.iit.dynamiclayout_prototype.MainActivity.*;
+import hu.bme.iit.dynamiclayout_prototype.MainActivity.CodeResolveDifficulty;
 
-public class TestResultActivity extends AppCompatActivity implements KeyListener{
+public class TestResultActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +41,7 @@ public class TestResultActivity extends AppCompatActivity implements KeyListener
             String diffLocalizedString = getLocalizedDifficultyString(difficultyResult);
             int completionTimeInSecs = extras.getInt(getString(R.string.comp_time_sec_key)); //only for performance calculation
 
-            int performance = (int)((difficultyResult.getDifficultyMultiplier() * 120/completionTimeInSecs * (codeLengthResult/2) )/ ((failsResult*0.5)+1));
+            int performance = (int)((difficultyResult.getDifficultyMultiplier() * (120/completionTimeInSecs) * codeLengthResult )/ ((failsResult*0.5)+1));
 
 
             difficultyResultText.setText(diffLocalizedString);
@@ -66,16 +64,17 @@ public class TestResultActivity extends AppCompatActivity implements KeyListener
     }
 
     private String getLocalizedDifficultyString(CodeResolveDifficulty difficulty){
+        String[] localizedDifficultyArray = getResources().getStringArray(R.array.difficulty_array);
         switch(difficulty){
-            case EASY: return getString(R.string.easy_difficulty);
-            case HARD: return getString(R.string.hard_difficulty);
-            case EVIL: return getString(R.string.evil_difficulty);
+            case EASY: return localizedDifficultyArray[0];
+            case HARD: return localizedDifficultyArray[1];
+            case EVIL: return localizedDifficultyArray[2];
             default: return "Unknown difficulty";
         }
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+    public boolean onKeyDown(int keyCode, KeyEvent event)  { //A method override to ignore default function of the back button
         if (Integer.parseInt(android.os.Build.VERSION.SDK) > 5
                 && keyCode == KeyEvent.KEYCODE_BACK
                 && event.getRepeatCount() == 0) {
@@ -93,28 +92,4 @@ public class TestResultActivity extends AppCompatActivity implements KeyListener
         startActivity(setIntent);
     }
 
-    @Override
-    public int getInputType() {
-        return 0;
-    }
-
-    @Override
-    public boolean onKeyDown(View view, Editable text, int keyCode, KeyEvent event) {
-        return false;
-    }
-
-    @Override
-    public boolean onKeyUp(View view, Editable text, int keyCode, KeyEvent event) {
-        return false;
-    }
-
-    @Override
-    public boolean onKeyOther(View view, Editable text, KeyEvent event) {
-        return false;
-    }
-
-    @Override
-    public void clearMetaKeyState(View view, Editable content, int states) {
-
-    }
 }

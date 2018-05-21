@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="difficulty_array">
+        <item name="easy_difficulty">Default</item>
+        <item name="hard_difficulty">Complicated</item>
+        <item name="evil_difficulty">Highly complicated</item>
+    </string-array>
+
+    <string-array name="difficulty_save_array">
+        <item>EASY</item>
+        <item>HARD</item>
+        <item>EVIL</item>
+    </string-array>
+
+    <string-array name="layout_array">
+        <item>Numeric</item>
+        <item>Graphic</item>
+    </string-array>
+
+    <string-array name="layout_save_array">
+        <item>numeric</item>
+        <item>graphic</item>
+    </string-array>
+</resources>
