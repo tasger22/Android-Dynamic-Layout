@@ -1,4 +1,4 @@
-package hu.bme.iit.dynamiclayout_prototype.serviceElements;
+package hu.bme.iit.dynamiclayout_prototype.service_elements;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

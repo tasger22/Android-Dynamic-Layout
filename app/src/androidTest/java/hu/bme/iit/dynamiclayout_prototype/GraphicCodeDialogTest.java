@@ -28,7 +28,7 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
-@Deprecated
+@Deprecated //Since GraphicCodeDialog uses unsafe codeinput methods (code is visible in plain sight)
 public class GraphicCodeDialogTest {
 
     Context appContext;

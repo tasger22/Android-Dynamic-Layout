@@ -26,7 +26,7 @@
             android:screenOrientation="portrait"/>
 
         <receiver
-            android:name=".serviceElements.EventHappenedReceiver"
+            android:name=".service_elements.EventHappenedReceiver"
             android:label="StartActivityAtActionReceiver">
             <intent-filter android:priority="100">
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -34,7 +34,7 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".serviceElements.ScreenOnWatcherService">
+        <service android:name=".service_elements.ScreenOnWatcherService">
 
         </service>
 

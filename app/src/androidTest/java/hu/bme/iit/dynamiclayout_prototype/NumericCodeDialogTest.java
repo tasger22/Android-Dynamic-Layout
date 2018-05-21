@@ -30,20 +30,17 @@ import static org.junit.Assert.*;
 @RunWith(AndroidJUnit4.class)
 public class NumericCodeDialogTest {
 
-    private Context appContext;
-    private MainActivity activityContext;
     private String testCode = "1996";
-    private SharedPreferences.Editor appPrefEditor;
     private NumericCodeDialog shownNumericDialog;
     private CryptClass testCrypter = new CryptClass();
 
     @Before
     public void setUp() throws Throwable {
-        appContext = InstrumentationRegistry.getContext();
-        activityContext = mActivityRule.launchActivity(new Intent(appContext,MainActivity.class));
+        Context appContext = InstrumentationRegistry.getContext();
+        MainActivity activityContext = mActivityRule.launchActivity(new Intent(appContext,MainActivity.class));
 
         final SharedPreferences customPref = appContext.getSharedPreferences("numericTest",Context.MODE_PRIVATE);
-        appPrefEditor = customPref.edit();
+        SharedPreferences.Editor appPrefEditor = customPref.edit();
         byte[] stringByteArray = testCrypter.encrypt(testCode);
         String encryptedStr = CryptClass.byteArrayToHexString(stringByteArray);
 
