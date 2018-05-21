@@ -131,7 +131,7 @@ public abstract class CodeDialogBase extends AlertDialog {
             if(tries < 0)   throw new InvalidParameterException("'tries' value cannot be negative");
         }
         catch (InvalidParameterException e){
-            //TODO: write the catch clause
+            e.printStackTrace();
         }
         this.tries = tries;
     }

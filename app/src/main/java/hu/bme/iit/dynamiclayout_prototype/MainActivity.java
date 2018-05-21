@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity{
 
         setContentView(R.layout.activity_main);
 
-        startService(new Intent(this,ScreenOnWatcherService.class)); //Just to start the service when the app is started TODO: it is not necessary if the user set it to off
+        startService(new Intent(this,ScreenOnWatcherService.class)); //Just to start the service when the app is started
 
         final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onResume() {
         super.onResume();
-        isTestMode = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SettingsActivity.KEY_PREF_TESTMODE,false); //TODO: change it to something less resource hungry
+        isTestMode = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(SettingsActivity.KEY_PREF_TESTMODE,false);
     }
 
     @Override

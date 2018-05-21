@@ -88,8 +88,7 @@ public class NumericCodeDialog extends CodeDialogBase {
     @NonNull
     private ArrayList<Button> getViewButtons() {
         ArrayList<Button> buttonList = new ArrayList<>();
-
-        //TODO: change the following code into more practical
+        
         buttonList.add((Button) findViewById(R.id.button1));
         buttonList.add((Button) findViewById(R.id.button2));
         buttonList.add((Button) findViewById(R.id.button3));
