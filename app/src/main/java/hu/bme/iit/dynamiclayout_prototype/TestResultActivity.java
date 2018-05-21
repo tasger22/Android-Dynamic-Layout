@@ -41,7 +41,7 @@ public class TestResultActivity extends AppCompatActivity{
             String diffLocalizedString = getLocalizedDifficultyString(difficultyResult);
             int completionTimeInSecs = extras.getInt(getString(R.string.comp_time_sec_key)); //only for performance calculation
 
-            int performance = (int)((difficultyResult.getDifficultyMultiplier() * 120/completionTimeInSecs * (codeLengthResult/2) )/ ((failsResult*0.5)+1));
+            int performance = (int)((difficultyResult.getDifficultyMultiplier() * (120/completionTimeInSecs) * codeLengthResult )/ ((failsResult*0.5)+1));
 
 
             difficultyResultText.setText(diffLocalizedString);

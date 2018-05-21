@@ -24,6 +24,8 @@
         </activity>
         <activity android:name=".SettingsActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".TestResultActivity"
+            android:screenOrientation="portrait"/>
 
         <receiver
             android:name=".service_elements.EventHappenedReceiver"

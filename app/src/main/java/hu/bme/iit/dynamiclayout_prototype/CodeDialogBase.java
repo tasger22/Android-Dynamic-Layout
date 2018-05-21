@@ -104,9 +104,17 @@ public abstract class CodeDialogBase extends AlertDialog {
 
         String compTimeText = minutes + ":" + secondsString + "." + milliString ;
         Intent resultIntent = new Intent(getContext(),TestResultActivity.class);
+        int codeLength = 4;
+        try{
+            String decryptedStr = new String(crypter.decrypt(code));
+            codeLength = decryptedStr.trim().length();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
 
         resultIntent.putExtra(getContext().getString(R.string.diff_key),currentDifficulty)
-                    .putExtra(getContext().getString(R.string.code_length_key),code.length())
+                    .putExtra(getContext().getString(R.string.code_length_key),codeLength)
                     .putExtra(getContext().getString(R.string.comp_time_key),compTimeText)
                     .putExtra(getContext().getString(R.string.comp_time_sec_key),(int)timeDifference/1000)
                     .putExtra(getContext().getString(R.string.fails_key),fails);
