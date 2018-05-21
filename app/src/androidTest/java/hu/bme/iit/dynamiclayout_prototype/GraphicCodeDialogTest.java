@@ -23,14 +23,12 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.anyOf;
-import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
+@Deprecated
 public class GraphicCodeDialogTest {
 
     Context appContext;
@@ -44,9 +42,8 @@ public class GraphicCodeDialogTest {
         appContext = InstrumentationRegistry.getContext();
         activityContext = mActivityRule.launchActivity(new Intent(appContext,MainActivity.class));
 
-        SharedPreferences appPref = PreferenceManager.getDefaultSharedPreferences(activityContext.getApplicationContext());
-        appPrefEditor = appPref.edit();
-        appPrefEditor.putBoolean(SettingsActivity.KEY_PREF_USERCODE,true);
+        final SharedPreferences customPref = appContext.getSharedPreferences("graphicTest",Context.MODE_PRIVATE);
+        appPrefEditor = customPref.edit();
         appPrefEditor.putString(SettingsActivity.KEY_PREF_CODEINPUT,testCode);
         appPrefEditor.apply();
 
@@ -54,7 +51,7 @@ public class GraphicCodeDialogTest {
         activityContext.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                shownGraphicDialog = new GraphicCodeDialog(activityContext,false);
+                shownGraphicDialog = new GraphicCodeDialog(activityContext,false, customPref);
                 shownGraphicDialog.show();
             }
         });

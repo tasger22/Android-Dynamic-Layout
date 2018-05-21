@@ -67,7 +67,7 @@ public class SettingsActivity extends Activity {
                 CryptClass encrypter = new CryptClass();
 
                 SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
-                if(!customSecurityCode.equals("")) {
+                if(!"".equals(customSecurityCode)) {
                     try {
                         byte[] stringByteArray = encrypter.encrypt(customSecurityCode);
                         String encryptedStr = CryptClass.byteArrayToHexString(stringByteArray);

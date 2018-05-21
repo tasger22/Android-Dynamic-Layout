@@ -25,7 +25,7 @@ public class GraphicCodeDialog extends CodeDialogBase {
 
     private String codeInput = ""; //String which contains the character from all the previously pressed buttons
 
-    protected GraphicCodeDialog(@NonNull Context context, boolean wasStartedByBroadcastReceiver, SharedPreferences customSharedPref) {
+    public GraphicCodeDialog(@NonNull Context context, boolean wasStartedByBroadcastReceiver, SharedPreferences customSharedPref) {
         super(context,wasStartedByBroadcastReceiver,customSharedPref);
     }
 

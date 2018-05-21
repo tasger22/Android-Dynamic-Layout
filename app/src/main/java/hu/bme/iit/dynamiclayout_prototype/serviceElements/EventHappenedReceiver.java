@@ -1,10 +1,15 @@
-package hu.bme.iit.dynamiclayout_prototype;
+package hu.bme.iit.dynamiclayout_prototype.serviceElements;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+
+import hu.bme.iit.dynamiclayout_prototype.CodeDialogBase;
+import hu.bme.iit.dynamiclayout_prototype.GraphicCodeDialog;
+import hu.bme.iit.dynamiclayout_prototype.NumericCodeDialog;
+import hu.bme.iit.dynamiclayout_prototype.SettingsActivity;
 
 /**
  * Created by Stealth on 2018. 04. 03..

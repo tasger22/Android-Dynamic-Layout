@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
@@ -22,6 +21,7 @@ import static android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
 import static android.view.WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
 import static android.view.WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
 
+
 //Class which provides all the necessary components for a CodeActivity
 public abstract class CodeDialogBase extends AlertDialog {
 
@@ -35,9 +35,11 @@ public abstract class CodeDialogBase extends AlertDialog {
     private boolean wasStartedByBroadcastReceiver = false;
     private CryptClass crypter = new CryptClass();
     private SharedPreferences settings;
+    private Context ownerContext;
 
     protected CodeDialogBase(@NonNull Context context, boolean wasStartedByBroadcastReceiver, SharedPreferences customSharedPref) {
         super(context,R.style.AppTheme);
+        ownerContext = context;
         this.wasStartedByBroadcastReceiver = wasStartedByBroadcastReceiver;
         settings = customSharedPref;
         if(wasStartedByBroadcastReceiver){
@@ -109,7 +111,7 @@ public abstract class CodeDialogBase extends AlertDialog {
                     .putExtra(getContext().getString(R.string.comp_time_sec_key),(int)timeDifference/1000)
                     .putExtra(getContext().getString(R.string.fails_key),fails);
 
-        getOwnerActivity().startActivity(resultIntent);
+        ownerContext.startActivity(resultIntent);
     }
 
     protected int getInitialTries() {

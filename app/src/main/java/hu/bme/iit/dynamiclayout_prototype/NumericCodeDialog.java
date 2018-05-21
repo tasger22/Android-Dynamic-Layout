@@ -21,7 +21,7 @@ public class NumericCodeDialog extends CodeDialogBase {
 
     private EditText passwordLine;
 
-    protected NumericCodeDialog(@NonNull Context context, boolean wasStartedByBroadcastReceiver, SharedPreferences customSharedPref) {
+    public NumericCodeDialog(@NonNull Context context, boolean wasStartedByBroadcastReceiver, SharedPreferences customSharedPref) {
         super(context,wasStartedByBroadcastReceiver,customSharedPref);
     }
 

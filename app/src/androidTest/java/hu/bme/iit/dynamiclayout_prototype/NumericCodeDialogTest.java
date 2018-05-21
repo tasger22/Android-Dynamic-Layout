@@ -28,27 +28,41 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.*;
 
 @RunWith(AndroidJUnit4.class)
-public class NumericCodeActivityTest {
+public class NumericCodeDialogTest {
 
-    Context appContext;
-    String testCode = "1996";
-    SharedPreferences.Editor appPrefEditor;
-    NumericCodeDialog startedNumericActivity;
+    private Context appContext;
+    private MainActivity activityContext;
+    private String testCode = "1996";
+    private SharedPreferences.Editor appPrefEditor;
+    private NumericCodeDialog shownNumericDialog;
+    private CryptClass testCrypter = new CryptClass();
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws Throwable {
         appContext = InstrumentationRegistry.getContext();
+        activityContext = mActivityRule.launchActivity(new Intent(appContext,MainActivity.class));
 
-        startedNumericActivity = new NumericCodeDialog(mActivityRule.getActivity(),false);
-        SharedPreferences appPref = PreferenceManager.getDefaultSharedPreferences(appContext);
-        appPrefEditor = appPref.edit();
-        appPrefEditor.putBoolean(SettingsActivity.KEY_PREF_USERCODE,true);
-        appPrefEditor.putString(SettingsActivity.KEY_PREF_CODEINPUT,testCode);
+        final SharedPreferences customPref = appContext.getSharedPreferences("numericTest",Context.MODE_PRIVATE);
+        appPrefEditor = customPref.edit();
+        byte[] stringByteArray = testCrypter.encrypt(testCode);
+        String encryptedStr = CryptClass.byteArrayToHexString(stringByteArray);
+
+        appPrefEditor.putString(activityContext.getString(R.string.encrypted_code_key), encryptedStr);
         appPrefEditor.apply();
 
-        //Since the check for preference values happen in onCreate, but that starts with the test we have to reset the variables and set the code to the one we gave in testCode
-        startedNumericActivity.initialSetup();
-        startedNumericActivity.setCodeToUserCode();
+        mActivityRule.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                shownNumericDialog = new NumericCodeDialog(mActivityRule.getActivity(),false, customPref);
+                try {
+                    shownNumericDialog.initialSetup();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                shownNumericDialog.show();
+            }
+        });
+
     }
 
     @Rule
@@ -58,26 +72,26 @@ public class NumericCodeActivityTest {
     @Test
     public void testCodeMatchesSetSecurityCode(){
         //Check if setting the code to test code really changed it meaning initialSetup really changed the userCode var and setting the code to it worked
-        String setTestCode = startedNumericActivity.getCode(); //The security code which supposed to equal to testCode set above
-        assertEquals(testCode,setTestCode);
+         //The security code which supposed to equal to testCode set above
+        assertTrue(shownNumericDialog.isInputCodeCorrect(testCode));
     }
 
     @Test
     public void inputCodeMatchesPasswordLineAndSetSecurityCode(){
         //Pressing buttons to put in security code
-        onView(withText("1")).perform(click());
-        onView(withText("9")).perform(click());
-        onView(withText("9")).perform(click());
-        onView(withText("6")).perform(click());
+        for (int i = 0; i < testCode.length(); i++) {
+            onView(withText(Character.toString(testCode.charAt(i)))).perform(click());
+        }
 
         //Check if the password line holds the same values
-        EditText passLine = startedNumericActivity.findViewById(R.id.passwordLine);
+        EditText passLine = shownNumericDialog.findViewById(R.id.passwordLine);
         assertEquals(testCode,passLine.getText().toString());
-        assertEquals(startedNumericActivity.getCode(),passLine.getText().toString());
+        assertTrue(shownNumericDialog.isInputCodeCorrect(passLine.getText().toString()));
+
 
         //Testing if the code was really correct with checking if the Toast for the correct code appeared (throws exception if the Toast with the message was not found)
         onView(withId(R.id.acceptButton)).perform(click());
-        onView(withText(R.string.code_accepted)).inRoot(withDecorView(not(startedNumericActivity.getWindow().getDecorView()))).check(matches(isDisplayed()));
+        onView(withText(R.string.code_accepted)).inRoot(withDecorView(not(shownNumericDialog.getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 
     @Test
@@ -91,7 +105,7 @@ public class NumericCodeActivityTest {
         onView(withId(R.id.deleteButton)).perform(click());
 
         //Check if the password line is empty
-        EditText passLine = startedNumericActivity.findViewById(R.id.passwordLine);
+        EditText passLine = shownNumericDialog.findViewById(R.id.passwordLine);
         assertEquals("",passLine.getText().toString());
     }
 }

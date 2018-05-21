@@ -14,6 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import hu.bme.iit.dynamiclayout_prototype.serviceElements.ScreenOnWatcherService;
+
 public class MainActivity extends AppCompatActivity{
 
     private boolean isTestMode;
