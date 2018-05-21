@@ -3,7 +3,6 @@ package hu.bme.iit.dynamiclayout_prototype;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -14,9 +13,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.nio.file.AccessDeniedException;
-
-import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -29,6 +25,10 @@ import static org.junit.Assert.*;
 
 @RunWith(AndroidJUnit4.class)
 public class NumericCodeDialogTest {
+
+    @Rule
+    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(
+            MainActivity.class);
 
     private String testCode = "1996";
     private NumericCodeDialog shownNumericDialog;
@@ -61,10 +61,6 @@ public class NumericCodeDialogTest {
         });
 
     }
-
-    @Rule
-    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(
-            MainActivity.class);
 
     @Test
     public void testCodeMatchesSetSecurityCode(){

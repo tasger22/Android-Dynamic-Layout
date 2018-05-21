@@ -40,8 +40,6 @@ public class GraphicCodeDialog extends CodeDialogBase {
             e.printStackTrace();
         }
 
-        TextView codeView = (TextView) findViewById(R.id.randomCodeText);
-
         buttonSetup();
     }
 
