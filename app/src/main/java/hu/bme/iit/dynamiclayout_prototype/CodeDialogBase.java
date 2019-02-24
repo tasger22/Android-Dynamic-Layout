@@ -19,6 +19,7 @@ import static android.view.WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD;
 import static android.view.WindowManager.LayoutParams.FLAG_LOCAL_FOCUS_MODE;
 import static android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
 import static android.view.WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
+import static android.view.WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
 import static android.view.WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
 
 
@@ -44,7 +45,12 @@ public abstract class CodeDialogBase extends AlertDialog {
         settings = customSharedPref;
         if(wasStartedByBroadcastReceiver){
             WindowManager.LayoutParams params = getWindow().getAttributes();
-            params.type = TYPE_SYSTEM_ERROR;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                params.type = TYPE_APPLICATION_OVERLAY;
+            }
+            else{
+                params.type = TYPE_SYSTEM_ERROR;
+            }
             params.dimAmount = 0.0F; // transparent
             params.gravity = Gravity.BOTTOM;
             getWindow().setAttributes(params);

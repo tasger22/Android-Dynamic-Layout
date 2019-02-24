@@ -18,7 +18,6 @@ public class ScreenOnWatcherService extends Service {
         IntentFilter screenStateFilter = new IntentFilter();
         screenStateFilter.addAction(Intent.ACTION_SCREEN_ON);
         registerReceiver(screenOnEventReceiver,screenStateFilter);
-
         return super.onStartCommand(intent, flags, startId);
     }
 

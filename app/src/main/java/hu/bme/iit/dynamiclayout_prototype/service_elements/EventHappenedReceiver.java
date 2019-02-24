@@ -4,7 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
 
 import hu.bme.iit.dynamiclayout_prototype.CodeDialogBase;
 import hu.bme.iit.dynamiclayout_prototype.GraphicCodeDialog;
@@ -18,20 +20,21 @@ import hu.bme.iit.dynamiclayout_prototype.SettingsActivity;
 public class EventHappenedReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction()) || Intent.ACTION_SCREEN_ON.equals(intent.getAction())) {
+        if(!Intent.ACTION_SCREEN_ON.equals(intent.getAction()))
+            context.startService(new Intent(context,ScreenOnWatcherService.class));
 
-            if(Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) context.startService(new Intent(context,ScreenOnWatcherService.class));
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+        CodeDialogBase dialogBase;
 
-            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-            CodeDialogBase dialogBase;
+        String layoutFromSettings = settings.getString(SettingsActivity.KEY_PREF_LAYOUT,"numeric");
+        boolean isLockScreenEnabled = settings.getBoolean(SettingsActivity.KEY_PREF_LOCKSCREEN,false);
+        if (isLockScreenEnabled){
+            if("numeric".equals(layoutFromSettings))
+                dialogBase = new NumericCodeDialog(context,true,settings);
+            else
+                dialogBase = new GraphicCodeDialog(context,true,settings);
 
-            String layoutFromSettings = settings.getString(SettingsActivity.KEY_PREF_LAYOUT,"numeric");
-            boolean isLockScreenEnabled = settings.getBoolean(SettingsActivity.KEY_PREF_LOCKSCREEN,false);
-            if (isLockScreenEnabled){
-                if("numeric".equals(layoutFromSettings)) dialogBase = new NumericCodeDialog(context,true,settings);
-                else dialogBase = new GraphicCodeDialog(context,true,settings);
-                dialogBase.show();
-            }
+            dialogBase.show();
         }
     }
 }
