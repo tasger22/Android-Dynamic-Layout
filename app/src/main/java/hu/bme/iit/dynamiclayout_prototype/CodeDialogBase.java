@@ -9,9 +9,12 @@ import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
 
 import hu.bme.iit.dynamiclayout_prototype.MainActivity.CodeResolveDifficulty;
 
@@ -86,6 +89,19 @@ public abstract class CodeDialogBase extends AlertDialog {
             tries = initialTries = 2;
             fails = 0;
         }
+    }
+
+    @NonNull
+    protected <T extends View> ArrayList<T> getViewButtons(int viewId) {
+        ArrayList<T> buttonList = new ArrayList<>();
+        ViewGroup viewContainer = findViewById(viewId);
+        if (viewContainer != null){
+            for (int i = 0; i < viewContainer.getChildCount(); i++) {
+                View childView = viewContainer.getChildAt(i);
+                buttonList.add((T)childView);
+            }
+        }
+        return buttonList;
     }
 
     protected abstract void compareCodeToInput(String input);

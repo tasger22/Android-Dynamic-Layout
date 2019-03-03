@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -79,19 +78,6 @@ public class NumericCodeDialog extends CodeDialogBase {
              buttonList) {
             b.setOnClickListener(this::processNumberPress);
         }
-    }
-
-    @NonNull
-    private ArrayList<Button> getViewButtons(int viewId) {
-        ArrayList<Button> buttonList = new ArrayList<>();
-        ViewGroup viewContainer = findViewById(viewId);
-        if (viewContainer != null){
-            for (int i = 0; i < viewContainer.getChildCount(); i++) {
-                View childView = viewContainer.getChildAt(i);
-                buttonList.add((Button)childView);
-            }
-        }
-        return buttonList;
     }
 
     public void processNumberPress(View view) {
