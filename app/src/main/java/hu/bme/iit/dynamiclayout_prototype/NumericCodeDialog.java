@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -72,33 +73,24 @@ public class NumericCodeDialog extends CodeDialogBase {
     }
 
     private void setUpAllButtons(){
-        ArrayList<Button> buttonList = getViewButtons();
+        ArrayList<Button> buttonList = getViewButtons(R.id.buttonLayout);
 
         for (Button b:
              buttonList) {
-            b.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    processNumberPress(view);
-                }
-            });
+            b.setOnClickListener(this::processNumberPress);
         }
     }
 
     @NonNull
-    private ArrayList<Button> getViewButtons() {
+    private ArrayList<Button> getViewButtons(int viewId) {
         ArrayList<Button> buttonList = new ArrayList<>();
-
-        buttonList.add((Button) findViewById(R.id.button1));
-        buttonList.add((Button) findViewById(R.id.button2));
-        buttonList.add((Button) findViewById(R.id.button3));
-        buttonList.add((Button) findViewById(R.id.button4));
-        buttonList.add((Button) findViewById(R.id.button5));
-        buttonList.add((Button) findViewById(R.id.button6));
-        buttonList.add((Button) findViewById(R.id.button7));
-        buttonList.add((Button) findViewById(R.id.button8));
-        buttonList.add((Button) findViewById(R.id.button9));
-        buttonList.add((Button) findViewById(R.id.button10));
+        ViewGroup viewContainer = findViewById(viewId);
+        if (viewContainer != null){
+            for (int i = 0; i < viewContainer.getChildCount(); i++) {
+                View childView = viewContainer.getChildAt(i);
+                buttonList.add((Button)childView);
+            }
+        }
         return buttonList;
     }
 
@@ -162,7 +154,7 @@ public class NumericCodeDialog extends CodeDialogBase {
     }
 
     private void randomizeButtons(){
-        ArrayList<Button> buttonList = getViewButtons();
+        ArrayList<Button> buttonList = getViewButtons(R.id.buttonLayout);
 
         boolean[] numberWasUsed = new boolean[10];
         Random rand = new Random();
