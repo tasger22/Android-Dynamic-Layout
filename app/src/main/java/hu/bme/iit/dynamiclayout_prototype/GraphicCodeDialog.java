@@ -203,5 +203,9 @@ public class GraphicCodeDialog extends CodeDialogBase {
         return Math.round((float) dp * density);
     }
 
+    private String getCode(){
+        return "0000";
+    }
+
 
 }

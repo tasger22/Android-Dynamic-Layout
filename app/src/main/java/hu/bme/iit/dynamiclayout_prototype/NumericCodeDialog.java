@@ -11,7 +11,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import hu.bme.iit.dynamiclayout_prototype.MainActivity.CodeResolveDifficulty;
@@ -38,30 +37,24 @@ public class NumericCodeDialog extends CodeDialogBase {
 
         setUpAllButtons();
 
-        TextView codeView = (TextView) findViewById(R.id.randomCodeText);
-        passwordLine = (EditText) findViewById(R.id.passwordLine);
+        TextView codeView = findViewById(R.id.randomCodeText);
+        passwordLine = findViewById(R.id.passwordLine);
 
-        Button acceptButton = (Button) findViewById(R.id.acceptButton);
-        acceptButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String codeInput = passwordLine.getText().toString();
-                if (!"".equals(codeInput)) {
-                    compareCodeToInput(codeInput);
-                }
+        Button acceptButton = findViewById(R.id.acceptButton);
+        acceptButton.setOnClickListener(view -> {
+            String codeInput = passwordLine.getText().toString();
+            if (!"".equals(codeInput)) {
+                compareCodeToInput(codeInput);
             }
         });
 
-        ImageButton deleteButton = (ImageButton) findViewById(R.id.deleteButton);
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String codeInput = passwordLine.getText().toString();
-                if(!"".equals(codeInput)){
-                    int passLength = codeInput.length();
-                    String newPassLineText = codeInput.substring(0,passLength-1);
-                    passwordLine.setText(newPassLineText);
-                }
+        ImageButton deleteButton = findViewById(R.id.deleteButton);
+        deleteButton.setOnClickListener(view -> {
+            String codeInput = passwordLine.getText().toString();
+            if(!"".equals(codeInput)){
+                int passLength = codeInput.length();
+                String newPassLineText = codeInput.substring(0,passLength-1);
+                passwordLine.setText(newPassLineText);
             }
         });
 
@@ -72,18 +65,17 @@ public class NumericCodeDialog extends CodeDialogBase {
     }
 
     private void setUpAllButtons(){
-        ArrayList<Button> buttonList = getViewButtons(R.id.buttonLayout);
-
-        for (Button b:
-             buttonList) {
-            b.setOnClickListener(this::processNumberPress);
+        setCodeButtonList(R.id.buttonLayout);
+        for (View b:
+             getCodeButtonList()) {
+            b.setOnClickListener(this::processCodeButtonPress);
         }
     }
 
-    public void processNumberPress(View view) {
+    @Override
+    protected void processCodeButtonPress(View view) {
         Button numberButton = (Button) view;
-
-        EditText passwordLine = (EditText) findViewById(R.id.passwordLine);
+        EditText passwordLine = findViewById(R.id.passwordLine);
 
         passwordLine.append(numberButton.getText().toString());
 
@@ -139,24 +131,25 @@ public class NumericCodeDialog extends CodeDialogBase {
         }
     }
 
-    private void randomizeButtons(){
-        ArrayList<Button> buttonList = getViewButtons(R.id.buttonLayout);
-
+    @Override
+    protected void randomizeButtons(){
         boolean[] numberWasUsed = new boolean[10];
         Random rand = new Random();
 
-        for (Button b : buttonList
+        for (View b : getCodeButtonList()
              ) {
-            int tempRandInt = rand.nextInt(10);
+            if (b.getClass() == Button.class){
+                Button buttonView = (Button)b;
+                int tempRandInt = rand.nextInt(10);
 
-            while(numberWasUsed[tempRandInt]){
-                if(areAllValuesTrue(numberWasUsed)) return;
+                while(numberWasUsed[tempRandInt]){
+                    if(areAllValuesTrue(numberWasUsed)) return;
 
-                tempRandInt = rand.nextInt(10);
+                    tempRandInt = rand.nextInt(10);
+                }
+                numberWasUsed[tempRandInt] = true;
+                buttonView.setText(Integer.toString(tempRandInt));
             }
-
-            numberWasUsed[tempRandInt] = true;
-            b.setText(Integer.toString(tempRandInt));
         }
     }
 

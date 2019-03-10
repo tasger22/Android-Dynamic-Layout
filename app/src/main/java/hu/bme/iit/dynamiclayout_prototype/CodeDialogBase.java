@@ -12,9 +12,12 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.Random;
 
 import hu.bme.iit.dynamiclayout_prototype.MainActivity.CodeResolveDifficulty;
 
@@ -40,6 +43,8 @@ public abstract class CodeDialogBase extends AlertDialog {
     private CryptClass crypter = new CryptClass();
     private SharedPreferences settings;
     private Context ownerContext;
+
+    private ArrayList<View> codeButtonList;
 
     protected CodeDialogBase(@NonNull Context context, boolean wasStartedByBroadcastReceiver, SharedPreferences customSharedPref) {
         super(context,R.style.AppTheme);
@@ -84,24 +89,44 @@ public abstract class CodeDialogBase extends AlertDialog {
             fails = 0;
             testStartTime = System.currentTimeMillis();
         }
-
         else{
             tries = initialTries = 2;
             fails = 0;
         }
     }
 
-    @NonNull
-    protected <T extends View> ArrayList<T> getViewButtons(int viewId) {
-        ArrayList<T> buttonList = new ArrayList<>();
-        ViewGroup viewContainer = findViewById(viewId);
+    protected void setCodeButtonList(int viewContainerId){
+        ViewGroup viewContainer = findViewById(viewContainerId);
+        codeButtonList = getChildrenViews(viewContainer);
+    }
+
+    protected void setCodeButtonList(ViewGroup viewContainer){
+        codeButtonList = getChildrenViews(viewContainer);
+    }
+
+    private ArrayList<View> getChildrenViews(ViewGroup viewContainer){
+        ArrayList<View> childrenViews = new ArrayList<>();
         if (viewContainer != null){
             for (int i = 0; i < viewContainer.getChildCount(); i++) {
                 View childView = viewContainer.getChildAt(i);
-                buttonList.add((T)childView);
+                childrenViews.add(childView);
             }
         }
-        return buttonList;
+        return childrenViews;
+    }
+
+    protected void processCodeButtonPress(View view) {
+        Button numberButton = (Button) view;
+        EditText passwordLine = findViewById(R.id.passwordLine);
+
+        passwordLine.append(numberButton.getText().toString());
+
+        if(getCurrentDifficulty() == CodeResolveDifficulty.EVIL)
+            randomizeButtons();
+    }
+
+    protected void randomizeButtons(){
+
     }
 
     protected abstract void compareCodeToInput(String input);
@@ -202,8 +227,7 @@ public abstract class CodeDialogBase extends AlertDialog {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (Integer.parseInt(android.os.Build.VERSION.SDK) > 5
-                && keyCode == KeyEvent.KEYCODE_BACK
+        if (keyCode == KeyEvent.KEYCODE_BACK
                 && event.getRepeatCount() == 0
                 && wasStartedByBroadcastReceiver) {
             return true;
@@ -211,7 +235,7 @@ public abstract class CodeDialogBase extends AlertDialog {
         return super.onKeyDown(keyCode, event);
     }
 
-    //Only for GraphicCodeDialog, since the numeric system doesn't need this and uses isInputCodeCorrect instead (which is more secure)
-    protected String getCode(){return "0000";}
-
+    protected ArrayList<View> getCodeButtonList() {
+        return codeButtonList;
+    }
 }
