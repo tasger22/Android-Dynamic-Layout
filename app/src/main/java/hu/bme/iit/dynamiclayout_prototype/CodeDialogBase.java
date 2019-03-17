@@ -7,6 +7,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -43,6 +44,7 @@ public abstract class CodeDialogBase extends AlertDialog {
     private CryptClass crypter = new CryptClass();
     private SharedPreferences settings;
     private Context ownerContext;
+    private ViewGroup codeButtonContainer;
 
     private ArrayList<View> codeButtonList;
 
@@ -96,12 +98,13 @@ public abstract class CodeDialogBase extends AlertDialog {
     }
 
     protected void setCodeButtonList(int viewContainerId){
-        ViewGroup viewContainer = findViewById(viewContainerId);
-        codeButtonList = getChildrenViews(viewContainer);
+        codeButtonContainer = findViewById(viewContainerId);
+        codeButtonList = getChildrenViews(codeButtonContainer);
     }
 
     protected void setCodeButtonList(ViewGroup viewContainer){
-        codeButtonList = getChildrenViews(viewContainer);
+        codeButtonContainer = viewContainer;
+        codeButtonList = getChildrenViews(codeButtonContainer);
     }
 
     private ArrayList<View> getChildrenViews(ViewGroup viewContainer){
@@ -126,7 +129,29 @@ public abstract class CodeDialogBase extends AlertDialog {
     }
 
     protected void randomizeButtons(){
+        try {
+            Random rand = new Random();
+            ArrayList<ViewGroup.LayoutParams> params = new ArrayList<>();
+            for (View v:
+                    codeButtonList) {
+                params.add(v.getLayoutParams());
+            }
+            for (View v:
+                    codeButtonList) {
+                codeButtonContainer.removeView(v);
+                ViewGroup.LayoutParams randomParam = params.get(rand.nextInt(params.size()));
+                v.setLayoutParams(randomParam);
+                params.remove(randomParam);
+                codeButtonContainer.addView(v);
+            }
+        }  catch (ClassCastException e){
+            Log.w("Failed casting", e);
+        }
 
+    }
+
+    private <T extends ViewGroup.MarginLayoutParams> T internalCast(Class<T> cls, Object castable) {
+        return cls.cast(castable);
     }
 
     protected abstract void compareCodeToInput(String input);

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -65,7 +66,17 @@ public class NumericCodeDialog extends CodeDialogBase {
     }
 
     private void setUpAllButtons(){
-        setCodeButtonList(R.id.buttonLayout);
+        ViewGroup buttonGridLayout = findViewById(R.id.buttonLayout);
+        View acceptButton = null;
+        for (int i = 0; i < buttonGridLayout.getChildCount(); i++) {
+            View child = buttonGridLayout.getChildAt(i);
+            if (child.getId() == R.id.acceptButton){
+                acceptButton = child;
+                buttonGridLayout.removeView(child);
+            }
+        }
+        setCodeButtonList(buttonGridLayout);
+        buttonGridLayout.addView(acceptButton);
         for (View b:
              getCodeButtonList()) {
             b.setOnClickListener(this::processCodeButtonPress);
@@ -127,28 +138,6 @@ public class NumericCodeDialog extends CodeDialogBase {
 
                 else
                     dismiss();
-            }
-        }
-    }
-
-    @Override
-    protected void randomizeButtons(){
-        boolean[] numberWasUsed = new boolean[10];
-        Random rand = new Random();
-
-        for (View b : getCodeButtonList()
-             ) {
-            if (b.getClass() == Button.class){
-                Button buttonView = (Button)b;
-                int tempRandInt = rand.nextInt(10);
-
-                while(numberWasUsed[tempRandInt]){
-                    if(areAllValuesTrue(numberWasUsed)) return;
-
-                    tempRandInt = rand.nextInt(10);
-                }
-                numberWasUsed[tempRandInt] = true;
-                buttonView.setText(Integer.toString(tempRandInt));
             }
         }
     }
