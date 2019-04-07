@@ -7,14 +7,16 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-public class CryptClass {
+import hu.bme.iit.dynamiclayout_prototype.cryptography.Cryptography;
+
+public class CryptographyImplementation implements Cryptography {
     private String iv = "T3mPoR4ryIV3cTor";
     private IvParameterSpec ivspec;
     private SecretKeySpec keyspec;
     private Cipher cipher;
     private String SecretKey = "TemPS3cr3TKEy$tR";
 
-    public CryptClass() {
+    public CryptographyImplementation() {
         ivspec = new IvParameterSpec(iv.getBytes());
         keyspec = new SecretKeySpec(SecretKey.getBytes(), "AES");
 
@@ -28,9 +30,13 @@ public class CryptClass {
         }
     }
 
-    public byte[] encrypt(String text) throws Exception {
+    public byte[] encrypt(String text){
         if (text == null || text.length() == 0)
-            throw new Exception("Empty string");
+            try {
+                throw new Exception("Empty string");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
         byte[] encrypted = null;
         try {
@@ -39,29 +45,41 @@ public class CryptClass {
 
             encrypted = cipher.doFinal(padString(text).getBytes());
         } catch (Exception e) {
-            throw new Exception("[encrypt] " + e.getMessage());
+            try {
+                throw new Exception("[encrypt] " + e.getMessage());
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
         }
         return encrypted;
     }
 
-    public byte[] decrypt(String text) throws Exception {
-        if (text == null || text.length() == 0)
-            throw new Exception("Empty string");
+    public String decrypt(byte[] array){
+        if (array == null || array.length == 0)
+            try {
+                throw new Exception("Empty array");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
         byte[] decrypted = null;
         try {
 // Cipher.DECRYPT_MODE = Constant for decryption operation mode.
             cipher.init(Cipher.DECRYPT_MODE, keyspec, ivspec);
 
-            decrypted = cipher.doFinal(hexToBytes(text));
+            decrypted = cipher.doFinal(array);
         } catch (Exception e) {
-            throw new Exception("[decrypt] " + e.getMessage());
+            try {
+                throw new Exception("[decrypt] " + e.getMessage());
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
         }
-        return decrypted;
+        return new String(decrypted);
     }
 
-    public static String byteArrayToHexString(byte[] array) {
-        StringBuffer hexString = new StringBuffer();
+    public String byteArrayToHexString(byte[] array){
+        StringBuilder hexString = new StringBuilder();
         for (byte b : array) {
             int intVal = b & 0xff;
             if (intVal < 0x10)
@@ -71,7 +89,7 @@ public class CryptClass {
         return hexString.toString();
     }
 
-    public static byte[] hexToBytes(String str) {
+    public byte[] hexStringToBytes(String str){
         if (str == null) {
             return null;
         } else if (str.length() < 2) {
@@ -89,7 +107,7 @@ public class CryptClass {
         }
     }
 
-    private static String padString(String source) {
+    private String padString(String source) {
         String src = source;
         char paddingChar = 0;
         int size = 16;
