@@ -45,39 +45,26 @@ public class MainActivity extends AppCompatActivity{
 
         final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.mainToolbar);
+        Toolbar toolbar = findViewById(R.id.mainToolbar);
         setSupportActionBar(toolbar);
         isTestMode = settings.getBoolean(SettingsActivity.KEY_PREF_TESTMODE,false);
-        final Button numericButton = (Button) findViewById(R.id.numericButton);
-        final Button graphicButton = (Button) findViewById(R.id.graphicButton);
-        View.OnClickListener activityStarterListener = new View.OnClickListener() { //OnClickListener to unify the listeners of the two activity start buttons to reduce repetition
-            @Override
-            public void onClick(View view) {
-                if(view.equals(numericButton))
-                    dialogBase = new NumericCodeDialog(MainActivity.this,wasStartedByBroadcastReceiver,settings);
-                else if (view.equals(graphicButton))
-                    dialogBase = new GraphicCodeDialog(MainActivity.this,wasStartedByBroadcastReceiver,settings);
-                if(isTestMode){
-                    final CodeDialogBase finalDialog = dialogBase;
-                    AlertDialog.Builder attentionDialog = new AlertDialog.Builder(view.getContext());
-                    attentionDialog.setMessage(R.string.attention_dialog_disclaimer);
-                    attentionDialog.setTitle(R.string.attention_dialog_title);
-                    attentionDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            finalDialog.show(); }});
-                    attentionDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss(); }});
-                    attentionDialog.show(); }
-                else dialogBase.show();
-            }
+        final Button numericButton = findViewById(R.id.numericButton);
+
+        //OnClickListener to unify the listeners of the two activity start buttons to reduce repetition
+        View.OnClickListener activityStarterListener = view -> {
+            if(view.equals(numericButton))
+                dialogBase = new NumericCodeDialog(MainActivity.this,wasStartedByBroadcastReceiver,settings, new CryptographyImplementation());
+            if(isTestMode){
+                final CodeDialogBase finalDialog = dialogBase;
+                AlertDialog.Builder attentionDialog = new AlertDialog.Builder(view.getContext());
+                attentionDialog.setMessage(R.string.attention_dialog_disclaimer);
+                attentionDialog.setTitle(R.string.attention_dialog_title);
+                attentionDialog.setPositiveButton("YES", (dialogInterface, i) -> finalDialog.show());
+                attentionDialog.setNegativeButton("NO", (dialogInterface, i) -> dialogInterface.dismiss());
+                attentionDialog.show(); }
+            else dialogBase.show();
         };
         numericButton.setOnClickListener(activityStarterListener);
-        graphicButton.setOnClickListener(activityStarterListener);
-
-
     }
 
     @Override

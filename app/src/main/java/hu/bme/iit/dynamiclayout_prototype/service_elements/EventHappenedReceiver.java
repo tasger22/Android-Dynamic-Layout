@@ -4,12 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
 
 import hu.bme.iit.dynamiclayout_prototype.CodeDialogBase;
-import hu.bme.iit.dynamiclayout_prototype.GraphicCodeDialog;
+import hu.bme.iit.dynamiclayout_prototype.CryptographyImplementation;
 import hu.bme.iit.dynamiclayout_prototype.NumericCodeDialog;
 import hu.bme.iit.dynamiclayout_prototype.SettingsActivity;
 
@@ -30,11 +28,11 @@ public class EventHappenedReceiver extends BroadcastReceiver {
         boolean isLockScreenEnabled = settings.getBoolean(SettingsActivity.KEY_PREF_LOCKSCREEN,false);
         if (isLockScreenEnabled){
             if("numeric".equals(layoutFromSettings))
-                dialogBase = new NumericCodeDialog(context,true,settings);
-            else
-                dialogBase = new GraphicCodeDialog(context,true,settings);
+            {
+                dialogBase = new NumericCodeDialog(context,true,settings, new CryptographyImplementation());
+                dialogBase.show();
+            }
 
-            dialogBase.show();
         }
     }
 }
