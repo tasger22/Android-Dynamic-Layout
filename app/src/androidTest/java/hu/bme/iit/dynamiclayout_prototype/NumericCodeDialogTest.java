@@ -32,7 +32,7 @@ public class NumericCodeDialogTest {
 
     private String testCode = "1996";
     private NumericCodeDialog shownNumericDialog;
-    private CryptClass testCrypter = new CryptClass();
+    private CryptographyImplementation testCrypter = new CryptographyImplementation();
 
     @Before
     public void setUp() throws Throwable {
@@ -42,7 +42,7 @@ public class NumericCodeDialogTest {
         final SharedPreferences customPref = appContext.getSharedPreferences("numericTest",Context.MODE_PRIVATE);
         SharedPreferences.Editor appPrefEditor = customPref.edit();
         byte[] stringByteArray = testCrypter.encrypt(testCode);
-        String encryptedStr = CryptClass.byteArrayToHexString(stringByteArray);
+        String encryptedStr = testCrypter.byteArrayToHexString(stringByteArray);
 
         appPrefEditor.putString(activityContext.getString(R.string.encrypted_code_key), encryptedStr);
         appPrefEditor.apply();
