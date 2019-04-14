@@ -15,8 +15,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import java.util.Arrays;
-
 import hu.bme.iit.dynamiccodedialog.CodeDialogBase;
 import hu.bme.iit.dynamiclayout_prototype.MainActivity.CodeResolveDifficulty;
 
