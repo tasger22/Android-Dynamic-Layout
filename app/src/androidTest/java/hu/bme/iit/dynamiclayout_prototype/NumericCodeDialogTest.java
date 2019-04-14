@@ -31,8 +31,9 @@ public class NumericCodeDialogTest {
             MainActivity.class);
 
     private String testCode = "1996";
+    private String encryptedTestCode;
     private NumericCodeDialog shownNumericDialog;
-    private CryptClass testCrypter = new CryptClass();
+    private CryptographyImplementation testCrypter = new CryptographyImplementation();
 
     @Before
     public void setUp() throws Throwable {
@@ -42,15 +43,15 @@ public class NumericCodeDialogTest {
         final SharedPreferences customPref = appContext.getSharedPreferences("numericTest",Context.MODE_PRIVATE);
         SharedPreferences.Editor appPrefEditor = customPref.edit();
         byte[] stringByteArray = testCrypter.encrypt(testCode);
-        String encryptedStr = CryptClass.byteArrayToHexString(stringByteArray);
+        encryptedTestCode = testCrypter.byteArrayToHexString(stringByteArray);
 
-        appPrefEditor.putString(activityContext.getString(R.string.encrypted_code_key), encryptedStr);
+        appPrefEditor.putString(activityContext.getString(R.string.encrypted_code_key), encryptedTestCode);
         appPrefEditor.apply();
 
         mActivityRule.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                shownNumericDialog = new NumericCodeDialog(mActivityRule.getActivity(),false, customPref);
+                shownNumericDialog = new NumericCodeDialog(mActivityRule.getActivity(),false, customPref, testCrypter);
                 try {
                     shownNumericDialog.initialSetup();
                 } catch (Exception e) {
@@ -66,7 +67,7 @@ public class NumericCodeDialogTest {
     public void testCodeMatchesSetSecurityCode(){
         //Check if setting the code to test code really changed it meaning initialSetup really changed the userCode var and setting the code to it worked
          //The security code which supposed to equal to testCode set above
-        assertTrue(shownNumericDialog.isInputCodeCorrect(testCode));
+        assertTrue(shownNumericDialog.isInputCodeCorrect(encryptedTestCode));
     }
 
     @Test
@@ -78,8 +79,10 @@ public class NumericCodeDialogTest {
 
         //Check if the password line holds the same values
         EditText passLine = shownNumericDialog.findViewById(R.id.passwordLine);
+        byte[] inputEncryptedBytes = testCrypter.encrypt(passLine.getText().toString());
+        String hexaInputString = testCrypter.byteArrayToHexString(inputEncryptedBytes);
         assertEquals(testCode,passLine.getText().toString());
-        assertTrue(shownNumericDialog.isInputCodeCorrect(passLine.getText().toString()));
+        assertTrue(shownNumericDialog.isInputCodeCorrect(hexaInputString));
 
 
         //Testing if the code was really correct with checking if the Toast for the correct code appeared (throws exception if the Toast with the message was not found)

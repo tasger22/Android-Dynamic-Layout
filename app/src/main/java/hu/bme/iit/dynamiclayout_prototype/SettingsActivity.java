@@ -64,13 +64,13 @@ public class SettingsActivity extends Activity {
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             if(key.equals(KEY_PREF_CODEINPUT)){
                 String customSecurityCode = sharedPreferences.getString(KEY_PREF_CODEINPUT,"0000");
-                CryptClass encrypter = new CryptClass();
+                CryptographyImplementation encrypter = new CryptographyImplementation();
 
                 SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
                 if(!"".equals(customSecurityCode)) {
                     try {
                         byte[] stringByteArray = encrypter.encrypt(customSecurityCode);
-                        String encryptedStr = CryptClass.byteArrayToHexString(stringByteArray);
+                        String encryptedStr = encrypter.byteArrayToHexString(stringByteArray);
                         sharedPreferencesEditor.putString(getResources().getString(R.string.encrypted_code_key), encryptedStr);
                         sharedPreferencesEditor.apply();
                     } catch (Exception e) {
