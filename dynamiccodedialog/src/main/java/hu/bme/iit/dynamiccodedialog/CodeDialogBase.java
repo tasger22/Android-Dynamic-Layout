@@ -1,4 +1,4 @@
-package hu.bme.iit.dynamiclayout_prototype;
+package hu.bme.iit.dynamiccodedialog;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
-import hu.bme.iit.dynamiclayout_prototype.cryptography.Cryptography;
+import hu.bme.iit.dynamiccodedialog.cryptography.Cryptography;
 
 //Class which provides all the necessary components for a CodeActivity
 public abstract class CodeDialogBase extends AlertDialog {
@@ -27,8 +27,8 @@ public abstract class CodeDialogBase extends AlertDialog {
     private int tries = initialTries; //How many times you can try to input the code until it rejects input
 
 
-    protected CodeDialogBase(@NonNull Context context, Cryptography cryptographyImplementation) {
-        super(context,R.style.AppTheme);
+    protected CodeDialogBase(@NonNull Context context, int themeId ,Cryptography cryptographyImplementation) {
+        super(context, themeId);
         crypter = cryptographyImplementation;
     }
 
@@ -37,16 +37,25 @@ public abstract class CodeDialogBase extends AlertDialog {
         super.onCreate(savedInstanceState);
     }
 
-    protected abstract void initialSetup() throws Exception;
-
     protected void setCodeButtonList(int viewContainerId){
         codeButtonContainer = findViewById(viewContainerId);
         codeButtonList = getChildrenViews(codeButtonContainer);
+        for (View button:
+                codeButtonList) {
+            button.setOnClickListener(this::processCodeButtonPress);
+        }
     }
 
+    /**
+     * @param viewContainer Must contain all the views necessary for code input
+     */
     protected void setCodeButtonList(ViewGroup viewContainer){
         codeButtonContainer = viewContainer;
         codeButtonList = getChildrenViews(codeButtonContainer);
+        for (View button:
+             codeButtonList) {
+            button.setOnClickListener(this::processCodeButtonPress);
+        }
     }
 
     private ArrayList<View> getChildrenViews(ViewGroup viewContainer){
@@ -60,6 +69,10 @@ public abstract class CodeDialogBase extends AlertDialog {
         return childrenViews;
     }
 
+    /**
+     * @param view View responsible for code input
+     * @implNote This method is assigned to all codeButtonList views as OnClickListener
+     */
     protected abstract void processCodeButtonPress(View view);
 
     protected void randomizeButtons(){
@@ -87,11 +100,11 @@ public abstract class CodeDialogBase extends AlertDialog {
     protected void compareCodeToInput(String input){
         if(!isInputCodeCorrect("")){
             if(isInputCodeCorrect(input)){
-                Toast.makeText(getContext(), R.string.code_accepted,Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "The code is right, you have done " + tries+1 + " out of " + initialTries+1 , Toast.LENGTH_SHORT).show();
                 setTries(initialTries);
             }
             else if(tries > 0){
-                Toast.makeText(getContext(),getContext().getString(R.string.code_incorrect,tries),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"Incorrect code, " + tries + "tries remaining", Toast.LENGTH_SHORT).show();
                 decrementTries();
             }
             else{

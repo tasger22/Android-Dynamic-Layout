@@ -15,6 +15,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import java.util.Arrays;
+
+import hu.bme.iit.dynamiccodedialog.CodeDialogBase;
 import hu.bme.iit.dynamiclayout_prototype.MainActivity.CodeResolveDifficulty;
 
 import static android.view.WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD;
@@ -38,7 +41,7 @@ public class NumericCodeDialog extends CodeDialogBase {
     private long testStartTime;
 
     public NumericCodeDialog(@NonNull Context context, boolean wasStartedByBroadcastReceiver, SharedPreferences customSharedPref, CryptographyImplementation cryptographyImplementation) {
-        super(context, cryptographyImplementation);
+        super(context, R.style.AppTheme, cryptographyImplementation);
         crypter = cryptographyImplementation;
         this.wasStartedByBroadcastReceiver = wasStartedByBroadcastReceiver;
         settings = customSharedPref;
@@ -102,7 +105,7 @@ public class NumericCodeDialog extends CodeDialogBase {
     }
 
     //Method to initialize all the private variables from the SharedPreferences
-    protected void initialSetup() throws Exception {
+    protected void initialSetup() {
 
         if(wasStartedByBroadcastReceiver){
             isTestMode = false;
@@ -137,10 +140,6 @@ public class NumericCodeDialog extends CodeDialogBase {
         }
         setCodeButtonList(buttonGridLayout);
         buttonGridLayout.addView(acceptButton);
-        for (View b:
-             getCodeButtonList()) {
-            b.setOnClickListener(this::processCodeButtonPress);
-        }
     }
 
     protected void processCodeButtonPress(View view) {
@@ -200,6 +199,11 @@ public class NumericCodeDialog extends CodeDialogBase {
                 }
             }
         }
+    }
+
+    @Override
+    protected boolean isInputCodeCorrect(String inputCode) {
+        return super.isInputCodeCorrect(inputCode);
     }
 
     //Used when the user is in test mode where we have to compile the result screen

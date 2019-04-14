@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import hu.bme.iit.dynamiclayout_prototype.CodeDialogBase;
+import hu.bme.iit.dynamiccodedialog.CodeDialogBase;
 import hu.bme.iit.dynamiclayout_prototype.CryptographyImplementation;
 import hu.bme.iit.dynamiclayout_prototype.NumericCodeDialog;
 import hu.bme.iit.dynamiclayout_prototype.SettingsActivity;

@@ -1,4 +1,4 @@
-package hu.bme.iit.dynamiclayout_prototype.cryptography;
+package hu.bme.iit.dynamiccodedialog.cryptography;
 
 public interface Cryptography {
     byte[] encrypt(String text);

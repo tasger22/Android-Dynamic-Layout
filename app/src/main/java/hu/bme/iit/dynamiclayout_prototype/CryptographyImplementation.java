@@ -7,7 +7,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import hu.bme.iit.dynamiclayout_prototype.cryptography.Cryptography;
+import hu.bme.iit.dynamiccodedialog.cryptography.Cryptography;
 
 public class CryptographyImplementation implements Cryptography {
     private String iv = "T3mPoR4ryIV3cTor";

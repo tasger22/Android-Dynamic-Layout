@@ -2,7 +2,6 @@ package hu.bme.iit.dynamiclayout_prototype;
 
 import android.app.AlertDialog;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -14,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import hu.bme.iit.dynamiccodedialog.CodeDialogBase;
 import hu.bme.iit.dynamiclayout_prototype.service_elements.ScreenOnWatcherService;
 
 public class MainActivity extends AppCompatActivity{
