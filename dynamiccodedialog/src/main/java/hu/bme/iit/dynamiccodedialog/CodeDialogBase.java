@@ -101,13 +101,9 @@ public abstract class CodeDialogBase extends AlertDialog {
         boolean result = false;
         if(!isInputCodeCorrect("")){
             if(isInputCodeCorrect(input)){
-                Toast.makeText(getContext(), "The code is right, you have done " + tries+1 + " out of " + initialTries+1 , Toast.LENGTH_SHORT).show();
-                setTries(initialTries);
                 result = true;
             }
             else if(tries > 0){
-                Toast.makeText(getContext(),"Incorrect code, " + tries + "tries remaining", Toast.LENGTH_SHORT).show();
-                decrementTries();
                 result = false;
             }
             else{
