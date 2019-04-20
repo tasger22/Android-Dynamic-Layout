@@ -16,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import hu.bme.iit.dynamiccodedialog.CodeDialogBase;
+import hu.bme.iit.dynamiccodedialog.CryptographyImplementation;
 import hu.bme.iit.dynamiclayout_prototype.MainActivity.CodeResolveDifficulty;
 
 import static android.view.WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD;
