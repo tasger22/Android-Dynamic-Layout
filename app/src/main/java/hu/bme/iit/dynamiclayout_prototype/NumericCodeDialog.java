@@ -152,10 +152,11 @@ public class NumericCodeDialog extends CodeDialogBase {
     }
 
     @Override
-    protected void compareCodeToInput(String input){
+    protected boolean compareCodeToInput(String input){
+        boolean result = false;
         if(input.length() < 4){
             Toast.makeText(getContext(),"Code must be 4-8 characters long",Toast.LENGTH_SHORT).show();
-            return;
+            return false;
         }
         byte[] inputEncryptedBytes = crypter.encrypt(input);
         String hexaInputString = crypter.byteArrayToHexString(inputEncryptedBytes);
@@ -165,6 +166,7 @@ public class NumericCodeDialog extends CodeDialogBase {
                     decrementTries();
                     if(getTries() > 0){
                         Toast.makeText(getContext(), getContext().getString(R.string.code_accepted_test_mode,getInitialTries() - getTries(),getInitialTries()),Toast.LENGTH_SHORT).show();
+                        result = true;
                     }
                     passwordLine.setText("");
                     if(currentDifficulty == CodeResolveDifficulty.HARD) randomizeButtons();
@@ -172,13 +174,13 @@ public class NumericCodeDialog extends CodeDialogBase {
                 else{
                     Toast.makeText(getContext(),getContext().getString(R.string.code_incorrect_test_mode),Toast.LENGTH_SHORT).show();
                     ++fails;
+                    result = false;
                 }
             }
 
             if(getTries() <= 0){
                 compileResults();
             }
-
         } else {
             if(!isInputCodeCorrect("")){
                 if(isInputCodeCorrect(hexaInputString)){
@@ -188,16 +190,20 @@ public class NumericCodeDialog extends CodeDialogBase {
                     if(wasStartedByBroadcastReceiver) {
                         dismiss();
                     }
+                    result = true;
                 }
                 else if(getTries() > 0){
                     Toast.makeText(getContext(),getContext().getString(R.string.code_incorrect,getTries()),Toast.LENGTH_SHORT).show();
                     decrementTries();
+                    result = false;
                 }
                 else{
+                    result = false;
                     authenticationFailed();
                 }
             }
         }
+        return result;
     }
 
     @Override
