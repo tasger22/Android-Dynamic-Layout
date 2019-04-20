@@ -12,6 +12,8 @@ import android.preference.PreferenceFragment;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 
+import hu.bme.iit.dynamiccodedialog.CryptographyImplementation;
+
 /**
  * Created by Stealth on 2018. 04. 03..
  */

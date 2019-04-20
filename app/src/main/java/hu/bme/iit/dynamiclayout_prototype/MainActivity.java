@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 
 import hu.bme.iit.dynamiccodedialog.CodeDialogBase;
+import hu.bme.iit.dynamiccodedialog.CryptographyImplementation;
 import hu.bme.iit.dynamiclayout_prototype.service_elements.ScreenOnWatcherService;
 
 public class MainActivity extends AppCompatActivity{

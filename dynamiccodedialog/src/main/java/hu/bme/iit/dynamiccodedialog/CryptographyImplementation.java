@@ -1,4 +1,4 @@
-package hu.bme.iit.dynamiclayout_prototype;
+package hu.bme.iit.dynamiccodedialog;
 
 import java.security.NoSuchAlgorithmException;
 
