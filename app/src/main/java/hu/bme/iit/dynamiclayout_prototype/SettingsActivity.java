@@ -71,7 +71,7 @@ public class SettingsActivity extends Activity {
                 SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
                 if(!"".equals(customSecurityCode)) {
                     try {
-                        byte[] stringByteArray = encrypter.encrypt(customSecurityCode);
+                        byte[] stringByteArray = (byte[]) encrypter.encrypt(customSecurityCode);
                         String encryptedStr = encrypter.byteArrayToHexString(stringByteArray);
                         sharedPreferencesEditor.putString(getResources().getString(R.string.encrypted_code_key), encryptedStr);
                         sharedPreferencesEditor.apply();

@@ -1,6 +1,7 @@
 package hu.bme.iit.dynamiccodedialog.cryptography;
 
 public interface Cryptography {
-    byte[] encrypt(String text);
-    String decrypt (byte[] array);
+    Object encrypt(Object input);
+    Object decrypt (Object encryptedArray);
+    boolean equals (Object code, Object input);
 }

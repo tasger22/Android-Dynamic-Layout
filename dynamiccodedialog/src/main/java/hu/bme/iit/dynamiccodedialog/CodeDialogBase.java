@@ -7,11 +7,9 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 import hu.bme.iit.dynamiccodedialog.cryptography.Cryptography;
@@ -19,12 +17,11 @@ import hu.bme.iit.dynamiccodedialog.cryptography.Cryptography;
 //Class which provides all the necessary components for a CodeActivity
 public abstract class CodeDialogBase extends AlertDialog {
 
-    private byte[] code; //Security code for the CodeDialogs, encrypted
+    private Object code; //Security code for the CodeDialogs, encrypted
     private Cryptography crypter;
-    private ViewGroup codeButtonContainer;
-    private ArrayList<View> codeButtonList;
-    private int initialTries = 2;
-    private int tries = initialTries; //How many times you can try to input the code until it rejects input
+    private ViewGroup codeInputViewContainer;
+    private int initialTries;
+    private int tries; //How many times you can try to input the code until it rejects input
 
 
     protected CodeDialogBase(@NonNull Context context, int themeId ,Cryptography cryptographyImplementation) {
@@ -37,24 +34,15 @@ public abstract class CodeDialogBase extends AlertDialog {
         super.onCreate(savedInstanceState);
     }
 
-    protected void setCodeButtonList(int viewContainerId){
-        codeButtonContainer = findViewById(viewContainerId);
-        codeButtonList = getChildrenViews(codeButtonContainer);
-        for (View button:
-                codeButtonList) {
-            button.setOnClickListener(this::processCodeButtonPress);
-        }
-    }
-
     /**
-     * @param viewContainer Must contain all the views necessary for code input
+     * @param viewContainer ViewGroup which must contain all the views necessary for code input
      */
-    protected void setCodeButtonList(ViewGroup viewContainer){
-        codeButtonContainer = viewContainer;
-        codeButtonList = getChildrenViews(codeButtonContainer);
-        for (View button:
-             codeButtonList) {
-            button.setOnClickListener(this::processCodeButtonPress);
+    protected void setUpCodeInputInterface(ViewGroup viewContainer){
+        codeInputViewContainer = viewContainer;
+        ArrayList<View> codeInputViewList = getChildrenViews(codeInputViewContainer);
+        for (View view:
+             codeInputViewList) {
+            view.setOnClickListener(this::processCodeInputViewPress);
         }
     }
 
@@ -71,25 +59,28 @@ public abstract class CodeDialogBase extends AlertDialog {
 
     /**
      * @param view View responsible for code input
-     * @implNote This method is assigned to all codeButtonList views as OnClickListener
+     * @implNote This method is assigned to all codeInputViewContainer children views as OnClickListener
      */
-    protected abstract void processCodeButtonPress(View view);
+    protected abstract void processCodeInputViewPress(View view);
 
-    protected void randomizeButtons(){
+
+
+    protected void randomizeInputViews(){
         try {
             Random rand = new Random();
             ArrayList<ViewGroup.LayoutParams> params = new ArrayList<>();
+            ArrayList<View> codeInputViewList = getChildrenViews(codeInputViewContainer);
             for (View v:
-                    codeButtonList) {
+                    codeInputViewList) {
                 params.add(v.getLayoutParams());
             }
             for (View v:
-                    codeButtonList) {
-                codeButtonContainer.removeView(v);
+                    codeInputViewList) {
+                codeInputViewContainer.removeView(v);
                 ViewGroup.LayoutParams randomParam = params.get(rand.nextInt(params.size()));
                 v.setLayoutParams(randomParam);
                 params.remove(randomParam);
-                codeButtonContainer.addView(v);
+                codeInputViewContainer.addView(v);
             }
         }  catch (ClassCastException e){
             Log.w("Failed casting", e);
@@ -119,21 +110,17 @@ public abstract class CodeDialogBase extends AlertDialog {
     }
 
     protected void setCode(String code) {
-        byte[] newCodeBytes = crypter.encrypt(code);
-        this.code = newCodeBytes;
+        Object newCode = crypter.encrypt(code);
+        this.code = newCode;
     }
 
-    protected byte[] getCode(){
+    protected Object getCode(){
         return code;
     }
 
     protected boolean isInputCodeCorrect(String inputCode) {
-        byte[] inputCodeBytes = crypter.encrypt(inputCode);
-        return Arrays.equals(code, inputCodeBytes);
-    }
-
-    protected ArrayList<View> getCodeButtonList() {
-        return codeButtonList;
+        Object encryptedInputCode = crypter.encrypt(inputCode);
+        return crypter.equals(code ,encryptedInputCode);
     }
 
     protected int getTries() {

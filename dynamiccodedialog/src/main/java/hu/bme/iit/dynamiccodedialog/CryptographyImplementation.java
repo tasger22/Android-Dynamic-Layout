@@ -1,6 +1,8 @@
 package hu.bme.iit.dynamiccodedialog;
 
+import java.lang.reflect.Array;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
@@ -10,11 +12,11 @@ import javax.crypto.spec.SecretKeySpec;
 import hu.bme.iit.dynamiccodedialog.cryptography.Cryptography;
 
 public class CryptographyImplementation implements Cryptography {
-    private String iv = "T3mPoR4ryIV3cTor";
+    private static final String iv = "T3mPoR4ryIV3cTor";
+    private static final String SecretKey = "TemPS3cr3TKEy$tR";
     private IvParameterSpec ivspec;
     private SecretKeySpec keyspec;
     private Cipher cipher;
-    private String SecretKey = "TemPS3cr3TKEy$tR";
 
     public CryptographyImplementation() {
         ivspec = new IvParameterSpec(iv.getBytes());
@@ -30,7 +32,8 @@ public class CryptographyImplementation implements Cryptography {
         }
     }
 
-    public byte[] encrypt(String text){
+    public Object encrypt(Object input){
+        String text = (String) input;
         if (text == null || text.length() == 0)
             try {
                 throw new Exception("Empty string");
@@ -54,7 +57,8 @@ public class CryptographyImplementation implements Cryptography {
         return encrypted;
     }
 
-    public String decrypt(byte[] array){
+    public Object decrypt(Object encryptedArray){
+        byte[] array = (byte[]) encryptedArray;
         if (array == null || array.length == 0)
             try {
                 throw new Exception("Empty array");
@@ -78,6 +82,14 @@ public class CryptographyImplementation implements Cryptography {
         return new String(decrypted);
     }
 
+    @Override
+    public boolean equals(Object code, Object input) {
+        byte[] codeBytes = (byte[]) code;
+        byte[] inputBytes = (byte[]) input;
+
+        return Arrays.equals(codeBytes, inputBytes);
+    }
+
     public String byteArrayToHexString(byte[] array){
         StringBuilder hexString = new StringBuilder();
         for (byte b : array) {
@@ -87,24 +99,6 @@ public class CryptographyImplementation implements Cryptography {
             hexString.append(Integer.toHexString(intVal));
         }
         return hexString.toString();
-    }
-
-    public byte[] hexStringToBytes(String str){
-        if (str == null) {
-            return null;
-        } else if (str.length() < 2) {
-            return null;
-        } else {
-
-            int len = str.length() / 2;
-            byte[] buffer = new byte[len];
-            for (int i = 0; i < len; i++) {
-                buffer[i] = (byte) Integer.parseInt(
-                        str.substring(i * 2, i * 2 + 2), 16);
-
-            }
-            return buffer;
-        }
     }
 
     private String padString(String source) {

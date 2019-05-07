@@ -99,7 +99,7 @@ public class NumericCodeDialog extends CodeDialogBase {
         });
 
         if(currentDifficulty != CodeResolveDifficulty.EASY){
-            randomizeButtons();
+            randomizeInputViews();
         }
     }
 
@@ -114,7 +114,7 @@ public class NumericCodeDialog extends CodeDialogBase {
         }
 
         currentDifficulty = MainActivity.getCodeResolveDifficultyFromString(settings.getString(SettingsActivity.KEY_PREF_DIFFICULTY,"EASY"));
-        String savedCode = settings.getString(getContext().getString(R.string.encrypted_code_key),crypter.byteArrayToHexString(crypter.encrypt("0000")));
+        String savedCode = settings.getString(getContext().getString(R.string.encrypted_code_key),crypter.byteArrayToHexString((byte[])crypter.encrypt("0000")));
         setCode(savedCode);
 
         if(isTestMode){
@@ -137,7 +137,7 @@ public class NumericCodeDialog extends CodeDialogBase {
                 buttonGridLayout.removeView(child);
             }
         }
-        setCodeButtonList(buttonGridLayout);
+        setUpCodeInputInterface(buttonGridLayout);
         buttonGridLayout.addView(acceptButton);
     }
 
@@ -148,7 +148,7 @@ public class NumericCodeDialog extends CodeDialogBase {
         passwordLine.append(numberButton.getText().toString());
 
         if(currentDifficulty == CodeResolveDifficulty.EVIL)
-            randomizeButtons();
+            randomizeInputViews();
     }
 
     @Override
@@ -158,7 +158,7 @@ public class NumericCodeDialog extends CodeDialogBase {
             Toast.makeText(getContext(),"Code must be 4-8 characters long",Toast.LENGTH_SHORT).show();
             return false;
         }
-        byte[] inputEncryptedBytes = crypter.encrypt(input);
+        byte[] inputEncryptedBytes = (byte[])crypter.encrypt(input);
         String hexaInputString = crypter.byteArrayToHexString(inputEncryptedBytes);
         if (isTestMode) {
             if(!isInputCodeCorrect("")){
@@ -169,7 +169,7 @@ public class NumericCodeDialog extends CodeDialogBase {
                         result = true;
                     }
                     passwordLine.setText("");
-                    if(currentDifficulty == CodeResolveDifficulty.HARD) randomizeButtons();
+                    if(currentDifficulty == CodeResolveDifficulty.HARD) randomizeInputViews();
                 }
                 else{
                     Toast.makeText(getContext(),getContext().getString(R.string.code_incorrect_test_mode),Toast.LENGTH_SHORT).show();
@@ -186,7 +186,7 @@ public class NumericCodeDialog extends CodeDialogBase {
                 if(isInputCodeCorrect(hexaInputString)){
                     Toast.makeText(getContext(), R.string.code_accepted,Toast.LENGTH_SHORT).show();
                     setTries(getInitialTries());
-                    if(currentDifficulty == CodeResolveDifficulty.HARD) randomizeButtons();
+                    if(currentDifficulty == CodeResolveDifficulty.HARD) randomizeInputViews();
                     if(wasStartedByBroadcastReceiver) {
                         dismiss();
                     }
@@ -233,7 +233,7 @@ public class NumericCodeDialog extends CodeDialogBase {
         Intent resultIntent = new Intent(getContext(),TestResultActivity.class);
         int codeLength = 4;
         try{
-            String decryptedStr = crypter.decrypt(getCode());
+            String decryptedStr = (String)crypter.decrypt(getCode());
             codeLength = decryptedStr.trim().length();
         }
         catch(Exception e){
