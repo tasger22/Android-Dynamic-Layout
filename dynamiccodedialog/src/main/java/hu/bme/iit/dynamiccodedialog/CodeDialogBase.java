@@ -67,25 +67,18 @@ public abstract class CodeDialogBase <CodeContainerType, CodeInputType> extends 
 
 
     protected void randomizeInputViews(){
-        try {
-            Random rand = new Random();
-            ArrayList<ViewGroup.LayoutParams> params = new ArrayList<>();
-            for (View v:
-                    codeInputViewList) {
-                params.add(v.getLayoutParams());
-            }
-            for (View v:
-                    codeInputViewList) {
-                codeInputViewContainer.removeView(v);
-                ViewGroup.LayoutParams randomParam = params.get(rand.nextInt(params.size()));
-                v.setLayoutParams(randomParam);
-                params.remove(randomParam);
-                codeInputViewContainer.addView(v);
-            }
-        }  catch (ClassCastException e){
-            Log.w("Failed casting", e);
+        Random rand = new Random();
+        ArrayList<ViewGroup.LayoutParams> params = new ArrayList<>();
+        for (View v:
+                codeInputViewList) {
+            params.add(v.getLayoutParams());
         }
-
+        for (View v:
+                codeInputViewList) {
+            ViewGroup.LayoutParams randomParam = params.get(rand.nextInt(params.size()));
+            v.setLayoutParams(randomParam);
+            params.remove(randomParam);
+        }
     }
 
     protected boolean compareCodeToInput(CodeInputType input){
@@ -93,18 +86,15 @@ public abstract class CodeDialogBase <CodeContainerType, CodeInputType> extends 
         if(isInputCodeCorrect(input)){
             result = true;
         }
-        else if(tries > 0){
-            result = false;
-        }
-        else{
-            authenticationFailed();
-            result = false;
+        else if(initialTries > 0){
+            if (tries <= 0){
+                authenticationFailed();
+            }
         }
         return result;
     }
 
     protected void authenticationFailed(){
-        dismiss();
     }
 
     protected void setCode(CodeInputType code) {
