@@ -15,11 +15,12 @@ import java.util.Random;
 import hu.bme.iit.dynamiccodedialog.cryptography.Cryptography;
 
 //Class which provides all the necessary components for a CodeActivity
-public abstract class CodeDialogBase extends AlertDialog {
+public abstract class CodeDialogBase <CodeContainerType, CodeInputType> extends AlertDialog {
 
-    private Object code; //Security code for the CodeDialogs, encrypted
-    private Cryptography crypter;
+    private CodeContainerType code; //Security code for the CodeDialogs, encrypted
+    private Cryptography<CodeContainerType,CodeInputType> crypter;
     private ViewGroup codeInputViewContainer;
+    private ArrayList<View> codeInputViewList;
     private int initialTries;
     private int tries; //How many times you can try to input the code until it rejects input
 
@@ -39,7 +40,7 @@ public abstract class CodeDialogBase extends AlertDialog {
      */
     protected void setUpCodeInputInterface(ViewGroup viewContainer){
         codeInputViewContainer = viewContainer;
-        ArrayList<View> codeInputViewList = getChildrenViews(codeInputViewContainer);
+        codeInputViewList = getChildrenViews(codeInputViewContainer);
         for (View view:
              codeInputViewList) {
             view.setOnClickListener(this::processCodeInputViewPress);
@@ -69,7 +70,6 @@ public abstract class CodeDialogBase extends AlertDialog {
         try {
             Random rand = new Random();
             ArrayList<ViewGroup.LayoutParams> params = new ArrayList<>();
-            ArrayList<View> codeInputViewList = getChildrenViews(codeInputViewContainer);
             for (View v:
                     codeInputViewList) {
                 params.add(v.getLayoutParams());
@@ -88,19 +88,17 @@ public abstract class CodeDialogBase extends AlertDialog {
 
     }
 
-    protected boolean compareCodeToInput(String input){
+    protected boolean compareCodeToInput(CodeInputType input){
         boolean result = false;
-        if(!isInputCodeCorrect("")){
-            if(isInputCodeCorrect(input)){
-                result = true;
-            }
-            else if(tries > 0){
-                result = false;
-            }
-            else{
-                authenticationFailed();
-                result = false;
-            }
+        if(isInputCodeCorrect(input)){
+            result = true;
+        }
+        else if(tries > 0){
+            result = false;
+        }
+        else{
+            authenticationFailed();
+            result = false;
         }
         return result;
     }
@@ -109,17 +107,16 @@ public abstract class CodeDialogBase extends AlertDialog {
         dismiss();
     }
 
-    protected void setCode(String code) {
-        Object newCode = crypter.encrypt(code);
-        this.code = newCode;
+    protected void setCode(CodeInputType code) {
+        this.code = crypter.encrypt(code);
     }
 
-    protected Object getCode(){
+    protected CodeContainerType getCode(){
         return code;
     }
 
-    protected boolean isInputCodeCorrect(String inputCode) {
-        Object encryptedInputCode = crypter.encrypt(inputCode);
+    protected boolean isInputCodeCorrect(CodeInputType inputCode) {
+        CodeContainerType encryptedInputCode = crypter.encrypt(inputCode);
         return crypter.equals(code ,encryptedInputCode);
     }
 

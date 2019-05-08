@@ -27,7 +27,7 @@ import static android.view.WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
 import static android.view.WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
 
 //Code activity in which the user has to input the code with a number pad
-public class NumericCodeDialog extends CodeDialogBase {
+public class NumericCodeDialog extends CodeDialogBase <byte[], String> {
 
     private EditText passwordLine;
     private CodeResolveDifficulty currentDifficulty;
@@ -141,7 +141,7 @@ public class NumericCodeDialog extends CodeDialogBase {
         buttonGridLayout.addView(acceptButton);
     }
 
-    protected void processCodeButtonPress(View view) {
+    protected void processCodeInputViewPress(View view) {
         Button numberButton = (Button) view;
         EditText passwordLine = findViewById(R.id.passwordLine);
 
@@ -233,7 +233,7 @@ public class NumericCodeDialog extends CodeDialogBase {
         Intent resultIntent = new Intent(getContext(),TestResultActivity.class);
         int codeLength = 4;
         try{
-            String decryptedStr = (String)crypter.decrypt(getCode());
+            String decryptedStr = crypter.decrypt(getCode());
             codeLength = decryptedStr.trim().length();
         }
         catch(Exception e){

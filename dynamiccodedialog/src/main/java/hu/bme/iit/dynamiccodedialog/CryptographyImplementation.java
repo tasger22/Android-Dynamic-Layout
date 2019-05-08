@@ -11,7 +11,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import hu.bme.iit.dynamiccodedialog.cryptography.Cryptography;
 
-public class CryptographyImplementation implements Cryptography {
+public class CryptographyImplementation implements Cryptography<byte[],String> {
     private static final String iv = "T3mPoR4ryIV3cTor";
     private static final String SecretKey = "TemPS3cr3TKEy$tR";
     private IvParameterSpec ivspec;
@@ -32,8 +32,7 @@ public class CryptographyImplementation implements Cryptography {
         }
     }
 
-    public Object encrypt(Object input){
-        String text = (String) input;
+    public byte[] encrypt(String text){
         if (text == null || text.length() == 0)
             try {
                 throw new Exception("Empty string");
@@ -57,8 +56,7 @@ public class CryptographyImplementation implements Cryptography {
         return encrypted;
     }
 
-    public Object decrypt(Object encryptedArray){
-        byte[] array = (byte[]) encryptedArray;
+    public String decrypt(byte[] array){
         if (array == null || array.length == 0)
             try {
                 throw new Exception("Empty array");
@@ -83,9 +81,9 @@ public class CryptographyImplementation implements Cryptography {
     }
 
     @Override
-    public boolean equals(Object code, Object input) {
-        byte[] codeBytes = (byte[]) code;
-        byte[] inputBytes = (byte[]) input;
+    public boolean equals(byte[] code, byte[] input) {
+        byte[] codeBytes = code;
+        byte[] inputBytes = input;
 
         return Arrays.equals(codeBytes, inputBytes);
     }
