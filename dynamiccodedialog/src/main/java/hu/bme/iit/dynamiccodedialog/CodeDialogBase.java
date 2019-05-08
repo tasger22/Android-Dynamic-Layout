@@ -115,12 +115,6 @@ public abstract class CodeDialogBase <CodeContainerType, CodeInputType> extends 
     }
 
     protected void setTries(int tries) {
-        try{
-            if(tries < 0)   throw new InvalidParameterException("'tries' value cannot be negative");
-        }
-        catch (InvalidParameterException e){
-            e.printStackTrace();
-        }
         this.tries = tries;
     }
 
