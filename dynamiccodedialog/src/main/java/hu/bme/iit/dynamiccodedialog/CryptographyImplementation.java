@@ -1,6 +1,5 @@
 package hu.bme.iit.dynamiccodedialog;
 
-import java.lang.reflect.Array;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 

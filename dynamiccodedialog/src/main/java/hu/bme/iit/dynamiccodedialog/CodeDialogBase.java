@@ -64,8 +64,6 @@ public abstract class CodeDialogBase <CodeContainerType, CodeInputType> extends 
      */
     protected abstract void processCodeInputViewPress(View view);
 
-
-
     protected void randomizeInputViews(){
         Random rand = new Random();
         ArrayList<ViewGroup.LayoutParams> params = new ArrayList<>();
