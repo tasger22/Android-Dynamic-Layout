@@ -50,30 +50,27 @@ public class NumericCodeDialogTest {
         appPrefEditor.putString(activityContext.getString(R.string.encrypted_code_key), encryptedTestCode);
         appPrefEditor.apply();
 
-        mActivityRule.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                shownNumericDialog = new NumericCodeDialog(mActivityRule.getActivity(),false, customPref, testCrypter);
-                try {
-                    shownNumericDialog.initialSetup();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                shownNumericDialog.show();
+        mActivityRule.runOnUiThread(() -> {
+            shownNumericDialog = new NumericCodeDialog(mActivityRule.getActivity(),false, customPref, testCrypter);
+            try {
+                shownNumericDialog.initialSetup();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+            shownNumericDialog.show();
         });
 
     }
 
     @Test
-    public void testCodeMatchesSetSecurityCode(){
+    public void testCodeMatchesSetSecurityCode() throws Throwable{
         //Check if setting the code to test code really changed it meaning initialSetup really changed the userCode var and setting the code to it worked
          //The security code which supposed to equal to testCode set above
-        assertTrue(shownNumericDialog.isInputCodeCorrect(encryptedTestCode));
+        mActivityRule.runOnUiThread(() -> assertTrue(shownNumericDialog.isInputCodeCorrect(testCode)));
     }
 
     @Test
-    public void inputCodeMatchesPasswordLineAndSetSecurityCode(){
+    public void inputCodeMatchesPasswordLineAndSetSecurityCode() throws Throwable{
         //Pressing buttons to put in security code
         for (int i = 0; i < testCode.length(); i++) {
             onView(withText(Character.toString(testCode.charAt(i)))).perform(click());
@@ -81,11 +78,8 @@ public class NumericCodeDialogTest {
 
         //Check if the password line holds the same values
         EditText passLine = shownNumericDialog.findViewById(R.id.passwordLine);
-        byte[] inputEncryptedBytes = testCrypter.encrypt(passLine.getText().toString());
-        String hexaInputString = testCrypter.byteArrayToHexString(inputEncryptedBytes);
         assertEquals(testCode,passLine.getText().toString());
-        assertTrue(shownNumericDialog.isInputCodeCorrect(hexaInputString));
-
+        mActivityRule.runOnUiThread(() -> assertTrue(shownNumericDialog.isInputCodeCorrect(passLine.getText().toString())));
 
         //Testing if the code was really correct with checking if the Toast for the correct code appeared (throws exception if the Toast with the message was not found)
         onView(withId(R.id.acceptButton)).perform(click());

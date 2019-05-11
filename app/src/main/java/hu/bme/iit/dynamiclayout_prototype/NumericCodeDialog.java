@@ -27,7 +27,7 @@ import static android.view.WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
 import static android.view.WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
 
 //Code activity in which the user has to input the code with a number pad
-public class NumericCodeDialog extends CodeDialogBase <byte[], String> {
+public class NumericCodeDialog extends CodeDialogBase<byte[], String> {
 
     private EditText passwordLine;
     private CodeResolveDifficulty currentDifficulty;
@@ -46,12 +46,11 @@ public class NumericCodeDialog extends CodeDialogBase <byte[], String> {
         settings = customSharedPref;
         ownerContext = context;
 
-        if(wasStartedByBroadcastReceiver){
+        if (wasStartedByBroadcastReceiver) {
             WindowManager.LayoutParams params = getWindow().getAttributes();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 params.type = TYPE_APPLICATION_OVERLAY;
-            }
-            else{
+            } else {
                 params.type = TYPE_SYSTEM_ERROR;
             }
             params.dimAmount = 0.0F; // transparent
@@ -84,21 +83,21 @@ public class NumericCodeDialog extends CodeDialogBase <byte[], String> {
         acceptButton.setOnClickListener(view -> {
             String codeInput = passwordLine.getText().toString();
             if (!"".equals(codeInput)) {
-                compareCodeToInput(codeInput);
+                isInputCodeCorrect(codeInput);
             }
         });
 
         ImageButton deleteButton = findViewById(R.id.deleteButton);
         deleteButton.setOnClickListener(view -> {
             String codeInput = passwordLine.getText().toString();
-            if(!"".equals(codeInput)){
+            if (!"".equals(codeInput)) {
                 int passLength = codeInput.length();
-                String newPassLineText = codeInput.substring(0,passLength-1);
+                String newPassLineText = codeInput.substring(0, passLength - 1);
                 passwordLine.setText(newPassLineText);
             }
         });
 
-        if(currentDifficulty != CodeResolveDifficulty.EASY){
+        if (currentDifficulty != CodeResolveDifficulty.EASY) {
             randomizeInputViews();
         }
     }
@@ -106,33 +105,31 @@ public class NumericCodeDialog extends CodeDialogBase <byte[], String> {
     //Method to initialize all the private variables from the SharedPreferences
     protected void initialSetup() {
 
-        if(wasStartedByBroadcastReceiver){
+        if (wasStartedByBroadcastReceiver) {
             isTestMode = false;
-        }
-        else {
-            isTestMode = settings.getBoolean(SettingsActivity.KEY_PREF_TESTMODE,false);
+        } else {
+            isTestMode = settings.getBoolean(SettingsActivity.KEY_PREF_TESTMODE, false);
         }
 
-        currentDifficulty = MainActivity.getCodeResolveDifficultyFromString(settings.getString(SettingsActivity.KEY_PREF_DIFFICULTY,"EASY"));
-        String savedCode = settings.getString(getContext().getString(R.string.encrypted_code_key),crypter.byteArrayToHexString((byte[])crypter.encrypt("0000")));
+        currentDifficulty = MainActivity.getCodeResolveDifficultyFromString(settings.getString(SettingsActivity.KEY_PREF_DIFFICULTY, "EASY"));
+        String savedCode = settings.getString(getContext().getString(R.string.encrypted_code_key), crypter.byteArrayToHexString((byte[]) crypter.encrypt("0000")));
         setCode(savedCode);
 
-        if(isTestMode){
+        if (isTestMode) {
             setInitialTries(10);
             fails = 0;
             testStartTime = System.currentTimeMillis();
-        }
-        else{
+        } else {
             setInitialTries(2);
         }
     }
 
-    private void setUpAllButtons(){
+    private void setUpAllButtons() {
         ViewGroup buttonGridLayout = findViewById(R.id.buttonLayout);
         View acceptButton = null;
         for (int i = 0; i < buttonGridLayout.getChildCount(); i++) {
             View child = buttonGridLayout.getChildAt(i);
-            if (child.getId() == R.id.acceptButton){
+            if (child.getId() == R.id.acceptButton) {
                 acceptButton = child;
                 buttonGridLayout.removeView(child);
             }
@@ -147,69 +144,57 @@ public class NumericCodeDialog extends CodeDialogBase <byte[], String> {
 
         passwordLine.append(numberButton.getText().toString());
 
-        if(currentDifficulty == CodeResolveDifficulty.EVIL)
+        if (currentDifficulty == CodeResolveDifficulty.EVIL)
             randomizeInputViews();
     }
 
     @Override
-    protected boolean compareCodeToInput(String input){
+    protected boolean isInputCodeCorrect(String input) {
         boolean result = false;
-        if(input.length() < 4){
-            Toast.makeText(getContext(),"Code must be 4-8 characters long",Toast.LENGTH_SHORT).show();
+        if (input.length() < 4) {
+            Toast.makeText(getContext(), "Code must be 4-8 characters long", Toast.LENGTH_SHORT).show();
             return false;
         }
-        byte[] inputEncryptedBytes = (byte[])crypter.encrypt(input);
+        byte[] inputEncryptedBytes = (byte[]) crypter.encrypt(input);
         String hexaInputString = crypter.byteArrayToHexString(inputEncryptedBytes);
         if (isTestMode) {
-            if(!isInputCodeCorrect("")){
-                if(isInputCodeCorrect(hexaInputString)){
-                    decrementTries();
-                    if(getTries() > 0){
-                        Toast.makeText(getContext(), getContext().getString(R.string.code_accepted_test_mode,getInitialTries() - getTries(),getInitialTries()),Toast.LENGTH_SHORT).show();
-                        result = true;
-                    }
-                    passwordLine.setText("");
-                    if(currentDifficulty == CodeResolveDifficulty.HARD) randomizeInputViews();
+            if (super.isInputCodeCorrect(hexaInputString)) {
+                decrementTries();
+                if (getTries() > 0) {
+                    Toast.makeText(getContext(), getContext().getString(R.string.code_accepted_test_mode, getInitialTries() - getTries(), getInitialTries()), Toast.LENGTH_SHORT).show();
+                    result = true;
                 }
-                else{
-                    Toast.makeText(getContext(),getContext().getString(R.string.code_incorrect_test_mode),Toast.LENGTH_SHORT).show();
-                    ++fails;
-                    result = false;
-                }
+                passwordLine.setText("");
+                if (currentDifficulty == CodeResolveDifficulty.HARD) randomizeInputViews();
+            } else {
+                Toast.makeText(getContext(), getContext().getString(R.string.code_incorrect_test_mode), Toast.LENGTH_SHORT).show();
+                ++fails;
+                result = false;
             }
 
-            if(getTries() <= 0){
+            if (getTries() <= 0) {
                 compileResults();
             }
         } else {
-            if(!isInputCodeCorrect("")){
-                if(isInputCodeCorrect(hexaInputString)){
-                    Toast.makeText(getContext(), R.string.code_accepted,Toast.LENGTH_SHORT).show();
-                    setTries(getInitialTries());
-                    if(currentDifficulty == CodeResolveDifficulty.HARD) randomizeInputViews();
-                    if(wasStartedByBroadcastReceiver) {
-                        dismiss();
-                    }
-                    result = true;
+            if (super.isInputCodeCorrect(hexaInputString)) {
+                Toast.makeText(getContext(), R.string.code_accepted, Toast.LENGTH_SHORT).show();
+                setTries(getInitialTries());
+                if (currentDifficulty == CodeResolveDifficulty.HARD) randomizeInputViews();
+                if (wasStartedByBroadcastReceiver) {
+                    dismiss();
                 }
-                else if(getTries() > 0){
-                    Toast.makeText(getContext(),getContext().getString(R.string.code_incorrect,getTries()),Toast.LENGTH_SHORT).show();
-                    decrementTries();
-                    result = false;
-                }
-                else{
-                    result = false;
-                    authenticationFailed();
-                }
+                result = true;
+            } else if (getTries() > 0) {
+                Toast.makeText(getContext(), getContext().getString(R.string.code_incorrect, getTries()), Toast.LENGTH_SHORT).show();
+                decrementTries();
+                result = false;
+            } else {
+                result = false;
             }
         }
         return result;
     }
-
-    @Override
-    protected boolean isInputCodeCorrect(String inputCode) {
-        return super.isInputCodeCorrect(inputCode);
-    }
+    
 
     //Used when the user is in test mode where we have to compile the result screen
     protected void compileResults() {
@@ -221,30 +206,29 @@ public class NumericCodeDialog extends CodeDialogBase <byte[], String> {
 
         long seconds = tempVar / 1000;
         String secondsString = Long.toString(seconds);
-        if(secondsString.length() < 2)
+        if (secondsString.length() < 2)
             secondsString = "0" + secondsString;
 
         long milliseconds = timeDifference % 1000;
         String milliString = Long.toString(milliseconds);
-        while(milliString.length() < 3)
+        while (milliString.length() < 3)
             milliString = "0" + milliString;
 
-        String compTimeText = minutes + ":" + secondsString + "." + milliString ;
-        Intent resultIntent = new Intent(getContext(),TestResultActivity.class);
+        String compTimeText = minutes + ":" + secondsString + "." + milliString;
+        Intent resultIntent = new Intent(getContext(), TestResultActivity.class);
         int codeLength = 4;
-        try{
+        try {
             String decryptedStr = crypter.decrypt(getCode());
             codeLength = decryptedStr.trim().length();
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        resultIntent.putExtra(getContext().getString(R.string.diff_key),currentDifficulty)
-                .putExtra(getContext().getString(R.string.code_length_key),codeLength)
-                .putExtra(getContext().getString(R.string.comp_time_key),compTimeText)
-                .putExtra(getContext().getString(R.string.comp_time_sec_key),(int)timeDifference/1000)
-                .putExtra(getContext().getString(R.string.fails_key),fails);
+        resultIntent.putExtra(getContext().getString(R.string.diff_key), currentDifficulty)
+                .putExtra(getContext().getString(R.string.code_length_key), codeLength)
+                .putExtra(getContext().getString(R.string.comp_time_key), compTimeText)
+                .putExtra(getContext().getString(R.string.comp_time_sec_key), (int) timeDifference / 1000)
+                .putExtra(getContext().getString(R.string.fails_key), fails);
 
         ownerContext.startActivity(resultIntent);
     }
