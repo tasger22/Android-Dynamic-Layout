@@ -39,11 +39,13 @@ public abstract class CodeDialogBase <CodeContainerType, CodeInputType> extends 
      * @param viewContainer ViewGroup which must contain all the views necessary for code input
      */
     protected void setUpCodeInputInterface(ViewGroup viewContainer){
-        codeInputViewContainer = viewContainer;
-        codeInputViewList = getChildrenViews(codeInputViewContainer);
-        for (View view:
-             codeInputViewList) {
-            view.setOnClickListener(this::processCodeInputViewPress);
+        if (viewContainer != null){
+            codeInputViewContainer = viewContainer;
+            codeInputViewList = getChildrenViews(codeInputViewContainer);
+            for (View view:
+                    codeInputViewList) {
+                view.setOnClickListener(this::processCodeInputViewPress);
+            }
         }
     }
 
