@@ -81,22 +81,6 @@ public abstract class CodeDialogBase <CodeContainerType, CodeInputType> extends 
         }
     }
 
-    protected boolean compareCodeToInput(CodeInputType input){
-        boolean result = false;
-        if(isInputCodeCorrect(input)){
-            result = true;
-        }
-        else if(initialTries > 0){
-            if (tries <= 0){
-                authenticationFailed();
-            }
-        }
-        return result;
-    }
-
-    protected void authenticationFailed(){
-    }
-
     protected void setCode(CodeInputType code) {
         this.code = crypter.encrypt(code);
     }
