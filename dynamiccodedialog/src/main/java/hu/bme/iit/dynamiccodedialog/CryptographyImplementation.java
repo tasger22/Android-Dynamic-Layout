@@ -81,10 +81,7 @@ public class CryptographyImplementation implements Cryptography<byte[],String> {
 
     @Override
     public boolean equals(byte[] code, byte[] input) {
-        byte[] codeBytes = code;
-        byte[] inputBytes = input;
-
-        return Arrays.equals(codeBytes, inputBytes);
+        return Arrays.equals(code, input);
     }
 
     public String byteArrayToHexString(byte[] array){

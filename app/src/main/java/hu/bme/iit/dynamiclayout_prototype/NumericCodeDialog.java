@@ -194,7 +194,7 @@ public class NumericCodeDialog extends CodeDialogBase<byte[], String> {
         }
         return result;
     }
-    
+
 
     //Used when the user is in test mode where we have to compile the result screen
     protected void compileResults() {
