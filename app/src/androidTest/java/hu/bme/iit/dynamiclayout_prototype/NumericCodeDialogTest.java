@@ -59,7 +59,6 @@ public class NumericCodeDialogTest {
             }
             shownNumericDialog.show();
         });
-
     }
 
     @Test
@@ -80,10 +79,20 @@ public class NumericCodeDialogTest {
         EditText passLine = shownNumericDialog.findViewById(R.id.passwordLine);
         assertEquals(testCode,passLine.getText().toString());
         mActivityRule.runOnUiThread(() -> assertTrue(shownNumericDialog.isInputCodeCorrect(passLine.getText().toString())));
+    }
 
-        //Testing if the code was really correct with checking if the Toast for the correct code appeared (throws exception if the Toast with the message was not found)
-        onView(withId(R.id.acceptButton)).perform(click());
-        onView(withText(R.string.code_accepted)).inRoot(withDecorView(not(shownNumericDialog.getWindow().getDecorView()))).check(matches(isDisplayed()));
+    @Test
+    public void failWhenInputCodeDoesMatchPasswordLineButNotSetSecurityCode() throws Throwable{
+        //Pressing buttons to put in security code
+        String wrongCode = "0123";
+        for (int i = 0; i < wrongCode.length(); i++) {
+            onView(withText(Character.toString(wrongCode.charAt(i)))).perform(click());
+        }
+
+        //Check if the password line holds the same values
+        EditText passLine = shownNumericDialog.findViewById(R.id.passwordLine);
+        assertEquals(wrongCode,passLine.getText().toString());
+        mActivityRule.runOnUiThread(() -> assertFalse(shownNumericDialog.isInputCodeCorrect(passLine.getText().toString())));
     }
 
     @Test
